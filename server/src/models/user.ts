@@ -1,14 +1,13 @@
 /** Class pertaining to user objects. */
-import bcrypt from 'bcrypt'
-import { db } from '../db';
-import { UnauthorizedError } from '../helpers/ExpressError';
+import bcrypt from "bcrypt";
+import { db } from "../db";
+import { UnauthorizedError } from "../helpers/ExpressError";
 
 export class User {
   userID: string;
   username: string;
   constructor(userID: string, username: string) {
-    this.userID = userID,
-      this.username = username
+    (this.userID = userID), (this.username = username);
   }
 
   /** Check if credentials match a user. */
@@ -39,11 +38,8 @@ export class User {
   /** Return all users.(is this even useful for this project?) */
   static async findAll() {
     const result = await db.query(
-      `SELECT username,
-                      first_name AS "firstName",
-                      last_name AS "lastName",
-                      email,
-                      is_admin AS "isAdmin"
+      `SELECT   username,
+                email
                FROM users
                ORDER BY username`
     );
@@ -65,5 +61,7 @@ export class User {
     );
 
     const user = userRes.rows[0];
+
+    return user;
   }
 }

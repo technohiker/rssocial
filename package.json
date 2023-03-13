@@ -10,8 +10,8 @@
   },
   "scripts": {
     "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
-    "start-server": "nodemon backend/server.js",
-    "start-client": "cd frontend && npm run run-react"
+    "start-server": "nodemon server/src/server.ts",
+    "start-client": "cd client && npm run run-react"
   },
   "eslintConfig": {
     "extends": [

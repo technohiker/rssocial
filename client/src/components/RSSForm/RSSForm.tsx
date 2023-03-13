@@ -2,15 +2,14 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
-// Adjust form for RSS Creation fields.
 
-export function RegisterForm({ onSubmission }: IRegisterFormProps) {
+export function RSSForm({ onSubmission }: IRSSFormProps) {
   const required = (value: any) => (value ? undefined : "Required");
   const [error, setError] = useState("");
   const history = useHistory();
 
-  const submission = async (evt: IRegisterFormSubmit) => {
-    let result = await onSubmission(evt.username, evt.password, evt.email);
+  const submission = async (evt: IRSSFormSubmit) => {
+    let result = await onSubmission(evt);
     if (result) {
       setError(result[0]);
     } else {
@@ -24,27 +23,19 @@ export function RegisterForm({ onSubmission }: IRegisterFormProps) {
         <form onSubmit={handleSubmit}>
           <p className="text-center">{error}</p>
           <FieldInput
-            name="username"
+            name="name"
             className="mb-3"
             validation={required}
-            label={"Username:"}
+            label={"Feed Name:"}
             type={"text"}
             placeholder={""}
           />
           <FieldInput
-            name="password"
+            name="url"
             className="mb-3"
             validation={required}
-            label={"Password:"}
-            type={"password"}
-            placeholder={""}
-          />
-          <FieldInput
-            name="email"
-            className="mb-3"
-            validation={required}
-            label={"Email Address:"}
-            type={"email"}
+            label={"RSS URL:"}
+            type={"text"}
             placeholder={""}
           />
           <button type="submit" disabled={submitting}>
@@ -56,15 +47,11 @@ export function RegisterForm({ onSubmission }: IRegisterFormProps) {
   );
 }
 
-interface IRegisterFormSubmit {
+interface IRSSFormSubmit {
   username: string;
   password: string;
   email: string;
 }
-interface IRegisterFormProps {
-  onSubmission: (
-    username: string,
-    password: string,
-    email: string
-  ) => Promise<undefined | string[]>;
+interface IRSSFormProps {
+  onSubmission: (...args: IRSSFormSubmit[]) => Promise<undefined | string[]>;
 }
