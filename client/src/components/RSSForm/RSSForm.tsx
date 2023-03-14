@@ -38,6 +38,27 @@ export function RSSForm({ onSubmission }: IRSSFormProps) {
             type={"text"}
             placeholder={""}
           />
+          <label>
+            Automatically retrieve new data, or schedule when call occurs?
+          </label>
+          <FieldInput
+            name="frequency"
+            className="mb-3"
+            validation={required}
+            label={"Auto:"}
+            type={"radio"}
+            value="auto"
+          />
+          <FieldInput
+            name="frequency"
+            className="mb-3"
+            validation={required}
+            label={"Schedule:"}
+            type={"radio"}
+            value="schedule"
+          />
+
+          <FieldInput name="frequencyField" label="Frequency:" type="number" />
           <button type="submit" disabled={submitting}>
             Submit
           </button>

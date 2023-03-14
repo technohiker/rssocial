@@ -1,4 +1,4 @@
-import { Field, FieldInputProps } from "react-final-form";
+import { Field, FieldProps } from "react-final-form";
 import { Card, CardBody } from "reactstrap";
 
 /** Premade field for Input type in React Final Form. */
@@ -9,9 +9,10 @@ export function FieldInput({
   label,
   type,
   placeholder,
+  value,
 }: IFieldInputProps) {
   return (
-    <Field name={name} validate={validation} component="input">
+    <Field name={name} validate={validation} component="input" value={value}>
       {({ input, meta }) => (
         <div className={className}>
           <label className="form-label">
@@ -37,4 +38,5 @@ interface IFieldInputProps {
   label: string;
   type: React.HTMLInputTypeAttribute;
   placeholder?: string;
+  value?: any;
 }
