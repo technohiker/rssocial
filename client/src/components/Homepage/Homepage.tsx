@@ -2,11 +2,17 @@ import "./Homepage.css";
 import { useState, useEffect } from "react";
 import { RSSCall } from "../../helpers/Callers/RSSCall";
 import { RSSForm } from "../RSSForm/RSSForm";
+import { CategoryFolder } from "../CategoryFolder/CategoryFolder";
+import { IRSSFeed, IRSSItem } from "../../types/IRSS";
+import { FeedObject } from "../FeedObject/FeedObject";
+import { Message } from "../Message/Message";
 
-export function Homepage({ callRSS }: IHomepageProps) {
-  const [rss, setRSS] = useState<any>(defaultRSS);
+export function Homepage() {
+  const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
   const [isLoading, setLoading] = useState(true);
+  const [message, setMessage] = useState({} as IRSSItem);
 
+  /** Call RSS info when homepage loads. */
   useEffect(() => {
     makeCall();
   }, []);
@@ -14,16 +20,33 @@ export function Homepage({ callRSS }: IHomepageProps) {
   const makeCall = async () => {
     setLoading(true);
     setRSS(
-      await RSSCall.callRSS("https://patch.com/feeds/aol/new-jersey/oakland")
+      await RSSCall.callRSS(
+        "https://moxie.foxnews.com/google-publisher/sports.xml"
+      )
     );
     setLoading(false);
-    console.log({ rss });
+  };
+
+  const loadMessages = (newMessage: IRSSItem) => {
+    setMessage(newMessage);
+    console.log(message);
   };
 
   if (isLoading) {
     return <p>{"Not available yet."}</p>;
   } else {
-    return <RSSForm onSubmission={rssFormSubmit} />;
+    // return <CategoryFolder />;
+    return (
+      <>
+        <FeedObject
+          icon={rss.channel.image.url}
+          feedName={rss.channel.title}
+          messages={rss.channel.item}
+          loadMessages={loadMessages}
+        />
+        <Message message={message} />
+      </>
+    );
   }
 }
 
@@ -37,12 +60,5 @@ const rssFormSubmit = async (
   }, 2000);
 };
 
-interface IHomepageProps {
-  callRSS: (url: string) => void;
-}
-
-const defaultRSS = {
-  rss: {
-    _version: 0,
-  },
-};
+//const defaultRSS: IRSSFeed = {
+//};

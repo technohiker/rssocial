@@ -10,8 +10,9 @@ export class RSSCall {
 
   static parseXML(xml: string) {
     const x2js = new X2JS();
-    let json = x2js.xml2js(xml);
-    return json;
+    let json: any = x2js.xml2js(xml);
+    console.log(json.rss);
+    return json.rss;
   }
   /** Receives a URL and calls it. */
   static async callRSS(url: string) {

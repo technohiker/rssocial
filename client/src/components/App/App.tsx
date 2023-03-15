@@ -4,13 +4,11 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { NavBar } from "../NavBar/NavBar";
 import { Homepage } from "../Homepage/Homepage";
 import { RSSCall } from "../../helpers/Callers/RSSCall";
+import { UserPage } from "../UserPage/UserPage";
+import { LoginForm } from "../LoginForm/LoginForm";
 
 export function App() {
   const [token, setToken] = useState("");
-
-  const callRSS = (url: string) => {
-    console.log(RSSCall.callRSS(url));
-  };
 
   return (
     <BrowserRouter>
@@ -20,7 +18,15 @@ export function App() {
       />
       <main>
         <Switch>
-          <Homepage callRSS={callRSS}></Homepage>
+          <Route exact path="/">
+            <Homepage></Homepage>
+          </Route>
+          <Route exact path="/profile">
+            <UserPage></UserPage>
+          </Route>
+          <Route exact path="/register"></Route>
+          <Route exact path="/login"></Route>
+          <Route exact path="/logout"></Route>
         </Switch>
       </main>
     </BrowserRouter>
