@@ -1,5 +1,6 @@
 /** Routes for users. */
 
 import Router from "express";
+import { User } from "../models/user";
 
-export const router = Router();
+export const userRouter = Router();
