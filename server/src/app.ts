@@ -1,10 +1,10 @@
-import Express, { RequestHandler, ErrorRequestHandler } from 'express'
-import cors from 'cors'
+import Express, { RequestHandler, ErrorRequestHandler } from "express";
+import cors from "cors";
 
-import { ExpressError, NotFoundError } from './helpers/ExpressError';
-import { callRouter } from './routes/calls';
-import { msgRouter } from './routes/messages';
-import { userRouter } from './routes/users';
+import { ExpressError, NotFoundError } from "./helpers/ExpressError";
+import { callRouter } from "./routes/calls";
+import { msgRouter } from "./routes/messages";
+import { userRouter } from "./routes/users";
 
 export const app = Express();
 
@@ -13,20 +13,13 @@ app.use(cors());
 app.use(Express.json());
 
 //Link routes.
-app.use('/calls',callRouter)
-app.use('/users',userRouter)
-app.use('/messages',msgRouter)
-
-/**Handle 404 errors. */
-/*
-app.use(function (req: Request, res: Response, next: NextFunction) {
-  return next(new NotFoundError());
-});
-*/
+app.use("/calls", callRouter);
+app.use("/users", userRouter);
+app.use("/messages", msgRouter);
 
 app.use(((req, res, next) => {
   return next(new NotFoundError());
-}) as RequestHandler)
+}) as RequestHandler);
 
 /**Generic error handler. */
 app.use(((err, req, res, next) => {
@@ -38,4 +31,4 @@ app.use(((err, req, res, next) => {
   return res.status(status).json({
     error: { message, status },
   });
-}) as ErrorRequestHandler)
+}) as ErrorRequestHandler);

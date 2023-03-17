@@ -2,27 +2,21 @@
 
 import Router, { RequestHandler } from "express";
 import { Call } from "../models/call";
+import { BadRequestError } from "../helpers/ExpressError";
 
 export const callRouter = Router();
 
 //Making RSS Call.
-callRouter.get('/calls/rss', async function(req, res, next) {
-    // try {
-    //     const validator = jsonschema.validate(req.body, userNewSchema);
-    //     if (!validator.valid) {
-    //       const errs = validator.errors.map((e) => e.stack);
-    //       throw new BadRequestError(errs);
-    //     }
-    
-    //     const user = await User.register(req.body);
-    //     const token = createToken(user);
-    //     return res.status(201).json({ user, token });
-    //   } catch (err) {
-    //     return next(err);
-    //   }
-
-} as RequestHandler)
-
+callRouter.get("/rss", async function (req, res, next) {
+  try {
+    const { rssURL } = req.body;
+    const messages = await Call.callRSS(rssURL);
+    //  const token = createToken(user);
+    return res.status(201).json({ messages });
+  } catch (err) {
+    return next(err);
+  }
+} as RequestHandler);
 
 //Making Reddit Call.
 

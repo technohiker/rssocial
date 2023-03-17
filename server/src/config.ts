@@ -1,7 +1,7 @@
 /** Config values to be used across the project. */
 
-import dotenv from 'dotenv'
-import colors from 'colors'
+import dotenv from "dotenv";
+import colors from "colors";
 
 export const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 
@@ -17,7 +17,7 @@ export function getDatabaseUri() {
 // Speed up bcrypt during tests, since the algorithm safety doesn't need to be tested.
 export const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 14;
 
-console.log("Jobly Config:".green);
+console.log("Capstone Config:".green);
 console.log("SECRET_KEY:".yellow, SECRET_KEY);
 console.log("PORT:".yellow, PORT.toString());
 console.log("BCRYPT_WORK_FACTOR".yellow, BCRYPT_WORK_FACTOR);

@@ -6,6 +6,7 @@ import { CategoryFolder } from "../CategoryFolder/CategoryFolder";
 import { IRSSFeed, IRSSItem } from "../../types/IRSS";
 import { FeedObject } from "../FeedObject/FeedObject";
 import { Message } from "../Message/Message";
+import { ServerCaller } from "../../helpers/ServerCaller";
 
 export function Homepage() {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
@@ -20,7 +21,7 @@ export function Homepage() {
   const makeCall = async () => {
     setLoading(true);
     setRSS(
-      await RSSCall.callRSS(
+      await ServerCaller.callRSS(
         "https://moxie.foxnews.com/google-publisher/sports.xml"
       )
     );

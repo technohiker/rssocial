@@ -19,13 +19,16 @@ import { BadRequestError } from "./ExpressError";
  *     values: ['Aliya', 32] }
  */
 
-export function sqlForPartialUpdate(dataToUpdate: KeyObject, jsToSql: KeyObject): sqlPartialUpdate {
+export function sqlForPartialUpdate(
+  dataToUpdate: KeyObject,
+  jsToSql: KeyObject
+): sqlPartialUpdate {
   const keys = Object.keys(dataToUpdate);
   if (keys.length === 0) throw new BadRequestError("No data");
 
   // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
-  const cols = keys.map((colName, idx) =>
-    `"${jsToSql[colName] || colName}"=$${idx + 1}`,
+  const cols = keys.map(
+    (colName, idx) => `"${jsToSql[colName] || colName}"=$${idx + 1}`
   );
 
   return {
@@ -36,9 +39,9 @@ export function sqlForPartialUpdate(dataToUpdate: KeyObject, jsToSql: KeyObject)
 
 //Object with an unlimited number of key/value pairs.
 interface KeyObject {
-  [key: string]: string | number
+  [key: string]: string | number;
 }
 interface sqlPartialUpdate {
-  setCols: string,
-  values: (string | number)[]
+  setCols: string;
+  values: (string | number)[];
 }
