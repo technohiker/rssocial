@@ -8,9 +8,7 @@ CREATE TABLE users (
     bio TEXT NOT NULL
 )
 CREATE TABLE messages (
-    message_id SERIAL NOT NULL,
-    feed_id VARCHAR NOT NULL
-      REFERENCES feeds ON DELETE NULL
+    message_id SERIAL PRIMARY KEY
     source_name TEXT NOT NULL,
     author TEXT NOT NULL,
     title TEXT NOT NULL,
@@ -18,6 +16,27 @@ CREATE TABLE messages (
     date_created DATE NOT NULL,
     source_link TEXT NOT NULL,
     unread BOOLEAN DEFAULT TRUE
+)
+
+CREATE TABLE folders(
+  folder_id SERIAL PRIMARY KEY,
+  user_id VARCHAR NOT NULL 
+    REFERENCES users ON DELETE CASCADE,
+  folder_name TEXT NOT NULL
+)
+
+CREATE TABLE sources(   --RSS, Twitter, Reddit, etc.
+  source_id SERIAL PRIMARY KEY,
+  source_name TEXT NOT NULL
+  source_img TEXT NOT NULL
+)
+
+CREATE TABLE calls(  --User will not make calls every time.  Call info will need to be stored.
+  call_id SERIAL PRIMARY KEY,
+  base_url TEXT NOT NULL,
+  request_body TEXT,
+  request_params TEXT,
+  request_headers TEXT
 )
 
 CREATE TABLE feeds(
@@ -33,19 +52,11 @@ CREATE TABLE feeds(
     REFERENCES feed_calls ON DELETE NULL
 )
 
-CREATE TABLE feed_calls(
-  call_id SERIAL PRIMARY KEY,
-  base_url TEXT NOT NULL,
-  request_body TEXT,
-  request_params TEXT,
-  request_headers TEXT
-)
-
-CREATE TABLE folders(
-  folder_id SERIAL PRIMARY KEY,
-  user_id VARCHAR NOT NULL 
-    REFERENCES users ON DELETE CASCADE,
-  folder_name TEXT NOT NULL
+CREATE TABLE feed_messages(
+  message_id VARCHAR PRIMARY KEY
+    REFERENCES messages ON DELETE CASCADE,
+  feed_id VARCHAR PRIMARY KEY
+    REFERENCES feeds ON DELETE NULL
 )
 
 CREATE TABLE user_messages(
@@ -63,12 +74,6 @@ CREATE TABLE reactions (
     react_id SERIAL NOT NULL,
     name TEXT NOT NULL,
     img TEXT NOT NULL
-)
-
-CREATE TABLE sources(
-  source_id SERIAL PRIMARY KEY,
-  source_name TEXT NOT NULL
-  source_img TEXT NOT NULL
 )
 
 -- Twitter Feed Options:

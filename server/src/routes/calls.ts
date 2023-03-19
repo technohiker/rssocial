@@ -11,7 +11,6 @@ callRouter.get("/rss", async function (req, res, next) {
   try {
     const { rssURL } = req.body;
     const messages = await Call.callRSS(rssURL);
-    //  const token = createToken(user);
     return res.status(201).json({ messages });
   } catch (err) {
     return next(err);

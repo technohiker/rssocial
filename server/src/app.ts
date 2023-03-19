@@ -17,6 +17,7 @@ app.use("/calls", callRouter);
 app.use("/users", userRouter);
 app.use("/messages", msgRouter);
 
+/** Returns 404 when invalid URL is called. */
 app.use(((req, res, next) => {
   return next(new NotFoundError());
 }) as RequestHandler);
