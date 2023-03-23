@@ -3,6 +3,10 @@
 import dotenv from "dotenv";
 import colors from "colors";
 
+dotenv.config();
+
+colors.enabled = true
+
 export const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 
 export const PORT = +(process.env.PORT ?? 3001);
@@ -22,4 +26,4 @@ console.log("SECRET_KEY:".yellow, SECRET_KEY);
 console.log("PORT:".yellow, PORT.toString());
 console.log("BCRYPT_WORK_FACTOR".yellow, BCRYPT_WORK_FACTOR);
 console.log("---");
-//console.log("URL:", getDatabaseUri());
+console.log("URL:", getDatabaseUri());
