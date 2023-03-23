@@ -1,3 +1,5 @@
+import { IMessage } from "./IMessage";
+
 export interface IRSSFeed {
   _version: string; //Assumes version 2.0
   channel: {
@@ -5,7 +7,7 @@ export interface IRSSFeed {
       url: string;
       title: string;
     };
-    item: IRSSItem[];
+    item: IMessage[];
     title: string;
   };
 }

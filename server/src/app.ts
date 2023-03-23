@@ -5,6 +5,7 @@ import { ExpressError, NotFoundError } from "./helpers/ExpressError";
 import { callRouter } from "./routes/calls";
 import { msgRouter } from "./routes/messages";
 import { userRouter } from "./routes/users";
+import { authRouter } from "./routes/auth";
 
 export const app = Express();
 
@@ -16,6 +17,7 @@ app.use(Express.json());
 app.use("/calls", callRouter);
 app.use("/users", userRouter);
 app.use("/messages", msgRouter);
+app.use("/auth", authRouter);
 
 /** Returns 404 when invalid URL is called. */
 app.use(((req, res, next) => {

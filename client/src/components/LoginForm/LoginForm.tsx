@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
+import { Card, CardBody, CardTitle } from "reactstrap";
 
 /** Form for logging the user in. */
 export function LoginForm({ onSubmission }: ILoginFormProps) {
@@ -19,6 +20,11 @@ export function LoginForm({ onSubmission }: ILoginFormProps) {
   };
 
   return (
+    <Card>
+      <CardTitle className="text-center">
+        Please submit your username and password.
+      </CardTitle>
+      <CardBody>
         <Form
           onSubmit={submission}
           render={({ handleSubmit, submitting }) => (
@@ -46,6 +52,8 @@ export function LoginForm({ onSubmission }: ILoginFormProps) {
             </form>
           )}
         />
+      </CardBody>
+    </Card>
   );
 }
 

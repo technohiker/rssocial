@@ -20,6 +20,6 @@ export function FeedObject({
 interface IFeedObjectProps {
   icon: string;
   feedName: string;
-  messages: IRSSItem[];
-  loadMessages: (message: IRSSItem) => void;
+  messages: IMessage[];
+  loadMessages: (message: IMessage) => void;
 }

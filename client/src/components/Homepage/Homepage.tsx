@@ -7,11 +7,12 @@ import { IRSSFeed, IRSSItem } from "../../types/IRSS";
 import { FeedObject } from "../FeedObject/FeedObject";
 import { Message } from "../Message/Message";
 import { ServerCaller } from "../../helpers/ServerCaller";
+import { IMessage } from "../../types/IMessage";
 
 export function Homepage() {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
   const [isLoading, setLoading] = useState(true);
-  const [message, setMessage] = useState({} as IRSSItem);
+  const [message, setMessage] = useState({} as IMessage);
 
   /** Call RSS info when homepage loads. */
   useEffect(() => {
@@ -28,7 +29,7 @@ export function Homepage() {
     setLoading(false);
   };
 
-  const loadMessages = (newMessage: IRSSItem) => {
+  const loadMessages = (newMessage: IMessage) => {
     setMessage(newMessage);
     console.log(message);
   };
