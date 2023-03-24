@@ -10,8 +10,8 @@ export const callRouter = Router();
 callRouter.get("/rss", async function (req, res, next) {
   try {
     const { rssURL } = req.body;
-    const messages = await Call.callRSS(rssURL);
-    return res.status(201).json({ messages });
+    const rssFeed = await Call.callRSS(rssURL);
+    return res.status(201).json({ rssFeed });
   } catch (err) {
     return next(err);
   }

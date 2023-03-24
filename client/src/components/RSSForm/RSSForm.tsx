@@ -9,7 +9,7 @@ export function RSSForm({ onSubmission }: IRSSFormProps) {
   const history = useHistory();
 
   const submission = async (evt: IRSSFormSubmit) => {
-    let result = await onSubmission(evt);
+    let result = await onSubmission(evt.url);
     if (result) {
       setError(result[0]);
     } else {
@@ -69,10 +69,8 @@ export function RSSForm({ onSubmission }: IRSSFormProps) {
 }
 
 interface IRSSFormSubmit {
-  username: string;
-  password: string;
-  email: string;
+  url: string
 }
 interface IRSSFormProps {
-  onSubmission: (...args: IRSSFormSubmit[]) => Promise<undefined | string[]>;
+  onSubmission: (url: string) => Promise<undefined | string[]>;
 }

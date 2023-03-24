@@ -1,6 +1,5 @@
 import "./Homepage.css";
 import { useState, useEffect } from "react";
-import { RSSCall } from "../../helpers/Callers/RSSCall";
 import { RSSForm } from "../RSSForm/RSSForm";
 import { CategoryFolder } from "../CategoryFolder/CategoryFolder";
 import { IRSSFeed, IRSSItem } from "../../types/IRSS";
@@ -9,15 +8,15 @@ import { Message } from "../Message/Message";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { IMessage } from "../../types/IMessage";
 
-export function Homepage() {
+export function Homepage({sendRSS}: IHomepageProps) {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
   const [isLoading, setLoading] = useState(true);
   const [message, setMessage] = useState({} as IMessage);
 
   /** Call RSS info when homepage loads. */
-  useEffect(() => {
-    makeCall();
-  }, []);
+  // useEffect(() => {
+  //   makeCall();
+  // }, []);
 
   const makeCall = async () => {
     setLoading(true);
@@ -40,6 +39,7 @@ export function Homepage() {
     // return <CategoryFolder />;
     return (
       <>
+        <RSSForm onSubmission={sendRSS}/>
         <FeedObject
           icon={rss.channel.image.url}
           feedName={rss.channel.title}
@@ -52,15 +52,9 @@ export function Homepage() {
   }
 }
 
-const rssFormSubmit = async (
-  username: string,
-  password: string,
-  email: string
-) => {
-  return await setTimeout(() => {
-    console.log("Timer go!");
-  }, 2000);
-};
-
 //const defaultRSS: IRSSFeed = {
 //};
+
+interface IHomepageProps{
+  sendRSS: (url: string) => Promise<string[]|undefined>
+}

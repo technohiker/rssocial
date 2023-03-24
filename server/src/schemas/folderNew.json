@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://capstone2-json.com/folder.json",
+    "type": "object",
+    "properties": {
+      "userID": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 30
+      },
+      "folderName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 30
+      }
+    },
+    "additionalProperties": false,
+    "required": ["username","password","email"]
+  }
+  
