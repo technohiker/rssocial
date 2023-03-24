@@ -7,7 +7,7 @@ CREATE TABLE users (
     email TEXT NOT NULL
       CHECK (position('@' IN email) > 1),
     profile_img TEXT,
-    bio TEXT NOT NULL
+    bio TEXT
 );
 CREATE TABLE messages (
     message_id SERIAL PRIMARY KEY,

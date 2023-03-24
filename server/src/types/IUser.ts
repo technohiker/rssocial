@@ -1,3 +1,7 @@
 export interface IUser {
-  username: string
+  username: string;
+  password: string;
+  email: string;
+  avatar: string;
+  bio: string;
 }

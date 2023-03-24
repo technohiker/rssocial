@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://example.com/example.json",
+  "$id": "http://capstone2-json.com/user.json",
   "type": "object",
   "properties": {
     "username": {
@@ -22,12 +22,11 @@
     "avatar": {
       "type": "string",
       "format": "url"
+    },
+    "bio": {
+      "type": "string"
     }
   },
   "additionalProperties": false,
-  "required": [
-    "username",
-    "password",
-    "email"
-  ]
+  "required": ["username","password","email"]
 }

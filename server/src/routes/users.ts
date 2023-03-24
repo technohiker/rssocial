@@ -3,6 +3,8 @@
 import Router from "express";
 import { User } from "../models/user";
 import { RequestHandler } from "express";
+import { createToken } from "../helpers/tokens";
+import { IUser } from "../types/IUser";
 
 export const userRouter = Router();
 
@@ -12,7 +14,8 @@ export const userRouter = Router();
  */
 userRouter.get("/:username", async function (req, res, next) {
   try {
-    const user = await User.get(req.params.username);
+    const user: IUser = await User.get(req.params.username);
+    const token = createToken(user);
     return res.json({ user });
   } catch (err) {
     return next(err);

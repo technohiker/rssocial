@@ -8,6 +8,7 @@ import { UserPage } from "../UserPage/UserPage";
 import { LoginForm } from "../LoginForm/LoginForm";
 import { IUser } from "../../types/IUser";
 import { ServerCaller } from "../../helpers/ServerCaller";
+import { RegisterForm } from "../RegisterForm/RegisterForm";
 
 export function App() {
   const [token, setToken] = useState("");
@@ -15,9 +16,12 @@ export function App() {
 
   /** Add a new user */
   const registerUser = async (
-    newUser: IUser
+    username: string,
+    password: string,
+    email: string
   ): Promise<undefined | string[]> => {
     try {
+      const newUser = { username: username, password: password, email: email };
       let token = await ServerCaller.registerUser(newUser);
       setToken(token);
       setUser(newUser);
@@ -53,12 +57,14 @@ export function App() {
       <main>
         <Switch>
           <Route exact path="/">
-            <Homepage></Homepage>
+            <Homepage />
           </Route>
           <Route exact path="/profile">
-            <UserPage></UserPage>
+            <UserPage />
           </Route>
-          <Route exact path="/register"></Route>
+          <Route exact path="/register">
+            <RegisterForm onSubmission={registerUser} />
+          </Route>
           <Route exact path="/login">
             <LoginForm onSubmission={loginUser} />
           </Route>
