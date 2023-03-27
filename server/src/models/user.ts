@@ -17,8 +17,10 @@ export class User {
   static async authenticate(username: string, password: string) {
     // try to find the user first
     const result = await db.query(
-      `SELECT   username,
+      `SELECT   user_id,
+                username,
                 password,
+                email
               FROM users
               WHERE username = $1`,
       [username]
@@ -45,6 +47,7 @@ export class User {
          WHERE username = $1`,
       [username]
     );
+    console.log({ duplicateCheck })
 
     if (duplicateCheck.rows[0]) {
       throw new BadRequestError(`Duplicate username: ${username}`);
@@ -81,11 +84,9 @@ export class User {
   /** Return specific user. */
   static async get(username: string) {
     const userRes = await db.query(
-      `SELECT username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
+      `SELECT user_id,
+              username,
+              email
            FROM users
            WHERE username = $1`,
       [username]

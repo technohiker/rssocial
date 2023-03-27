@@ -38,7 +38,7 @@ export function RSSForm({ onSubmission }: IRSSFormProps) {
             type={"text"}
             placeholder={""}
           />
-          <label>
+          {/* <label>
             Automatically retrieve new data, or schedule when call occurs?
           </label>
           <FieldInput
@@ -58,7 +58,7 @@ export function RSSForm({ onSubmission }: IRSSFormProps) {
             value="schedule"
           />
 
-          <FieldInput name="frequencyField" label="Frequency:" type="number" />
+      <FieldInput name="frequencyField" label="Frequency:" type="number" /> */}
           <button type="submit" disabled={submitting}>
             Submit
           </button>
@@ -69,7 +69,7 @@ export function RSSForm({ onSubmission }: IRSSFormProps) {
 }
 
 interface IRSSFormSubmit {
-  url: string
+  url: string;
 }
 interface IRSSFormProps {
   onSubmission: (url: string) => Promise<undefined | string[]>;

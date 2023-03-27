@@ -26,6 +26,5 @@
     "bio": {
       "type": "string"
     }
-  },
-  "additionalProperties": false
+  }
 }

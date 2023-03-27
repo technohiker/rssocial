@@ -9,6 +9,7 @@ export function RegisterForm({ onSubmission }: IRegisterFormProps) {
   const history = useHistory();
 
   const submission = async (evt: IRegisterFormSubmit) => {
+    console.log("Handling submission.");
     let result = await onSubmission(evt.username, evt.password, evt.email);
     if (result) {
       setError(result[0]);

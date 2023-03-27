@@ -7,11 +7,12 @@ import { BadRequestError } from "../helpers/ExpressError";
 export const callRouter = Router();
 
 //Making RSS Call.
-callRouter.get("/rss", async function (req, res, next) {
+callRouter.post("/rss", async function (req, res, next) {
   try {
     const { rssURL } = req.body;
     const rssFeed = await Call.callRSS(rssURL);
-    return res.status(201).json({ rssFeed });
+
+    return res.status(201).json({ feed: rssFeed });
   } catch (err) {
     return next(err);
   }

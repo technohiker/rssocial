@@ -8,11 +8,16 @@ import { UserPage } from "../UserPage/UserPage";
 import { LoginForm } from "../LoginForm/LoginForm";
 import { IUser } from "../../types/IUser";
 import { ServerCaller } from "../../helpers/ServerCaller";
+import { AuthorizedRoute } from "../../helpers/AuthorizedRoute";
 import { RegisterForm } from "../RegisterForm/RegisterForm";
+import { Logout } from "../Logout/Logout";
+import { ProtectedRoute } from "../../helpers/ProtectedRoute";
+import jwt_decode from "jwt-decode";
+import { UserContext } from "../../helpers/UserContext";
 
 export function App() {
   const [token, setToken] = useState("");
-  const [user, setUser] = useState<IUser>({} as IUser);
+  const [currUser, setUser] = useState<IUser>({} as IUser);
 
   /** Add a new user */
   const registerUser = async (
@@ -21,6 +26,7 @@ export function App() {
     email: string
   ): Promise<undefined | string[]> => {
     try {
+      console.log("Calling Register User.");
       const newUser = { username: username, password: password, email: email };
       let token = await ServerCaller.registerUser(newUser);
       setToken(token);
@@ -48,27 +54,50 @@ export function App() {
     }
   };
 
+  /** */
+  const logoutUser = () => {
+    setUser({} as IUser);
+    setToken("");
+  };
+
+  /** Check if token is authentic. */
+  const authToken = async () => {
+    try {
+      //Decode current token.
+      let decoded = jwt_decode<ITokenDecoded>(token);
+      // JoblyApi.token = token;
+
+      //Run auth check to see if token is valid.
+      let user = await ServerCaller.getUser(decoded["username"]);
+
+      //Use token to get user data.
+      setUser(user);
+      return true;
+    } catch (e) {
+      setToken("");
+      return false;
+    }
+  };
+
   /** Send user's RSS info to backend. */
-  const newFeed = async(rssURL: string) => {
-    try{
-      let res = await ServerCaller.callRSS(rssURL)
+  const newFeed = async (rssURL: string) => {
+    try {
+      let res = await ServerCaller.callRSS(rssURL);
+    } catch (e: any) {
+      return e;
     }
-    catch(e: any){
-      return e
-    }
-    return undefined
-  }
+    return undefined;
+  };
 
   /** Store folder info created by user. */
-  const newFolder = async(folderName: string) => {
-    try{
-      let res = await ServerCaller.postFolder(folderName)
+  const newFolder = async (folderName: string) => {
+    try {
+      let res = await ServerCaller.postFolder(folderName);
+    } catch (e: any) {
+      return e;
     }
-    catch(e:any){
-      return e
-    }
-    return undefined
-  }
+    return undefined;
+  };
 
   return (
     <BrowserRouter>
@@ -79,18 +108,22 @@ export function App() {
       <main>
         <Switch>
           <Route exact path="/">
-            <Homepage sendRSS={newFeed} />
+            <UserContext.Provider value={{ currUser, token }}>
+              <Homepage sendRSS={newFeed} />
+            </UserContext.Provider>
           </Route>
-          <Route exact path="/profile">
+          <ProtectedRoute exact path="/profile" auth={authToken}>
             <UserPage />
-          </Route>
-          <Route exact path="/register">
+          </ProtectedRoute>
+          <AuthorizedRoute exact path="/register" token={token}>
             <RegisterForm onSubmission={registerUser} />
-          </Route>
-          <Route exact path="/login">
+          </AuthorizedRoute>
+          <AuthorizedRoute exact path="/login" token={token}>
             <LoginForm onSubmission={loginUser} />
+          </AuthorizedRoute>
+          <Route exact path="/logout">
+            <Logout logout={logoutUser} />
           </Route>
-          <Route exact path="/logout"></Route>
         </Switch>
       </main>
     </BrowserRouter>
@@ -119,3 +152,9 @@ const authRoutes = [
     text: "Log Out",
   },
 ];
+
+interface ITokenDecoded {
+  userid: string;
+  username: string;
+  email: string;
+}

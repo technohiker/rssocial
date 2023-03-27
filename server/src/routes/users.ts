@@ -8,14 +8,13 @@ import { IUser } from "../types/IUser";
 
 export const userRouter = Router();
 
-/** Get user.
+/** Returns user info.
  *
  * Returns {id, username, email, profile_img, bio}
  */
 userRouter.get("/:username", async function (req, res, next) {
   try {
     const user: IUser = await User.get(req.params.username);
-    const token = createToken(user);
     return res.json({ user });
   } catch (err) {
     return next(err);

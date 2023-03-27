@@ -6,10 +6,16 @@ import { Message } from "../models/message";
 export const msgRouter = Router();
 
 /** Get all messages that have been imported. */
-msgRouter.get("/all", async function (req, res, next) {} as RequestHandler);
+msgRouter.get("/all", async function (req, res, next) { } as RequestHandler);
+
+
+msgRouter.get("/test", async function (req, res, next) {
+  const obj = { test: "Testaroo" }
+  return res.json(obj)
+} as RequestHandler)
 
 /** Get single message. */
-msgRouter.get(":id", async function (req, res, next) {} as RequestHandler);
+msgRouter.get(":id", async function (req, res, next) { } as RequestHandler);
 
 /** Mark post as read. */
 msgRouter.post(":id/read", async function (req, res, next) {
