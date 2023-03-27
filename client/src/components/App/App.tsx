@@ -13,7 +13,7 @@ import { RegisterForm } from "../RegisterForm/RegisterForm";
 import { Logout } from "../Logout/Logout";
 import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import jwt_decode from "jwt-decode";
-import { UserContext } from "../../helpers/UserContext";
+import { ContextUser } from "../../helpers/ContextUser";
 
 export function App() {
   const [token, setToken] = useState("");
@@ -108,9 +108,9 @@ export function App() {
       <main>
         <Switch>
           <Route exact path="/">
-            <UserContext.Provider value={{ currUser, token }}>
+            <ContextUser.Provider value={{ currUser, token }}>
               <Homepage sendRSS={newFeed} />
-            </UserContext.Provider>
+            </ContextUser.Provider>
           </Route>
           <ProtectedRoute exact path="/profile" auth={authToken}>
             <UserPage />

@@ -4,7 +4,7 @@ import Router, { RequestHandler } from "express";
 import jsonschema from "jsonschema"
 import { Folder } from "../models/folder";
 import { BadRequestError } from "../helpers/ExpressError";
-import folderNew from "../schemas/folderNew.json"
+import folderNew from "../schemas/folderNew"
 
 export const folderRouter = Router();
 
