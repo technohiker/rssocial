@@ -26,3 +26,8 @@ msgRouter.post(":id/read", async function (req, res, next) {
     return next(e);
   }
 } as RequestHandler);
+
+/** Add reaction to message. */
+msgRouter.post(":id", async function (req, res, next) { 
+  const 
+} as RequestHandler);

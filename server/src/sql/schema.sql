@@ -12,7 +12,7 @@ CREATE TABLE users (
 CREATE TABLE messages (
     message_id SERIAL PRIMARY KEY,
     source_name TEXT NOT NULL,
-    author TEXT NOT NULL,
+    author TEXT,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     date_created DATE NOT NULL,

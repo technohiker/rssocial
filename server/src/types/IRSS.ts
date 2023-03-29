@@ -31,14 +31,3 @@ export interface IRSSItem {
   //Parse JSON for the text 'text/jpeg' or 'text/png', and return the text it appears in?
   title: string;
 }
-
-
-export interface IRSSParserObject { //Only exists due to rss-parser.
-  content: string,
-  contentSnippet: string,
-  creator: string,
-  guid: string,
-  pubDate: string,
-  link: string,
-  title: string
-}

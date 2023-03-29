@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://capstone2-json.com/message.json",
+    "type": "object",
+    "properties": {
+      "source_name":  {
+        "type": "string",
+        "minLength": 1
+      },
+      "author": {
+        "type": "string",
+        "minLength": 1
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "content": {
+        "type": "string",
+        "minLength": 1
+      },
+      "date_created": {
+        "type": "string",
+        "minLength": 1
+      },
+      "source_link": {
+        "type": "string",
+        "minLength": 1
+      },
+      "unread": {
+        "type": "boolean"
+      }
+    },
+    "additionalProperties": false
+  }
+  
