@@ -28,8 +28,8 @@ export class ServerCaller {
   /** Send RSS info and retrieve RSS response. */
   static async callRSS(url: string) {
     const response = await this.request("calls/rss", { rssURL: url }, "post");
-    console.log({ response })
-    return response.data;
+    console.log(response)
+    return response.feed;
   }
 
   /** Create new user and receive token. */

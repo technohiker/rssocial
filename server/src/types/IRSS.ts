@@ -1,3 +1,5 @@
+import { IMessage } from "./IMessage";
+
 export interface IRSSFeed {
   _version: string; //Assumes version 2.0
   channel: {
@@ -5,7 +7,7 @@ export interface IRSSFeed {
       url: string;
       title: string;
     };
-    item: IRSSItem[];
+    item: IMessage[];
     title: string;
   };
 }
@@ -13,19 +15,30 @@ export interface IRSSFeed {
 export interface IRSSItem {
   creator: {
     __text: string;
-  };
+  };  //Optional, but common.
   description: string;
   guid: {
     _isPermaLink: string;
     __text: string; //Holds URL that does not have any additional parameters, such as utm_campaign.
   };
-  link: string;
   pubDate: string; //Returning datetime.  Would that work, or is it being stringified by x2js?
 
   thumbnail: {
     _url: string;
     width: number;
     __prefix: string;
-  };
+  };  //Seems to be exclusive to Oakland Patch and Lifehacker.
+  //Parse JSON for the text 'text/jpeg' or 'text/png', and return the text it appears in?
   title: string;
+}
+
+
+export interface IRSSParserObject { //Only exists due to rss-parser.
+  content: string,
+  contentSnippet: string,
+  creator: string,
+  guid: string,
+  pubDate: string,
+  link: string,
+  title: string
 }

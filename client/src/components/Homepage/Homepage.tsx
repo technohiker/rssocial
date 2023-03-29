@@ -19,15 +19,22 @@ export function Homepage({ sendRSS }: IHomepageProps) {
   //   makeCall();
   // }, []);
 
-  const makeCall = async () => {
-    setLoading(true);
+  const makeCall = async (url: string) => {
+    // setLoading(true);
 
-    const { REACT_APP_RSS_URL } = process.env;
+    try {
+      // const { REACT_APP_RSS_URL } = process.env;
 
-    if (!REACT_APP_RSS_URL) return;
+      // if (!REACT_APP_RSS_URL) return;
 
-    setRSS(await ServerCaller.callRSS(REACT_APP_RSS_URL));
-    setLoading(false);
+      const newRSS = await ServerCaller.callRSS(url);
+      console.log({ newRSS });
+      setRSS(newRSS);
+      setMessages(newRSS.channel.item);
+      // setLoading(false);
+    } catch (e: any) {
+      return e;
+    }
   };
 
   const loadMessages = (newMessages: IMessage[]) => {
@@ -41,9 +48,9 @@ export function Homepage({ sendRSS }: IHomepageProps) {
     // return <CategoryFolder />;
     return (
       <>
-        <button onClick={makeCall}>Call API</button>
+        {/* <button onClick={makeCall}>Call API</button> */}
         <button>Make New Folder</button>
-        <RSSForm onSubmission={sendRSS} />
+        <RSSForm onSubmission={makeCall} />
         {folders.map((folder) => (
           <FolderObject
             key={folder.ID}
@@ -58,7 +65,7 @@ export function Homepage({ sendRSS }: IHomepageProps) {
           loadMessages={loadMessages}
         /> */}
         {messages.map((message) => (
-          <Message message={message} />
+          <Message key={message.title} message={message} />
         ))}
       </>
     );
