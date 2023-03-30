@@ -12,7 +12,6 @@ export class Call {
       const xml: Output<Item> = await parser.parseURL(url)
       const messages = xml.items.map(item => this.makeMessage(item))
       xml.items = messages
-      console.log({ xml })
       return xml
     } catch (e: any) {
       console.log(e);
@@ -21,9 +20,9 @@ export class Call {
   }
 
   /** Convert RSS messages into IMessage for storage.
-   *  Checks for any missing fields.
+   *  Checks for any missing fields when needed.
   */
-  static makeMessage(message: Item){
+  static makeMessage(message: Item) {
     const newMessage = {} as IMessage
 
     if (message.creator) newMessage.author = message.creator;

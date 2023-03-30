@@ -1,0 +1,17 @@
+.message-card {
+  width: 50%;
+  height: max-content;
+  border: 10px;
+  text-align: center;
+}
+
+img{
+  max-width: 450px;
+  max-height: 450px;
+  display: inline-block;
+}
+
+.message-content{
+  height: 300px;
+  overflow-y: scroll;
+}

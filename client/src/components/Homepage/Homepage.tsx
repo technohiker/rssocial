@@ -11,8 +11,8 @@ import { IFolder } from "../../types/IFolder";
 export function Homepage({ sendRSS }: IHomepageProps) {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
   const [isLoading, setLoading] = useState(false);
-  const [messages, setMessages] = useState([{} as IMessage]);
-  const [folders, setFolders] = useState([{} as IFolder]);
+  const [messages, setMessages] = useState<Array<IMessage>>([]);
+  const [folders, setFolders] = useState<Array<IFolder>>([]);
 
   /** Call RSS info when homepage loads. */
   //  useEffect(() => {
@@ -30,7 +30,8 @@ export function Homepage({ sendRSS }: IHomepageProps) {
       const newRSS = await ServerCaller.callRSS(url);
       console.log({ newRSS });
       setRSS(newRSS);
-      setMessages(newRSS.channel.item);
+      setMessages(newRSS.items);
+      console.log(newRSS.items);
       // setLoading(false);
     } catch (e: any) {
       return e;
