@@ -2,6 +2,7 @@
 
 import Router, { RequestHandler } from "express";
 import { Message } from "../models/message";
+import { Reaction } from "../models/reaction";
 
 export const msgRouter = Router();
 
@@ -29,5 +30,8 @@ msgRouter.post(":id/read", async function (req, res, next) {
 
 /** Add reaction to message. */
 msgRouter.post(":id", async function (req, res, next) {
-  const { reaction } = req.query
-} as RequestHandler);
+  const {react_id} = req.body
+  const {message_id} = req.params
+  const {user_id} = res.locals.user
+  let response = await Reaction.addReaction(react_id,message_id,user_id)
+} as RequestHandler);  //How to get user ID?  Can I get token info from middleware?  Res.locals?

@@ -7,6 +7,8 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 import { IMessage } from "../../types/IMessage";
 import { FolderObject } from "../FolderObject/FolderObject";
 import { IFolder } from "../../types/IFolder";
+import { Sidebar } from "../Sidebar/Sidebar";
+import { ContextFeed } from "../../helpers/ContextFeed";
 
 export function Homepage({ sendRSS }: IHomepageProps) {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
@@ -68,6 +70,9 @@ export function Homepage({ sendRSS }: IHomepageProps) {
         {messages.map((message) => (
           <Message key={message.title} message={message} />
         ))}
+        <ContextFeed.Provider value={[]}>
+          <Sidebar items={folders} />
+        </ContextFeed.Provider>
       </>
     );
   }

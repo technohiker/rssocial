@@ -1,5 +1,6 @@
 import { IMessage } from "../../types/IMessage";
 import { IRSSItem } from "../../types/IRSS";
+import { useState } from "react";
 
 /** Displays render of clickable feed object.  Clicking on this opens up view of feed messages. */
 export function FeedObject({
@@ -8,8 +9,16 @@ export function FeedObject({
   messages,
   loadMessages,
 }: IFeedObjectProps) {
+
+  const [isClicked, toggleClicked] = useState(false)
+
+  const deployMessages = () => {
+    toggleClicked(!isClicked)  //Needs to listen for any other clicks to occur.  Must be done in Sidebar.
+    loadMessages(messages[0])
+  }
+
   return (
-    <div onClick={() => loadMessages(messages[0])}>
+    <div className={isClicked ? "feed-clicked" : ""} onClick={deployMessages}>
       <img src={icon} />
       <p>{feedName}</p>
       <p>{messages.length}</p>
