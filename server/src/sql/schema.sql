@@ -71,7 +71,7 @@ CREATE TABLE user_messages(
   user_id INTEGER NOT NULL
     REFERENCES users ON DELETE CASCADE,
   message_id INTEGER NOT NULL
-    REFERENCES users ON DELETE SET NULL,
+    REFERENCES messages ON DELETE SET NULL,
   notes TEXT,
   clicks INTEGER DEFAULT 0,
   react_id INTEGER

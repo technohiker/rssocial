@@ -1,5 +1,6 @@
 export interface IFeed {
-  icon: string,
-  name: string,
-
+  id: string;
+  icon: string;
+  name: string;
+  folderID: string;
 }

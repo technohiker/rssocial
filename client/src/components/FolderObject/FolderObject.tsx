@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Card, CardBody } from "reactstrap";
 import { IFeed } from "../../types/IFeed";
 import { FeedObject } from "../FeedObject/FeedObject";
+import { ContextFeed } from "../../helpers/ContextFeed";
 export function FolderObject({ folderName, folderID }: IFolderObjectProps) {
-  const [feeds, setFeeds] = useState([{} as IFeed]);
+  const context = useContext(ContextFeed);
+  const [feeds, setFeeds] = useState(context["feeds"]);
   const [feedsVisible, toggleFeeds] = useState(false);
 
   const toggleFeedObject = () => {
@@ -17,7 +19,17 @@ export function FolderObject({ folderName, folderID }: IFolderObjectProps) {
           <span>Placeholder folder name.</span>
         </CardBody>
       </Card>
-      {/* {feeds.map(feed => (<FeedObject icon=""/>))} */}
+      {feeds.map((feed) => {
+        if (feed.folderID === folderID)
+          return (
+            <FeedObject
+              icon={feed.icon}
+              feedName={feed.name}
+              feedID={feed.id}
+              messages={context.messages}
+            />
+          );
+      })}
     </>
   );
 }

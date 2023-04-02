@@ -1,3 +1,7 @@
 .feed-clicked{
     opacity: 10%;
 }
+.feed-img{
+    height: 32px;
+    width: 32px;
+}

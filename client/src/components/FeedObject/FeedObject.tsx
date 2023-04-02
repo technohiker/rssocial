@@ -1,27 +1,32 @@
 import { IMessage } from "../../types/IMessage";
 import { IRSSItem } from "../../types/IRSS";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ContextFeed } from "../../helpers/ContextFeed";
+import "./FeedObject.css";
 
 /** Displays render of clickable feed object.  Clicking on this opens up view of feed messages. */
 export function FeedObject({
   icon,
   feedName,
+  feedID,
   messages,
-  loadMessages,
 }: IFeedObjectProps) {
+  const loadMessages = useContext(ContextFeed).loadMessages;
+  const feedMessages = messages.filter((message) => message.feedID === feedID);
+  console.log({ feedMessages });
 
-  const [isClicked, toggleClicked] = useState(false)
+  const [isClicked, toggleClicked] = useState(false);
 
   const deployMessages = () => {
-    toggleClicked(!isClicked)  //Needs to listen for any other clicks to occur.  Must be done in Sidebar.
-    loadMessages(messages[0])
-  }
+    toggleClicked(!isClicked); //Needs to listen for any other clicks to occur.  Must be done in Sidebar.
+    loadMessages(feedMessages);
+  };
 
   return (
     <div className={isClicked ? "feed-clicked" : ""} onClick={deployMessages}>
-      <img src={icon} />
+      <img className="feed-img" src={icon} />
       <p>{feedName}</p>
-      <p>{messages.length}</p>
+      <p>{feedMessages.length}</p>
     </div>
   );
 }
@@ -29,6 +34,6 @@ export function FeedObject({
 interface IFeedObjectProps {
   icon: string;
   feedName: string;
+  feedID: string;
   messages: IMessage[];
-  loadMessages: (message: IMessage) => void;
 }
