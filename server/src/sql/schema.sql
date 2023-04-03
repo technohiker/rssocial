@@ -17,14 +17,18 @@ CREATE TABLE messages (
     content TEXT NOT NULL,
     date_created DATE NOT NULL,
     source_link TEXT NOT NULL,
-    unread BOOLEAN DEFAULT TRUE
+    unread BOOLEAN DEFAULT TRUE,
 );
+
+ALTER TABLE messages ADD CONSTRAINT unique_title_source_name unique(title,source_name)
 
 CREATE TABLE folders(
   folder_id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL 
     REFERENCES users ON DELETE CASCADE,
-  folder_name TEXT NOT NULL
+  parent_id INTEGER
+  folder_name TEXT NOT NULL,
+  icon TEXT
 );
 
 CREATE TABLE sources(   --RSS, Twitter, Reddit, etc.

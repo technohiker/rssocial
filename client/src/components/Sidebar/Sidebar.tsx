@@ -8,16 +8,16 @@ export function Sidebar({ items }: ISidebarProps<any>) {
   const context = useContext(ContextFeed);
   const [folders, setFolders] = useState(context["folders"]);
   return (
-    <>
+    <div className="accordion sidebar">
       {folders.map((folder) => (
-        <FolderObject folderID={folder.ID} folderName={folder.name} />
+        <div className="accordion-header">
+          <FolderObject folderID={folder.ID} folderName={folder.name} />
+        </div>
       ))}
-    </>
+    </div>
   );
 }
 
 interface ISidebarProps<T> {
   items: Array<T>;
 }
-
-<Sidebar items={[5, "q"]} />;

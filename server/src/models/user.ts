@@ -70,9 +70,10 @@ export class User {
   }
 
   /** Return all users.(is this even useful for this project?) */
-  static async findAll() {
+  static async getAll() {
     const result = await db.query(
-      `SELECT   username,
+      `SELECT   user_id,
+                username,
                 email
                FROM users
                ORDER BY username`

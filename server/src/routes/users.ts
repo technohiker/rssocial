@@ -20,3 +20,13 @@ userRouter.get("/:username", async function (req, res, next) {
     return next(err);
   }
 } as RequestHandler);
+
+userRouter.get('/', async function (req, res, next) {
+  try {
+    const users: IUser[] = await User.getAll()
+    return res.json({ users })
+  }
+  catch (err) {
+    return next(err);
+  }
+} as RequestHandler)

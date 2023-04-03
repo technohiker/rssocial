@@ -3,7 +3,6 @@ import { useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { NavBar } from "../NavBar/NavBar";
 import { Homepage } from "../Homepage/Homepage";
-import { RSSCall } from "../../helpers/Callers/RSSCall";
 import { UserPage } from "../UserPage/UserPage";
 import { LoginForm } from "../LoginForm/LoginForm";
 import { IUser } from "../../types/IUser";

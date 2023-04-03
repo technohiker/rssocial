@@ -1,6 +1,5 @@
 .message-card {
   width: 50%;
-  height: max-content;
   border: 10px;
   text-align: center;
 }
@@ -12,6 +11,6 @@ img{
 }
 
 .message-content{
-  height: 300px;
-  overflow-y: scroll;
+  max-height: 300px;
+  overflow-y: auto;
 }

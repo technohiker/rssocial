@@ -5,8 +5,9 @@ main {
   align-items: center;
   padding-top: 15vh;
   height: calc(100vh - 56px); /* router view - navbar height */
-  overflow: scroll;
+  overflow: auto;
   background-color: lightgreen;
+  position: relative;
 }
 
 form {
@@ -31,3 +32,5 @@ form {
   font-weight: bolder;
   text-shadow: black;
 }
+
+* { box-sizing: border-box; }

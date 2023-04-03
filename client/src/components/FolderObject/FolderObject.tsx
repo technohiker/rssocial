@@ -16,7 +16,7 @@ export function FolderObject({ folderName, folderID }: IFolderObjectProps) {
       <Card onClick={toggleFeedObject}>
         <CardBody>
           <img alt="folder" src="folder.png" />
-          <span>Placeholder folder name.</span>
+          <span>{folderName}</span>
         </CardBody>
       </Card>
       {feeds.map((feed) => {

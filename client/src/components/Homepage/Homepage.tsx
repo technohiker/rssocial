@@ -1,11 +1,10 @@
 import "./Homepage.css";
 import { useState, useEffect } from "react";
 import { RSSForm } from "../RSSForm/RSSForm";
-import { IRSSFeed, IRSSItem } from "../../types/IRSS";
+import { IRSSFeed } from "../../types/IRSS";
 import { Message } from "../Message/Message";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { IMessage } from "../../types/IMessage";
-import { FolderObject } from "../FolderObject/FolderObject";
 import { IFolder } from "../../types/IFolder";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { ContextFeed } from "../../helpers/ContextFeed";
@@ -23,54 +22,40 @@ export function Homepage({ sendRSS }: IHomepageProps) {
   // }, []);
 
   const makeCall = async (url: string) => {
-    // setLoading(true);
+    setLoading(true);
 
     try {
-      // const { REACT_APP_RSS_URL } = process.env;
-
-      // if (!REACT_APP_RSS_URL) return;
-
       const newRSS = await ServerCaller.callRSS(url);
-      console.log({ newRSS });
       setRSS(newRSS);
       setMessages(newRSS.items);
-      console.log(newRSS.items);
-      // setLoading(false);
     } catch (e: any) {
       return e;
     }
+    setLoading(false);
   };
 
   const loadMessages = (newMessages: IMessage[]) => {
     setMessages(newMessages);
-    console.log(messages);
   };
 
   if (isLoading) {
-    return <p>{"Not available yet."}</p>;
-  } else {
-    // return <CategoryFolder />;
     return (
       <>
-        {/* <button onClick={makeCall}>Call API</button> */}
+        <div className="lds-ring">
+          {/** From loading.io/css */}
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <p>{"Not available yet."}</p>;
+      </>
+    );
+  } else {
+    return (
+      <>
         <button>Make New Folder</button>
         <RSSForm onSubmission={makeCall} />
-        {folders.map((folder) => (
-          <FolderObject
-            key={folder.ID}
-            folderID={folder.ID}
-            folderName={folder.name}
-          />
-        ))}
-        {/* <FeedObject
-          icon={rss.channel.image.url}
-          feedName={rss.channel.title}
-          messages={rss.channel.item}
-          loadMessages={loadMessages}
-        /> */}
-        {messages.map((message) => (
-          <Message key={message.title} message={message} />
-        ))}
         <ContextFeed.Provider
           value={{
             folders: defaultFolders,
@@ -81,13 +66,13 @@ export function Homepage({ sendRSS }: IHomepageProps) {
         >
           <Sidebar items={folders} />
         </ContextFeed.Provider>
+        {messages.map((message) => (
+          <Message key={message.title} message={message} />
+        ))}
       </>
     );
   }
 }
-
-//const defaultRSS: IRSSFeed = {
-//};
 
 interface IHomepageProps {
   sendRSS: (url: string) => Promise<string[] | undefined>;

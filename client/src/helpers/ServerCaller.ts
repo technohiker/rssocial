@@ -50,6 +50,7 @@ export class ServerCaller {
     return res.token;
   }
 
+  /** Retrieve user info by username. */
   static async getUser(username: string) {
     let res = await this.request(`users/${username}`);
     return res.user;
@@ -60,8 +61,21 @@ export class ServerCaller {
     return res.feeds
   }
 
+  /** Create a new folder. */
   static async postFolder(folderName: string) {
     let res = await this.request(`folders/new`, { folderName: folderName }, "post")
     return res.folder;
+  }
+
+  /** Edit a folder's name. */
+  static async patchFolder(folderName: string, folderID: string) {
+    let res = await this.request(`folders/${folderID}`, { folderName: folderName }, "patch")
+    return res.folder
+  }
+
+  /** Add/update a reaction to a user's article. */
+  static async postReaction(reactID: string, messageID: string, userID: string) {
+    let res = await this.request(``, { reactID: reactID }, "post")
+    return res.reaction
   }
 }
