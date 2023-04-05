@@ -14,10 +14,9 @@ CREATE TABLE messages (
     source_name TEXT NOT NULL,
     author TEXT,
     title TEXT NOT NULL,
-    content TEXT NOT NULL,
+    content TEXT,
     date_created DATE NOT NULL,
-    source_link TEXT NOT NULL,
-    unread BOOLEAN DEFAULT TRUE,
+    source_link TEXT NOT NULL
 );
 
 ALTER TABLE messages ADD CONSTRAINT unique_title_source_name unique(title,source_name)
@@ -78,8 +77,9 @@ CREATE TABLE user_messages(
     REFERENCES messages ON DELETE SET NULL,
   notes TEXT,
   clicks INTEGER DEFAULT 0,
-  react_id INTEGER
-    REFERENCES reactions ON DELETE SET NULL
+  react_id INTEGER DEFAULT 1
+    REFERENCES reactions ON DELETE SET NULL,
+  seen BOOLEAN DEFAULT FALSE
 );
 
 -- Twitter Feed Options:
