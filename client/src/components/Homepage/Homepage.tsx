@@ -9,9 +9,13 @@ import { IFolder } from "../../types/IFolder";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { ContextFeed } from "../../helpers/ContextFeed";
 import { IFeed } from "../../types/IFeed";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import { FolderForm } from "../FolderForm/FolderForm";
 
 export function Homepage({ sendRSS }: IHomepageProps) {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
+  const [feedModal, setFeedModal] = useState(false);
+  const [folderModal, setFolderModal] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Array<IMessage>>([]);
   const [folders, setFolders] = useState<Array<IFolder>>([]);
@@ -34,6 +38,18 @@ export function Homepage({ sendRSS }: IHomepageProps) {
     setLoading(false);
   };
 
+  const newFolder = async (name: string) => {
+    try {
+      const newFolder = await ServerCaller.postFolder(name);
+      setFolders((folders) => [...folders, newFolder]);
+    } catch (e: any) {
+      return e;
+    }
+  };
+
+  const toggleFeedModal = () => setFeedModal(!feedModal);
+  const toggleFolderModal = () => setFolderModal(!folderModal);
+
   const loadMessages = (newMessages: IMessage[]) => {
     setMessages(newMessages);
   };
@@ -54,8 +70,27 @@ export function Homepage({ sendRSS }: IHomepageProps) {
   } else {
     return (
       <>
-        <button>Make New Folder</button>
-        <RSSForm onSubmission={makeCall} />
+        <button onClick={toggleFolderModal}>Make New Folder</button>
+        <Modal isOpen={folderModal} toggle={toggleFolderModal}>
+          <ModalHeader toggle={toggleFolderModal}>
+            Create New Folder
+          </ModalHeader>
+          <ModalBody>
+            <FolderForm onSubmission={newFolder} />
+          </ModalBody>
+        </Modal>
+        <button onClick={toggleFeedModal}>Create New Feed</button>
+        <Modal isOpen={feedModal} toggle={toggleFeedModal}>
+          <ModalHeader toggle={toggleFeedModal}>Generate New Feed</ModalHeader>
+          <ModalBody>
+            <RSSForm
+              onSubmission={makeCall}
+              folderOptions={defaultFolders.map((folder) => {
+                return { value: folder.name, text: folder.name };
+              })}
+            />
+          </ModalBody>
+        </Modal>
         <ContextFeed.Provider
           value={{
             folders: defaultFolders,
@@ -79,23 +114,23 @@ interface IHomepageProps {
 }
 
 const defaultFolders: IFolder[] = [
-  { name: "Folder1", ID: "1", userID: "1" },
-  { name: "Folder2", ID: "2", userID: "1" },
-  { name: "Folder3", ID: "3", userID: "2" },
+  { name: "Folder1", ID: 1, userID: 1 },
+  { name: "Folder2", ID: 2, userID: 1 },
+  { name: "Folder3", ID: 3, userID: 2 },
 ];
 
 const defaultFeeds: IFeed[] = [
-  { id: "1", icon: "rss.png", name: "Feed1", folderID: "1" },
-  { id: "2", icon: "rss.png", name: "Feed2", folderID: "2" },
-  { id: "3", icon: "rss.png", name: "Feed3", folderID: "2" },
-  { id: "4", icon: "rss.png", name: "Feed4", folderID: "3" },
-  { id: "5", icon: "rss.png", name: "Feed5", folderID: "3" },
+  { id: 1, icon: "rss.png", name: "Feed1", folderID: 1 },
+  { id: 2, icon: "rss.png", name: "Feed2", folderID: 2 },
+  { id: 3, icon: "rss.png", name: "Feed3", folderID: 2 },
+  { id: 4, icon: "rss.png", name: "Feed4", folderID: 3 },
+  { id: 5, icon: "rss.png", name: "Feed5", folderID: 3 },
 ];
 
 const defaultMessages: IMessage[] = [
   {
-    messageID: "1",
-    feedID: "1",
+    messageID: 1,
+    feedID: 1,
     author: "Tiny Tim",
     title: "Title 1",
     content: "Here's some test text",
@@ -105,8 +140,8 @@ const defaultMessages: IMessage[] = [
     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
   },
   {
-    messageID: "2",
-    feedID: "2",
+    messageID: 2,
+    feedID: 2,
     author: "Tiny Tim",
     title: "Title 2",
     content: "Here's some test text",
@@ -116,8 +151,8 @@ const defaultMessages: IMessage[] = [
     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
   },
   {
-    messageID: "3",
-    feedID: "3",
+    messageID: 3,
+    feedID: 3,
     author: "Tiny Tim",
     title: "Title 3",
     content: "Here's some test text",
@@ -127,8 +162,8 @@ const defaultMessages: IMessage[] = [
     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
   },
   {
-    messageID: "4",
-    feedID: "4",
+    messageID: 4,
+    feedID: 4,
     author: "Tiny Tim",
     title: "Title 4",
     content: "Here's some test text",
@@ -138,8 +173,8 @@ const defaultMessages: IMessage[] = [
     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
   },
   {
-    messageID: "5",
-    feedID: "4",
+    messageID: 5,
+    feedID: 4,
     author: "Tiny Tim",
     title: "Title 5",
     content: "Here's some test text",

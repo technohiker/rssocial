@@ -7,6 +7,7 @@ import { Card, CardBody } from "reactstrap";
 
 /** Displays render of clickable feed object.  Clicking on this opens up view of feed messages. */
 export function FeedObject({
+  visible,
   icon,
   feedName,
   feedID,
@@ -27,7 +28,7 @@ export function FeedObject({
     <Card>
       <CardBody>
         <div
-          className={isClicked ? "feed-clicked" : ""}
+          className={`${isClicked && "feed-clicked"} ${!visible && "hidden"}`}
           onClick={deployMessages}
         >
           <img className="feed-img" src={icon} />
@@ -40,8 +41,9 @@ export function FeedObject({
 }
 
 interface IFeedObjectProps {
+  visible: boolean;
   icon: string;
   feedName: string;
-  feedID: string;
+  feedID: number;
   messages: IMessage[];
 }

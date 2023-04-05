@@ -153,7 +153,7 @@ const authRoutes = [
 ];
 
 interface ITokenDecoded {
-  userid: string;
+  userid: number;
   username: string;
   email: string;
 }

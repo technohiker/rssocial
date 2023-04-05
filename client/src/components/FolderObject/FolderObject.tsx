@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { Card, CardBody } from "reactstrap";
-import { IFeed } from "../../types/IFeed";
 import { FeedObject } from "../FeedObject/FeedObject";
 import { ContextFeed } from "../../helpers/ContextFeed";
 export function FolderObject({ folderName, folderID }: IFolderObjectProps) {
@@ -23,6 +22,7 @@ export function FolderObject({ folderName, folderID }: IFolderObjectProps) {
         if (feed.folderID === folderID)
           return (
             <FeedObject
+              visible={feedsVisible}
               icon={feed.icon}
               feedName={feed.name}
               feedID={feed.id}
@@ -36,5 +36,5 @@ export function FolderObject({ folderName, folderID }: IFolderObjectProps) {
 
 interface IFolderObjectProps {
   folderName: string;
-  folderID: string;
+  folderID: number;
 }

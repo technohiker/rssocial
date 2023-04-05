@@ -1,5 +1,5 @@
-export interface IFolder{
-    folderID: string,
-    userID: string,
-    folderName: string
+export interface IFolder {
+  folderID: number;
+  userID: number;
+  folderName: string;
 }

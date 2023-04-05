@@ -7,9 +7,9 @@ import { BadRequestError } from "../helpers/ExpressError";
 import { IUser } from "../types/IUser";
 
 export class User {
-  userID: string;
+  userID: number;
   username: string;
-  constructor(userID: string, username: string) {
+  constructor(userID: number, username: string) {
     (this.userID = userID), (this.username = username);
   }
 
@@ -47,7 +47,7 @@ export class User {
          WHERE username = $1`,
       [username]
     );
-    console.log({ duplicateCheck })
+    console.log({ duplicateCheck });
 
     if (duplicateCheck.rows[0]) {
       throw new BadRequestError(`Duplicate username: ${username}`);

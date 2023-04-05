@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
+import { FieldSelect } from "../../helpers/FormFields/FieldSelect";
+import { IFolder } from "../../types/IFolder";
 
-export function RSSForm({ onSubmission }: IRSSFormProps) {
+export function RSSForm({ onSubmission, folderOptions }: IRSSFormProps) {
   const required = (value: any) => (value ? undefined : "Required");
   const [error, setError] = useState("");
   const history = useHistory();
@@ -22,6 +24,12 @@ export function RSSForm({ onSubmission }: IRSSFormProps) {
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <p className="text-center">{error}</p>
+          <FieldSelect
+            name="folder"
+            validation={required}
+            label={"Pick a Folder:"}
+            options={folderOptions}
+          />
           <FieldInput
             name="name"
             className="mb-3"
@@ -73,4 +81,5 @@ interface IRSSFormSubmit {
 }
 interface IRSSFormProps {
   onSubmission: (url: string) => Promise<undefined | string[]>;
+  folderOptions: { value: string; text: string }[];
 }

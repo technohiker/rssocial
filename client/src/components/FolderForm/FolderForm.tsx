@@ -2,17 +2,14 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
-import { LinkButton } from "../LinkButton/LinkButton";
-import { Button } from "reactstrap";
 
-export function RegisterForm({ onSubmission }: IRegisterFormProps) {
+export function FolderForm({ onSubmission }: IRSSFormProps) {
   const required = (value: any) => (value ? undefined : "Required");
   const [error, setError] = useState("");
   const history = useHistory();
 
-  const submission = async (evt: IRegisterFormSubmit) => {
-    console.log("Handling submission.");
-    let result = await onSubmission(evt.username, evt.password, evt.email);
+  const submission = async (evt: IRSSFormSubmit) => {
+    let result = await onSubmission(evt.url);
     if (result) {
       setError(result[0]);
     } else {
@@ -26,48 +23,54 @@ export function RegisterForm({ onSubmission }: IRegisterFormProps) {
         <form onSubmit={handleSubmit}>
           <p className="text-center">{error}</p>
           <FieldInput
-            name="username"
+            name="name"
             className="mb-3"
             validation={required}
-            label={"Username:"}
+            label={"Feed Name:"}
             type={"text"}
             placeholder={""}
           />
           <FieldInput
-            name="password"
+            name="url"
             className="mb-3"
             validation={required}
-            label={"Password:"}
-            type={"password"}
+            label={"RSS URL:"}
+            type={"text"}
             placeholder={""}
+          />
+          {/* <label>
+            Automatically retrieve new data, or schedule when call occurs?
+          </label>
+          <FieldInput
+            name="frequency"
+            className="mb-3"
+            validation={required}
+            label={"Auto:"}
+            type={"radio"}
+            value="auto"
           />
           <FieldInput
-            name="email"
+            name="frequency"
             className="mb-3"
             validation={required}
-            label={"Email Address:"}
-            type={"email"}
-            placeholder={""}
+            label={"Schedule:"}
+            type={"radio"}
+            value="schedule"
           />
-          <Button type="submit" disabled={submitting}>
+
+      <FieldInput name="frequencyField" label="Frequency:" type="number" /> */}
+          <button type="submit" disabled={submitting}>
             Submit
-          </Button>
-          <LinkButton link="/" className="btn-danger" text="Cancel" />
+          </button>
         </form>
       )}
     />
   );
 }
 
-interface IRegisterFormSubmit {
-  username: string;
-  password: string;
-  email: string;
+interface IRSSFormSubmit {
+  url: string;
 }
-interface IRegisterFormProps {
-  onSubmission: (
-    username: string,
-    password: string,
-    email: string
-  ) => Promise<undefined | string[]>;
+interface IRSSFormProps {
+  onSubmission: (url: string) => Promise<undefined | string[]>;
 }

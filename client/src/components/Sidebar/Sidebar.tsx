@@ -2,19 +2,20 @@ import { FolderObject } from "../FolderObject/FolderObject";
 import "./Sidebar.css";
 import { useState, useContext } from "react";
 import { ContextFeed } from "../../helpers/ContextFeed";
+import { Accordion, AccordionItem, UncontrolledAccordion } from "reactstrap";
 
 /** Contains all RSS info. */
 export function Sidebar({ items }: ISidebarProps<any>) {
   const context = useContext(ContextFeed);
   const [folders, setFolders] = useState(context["folders"]);
   return (
-    <div className="accordion sidebar">
+    <UncontrolledAccordion flush className="sidebar">
       {folders.map((folder) => (
-        <div className="accordion-header">
+        <AccordionItem>
           <FolderObject folderID={folder.ID} folderName={folder.name} />
-        </div>
+        </AccordionItem>
       ))}
-    </div>
+    </UncontrolledAccordion>
   );
 }
 
