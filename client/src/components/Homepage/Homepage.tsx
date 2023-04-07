@@ -1,5 +1,5 @@
 import "./Homepage.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { RSSForm } from "../RSSForm/RSSForm";
 import { IRSSFeed } from "../../types/IRSS";
 import { Message } from "../Message/Message";
@@ -7,12 +7,14 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 import { IMessage } from "../../types/IMessage";
 import { IFolder } from "../../types/IFolder";
 import { Sidebar } from "../Sidebar/Sidebar";
-import { ContextFeed } from "../../helpers/ContextFeed";
+import { FeedContext } from "../../helpers/ContextFeed";
+import { UserContext } from "../../helpers/ContextUser";
 import { IFeed } from "../../types/IFeed";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
+import { IUser } from "../../types/IUser";
 
-export function Homepage({ sendRSS }: IHomepageProps) {
+export function Homepage({ currUser, token }: IHomepageProps) {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
   const [feedModal, setFeedModal] = useState(false);
   const [folderModal, setFolderModal] = useState(false);
@@ -54,7 +56,15 @@ export function Homepage({ sendRSS }: IHomepageProps) {
     setMessages(newMessages);
   };
 
-  if (isLoading) {
+  if (!token) {
+    return (
+      <p>
+        Welcome to the RSS Social Media conglomerate! Unfortunately, you need to
+        be logged in to see any news feeds. Please make an account and we can
+        get you started.
+      </p>
+    );
+  } else if (isLoading) {
     return (
       <>
         <div className="lds-ring">
@@ -70,6 +80,7 @@ export function Homepage({ sendRSS }: IHomepageProps) {
   } else {
     return (
       <>
+        <p>Welcome, {currUser.username}!</p>
         <button onClick={toggleFolderModal}>Make New Folder</button>
         <Modal isOpen={folderModal} toggle={toggleFolderModal}>
           <ModalHeader toggle={toggleFolderModal}>
@@ -91,7 +102,7 @@ export function Homepage({ sendRSS }: IHomepageProps) {
             />
           </ModalBody>
         </Modal>
-        <ContextFeed.Provider
+        <FeedContext.Provider
           value={{
             folders: defaultFolders,
             feeds: defaultFeeds,
@@ -100,7 +111,7 @@ export function Homepage({ sendRSS }: IHomepageProps) {
           }}
         >
           <Sidebar items={folders} />
-        </ContextFeed.Provider>
+        </FeedContext.Provider>
         {messages.map((message) => (
           <Message key={message.title} message={message} />
         ))}
@@ -110,7 +121,8 @@ export function Homepage({ sendRSS }: IHomepageProps) {
 }
 
 interface IHomepageProps {
-  sendRSS: (url: string) => Promise<string[] | undefined>;
+  currUser: IUser;
+  token: string;
 }
 
 const defaultFolders: IFolder[] = [

@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { NavBar } from "../NavBar/NavBar";
 import { Homepage } from "../Homepage/Homepage";
@@ -12,11 +12,16 @@ import { RegisterForm } from "../RegisterForm/RegisterForm";
 import { Logout } from "../Logout/Logout";
 import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import jwt_decode from "jwt-decode";
-import { ContextUser } from "../../helpers/ContextUser";
+import { UserContext } from "../../helpers/ContextUser";
 
 export function App() {
   const [token, setToken] = useState("");
   const [currUser, setUser] = useState<IUser>({} as IUser);
+
+  /** Set API caller's token to the state's token upon change. */
+  useEffect(() => {
+    ServerCaller.token = token;
+  }, [token]);
 
   /** Add a new user */
   const registerUser = async (
@@ -107,9 +112,7 @@ export function App() {
       <main>
         <Switch>
           <Route exact path="/">
-            <ContextUser.Provider value={{ currUser, token }}>
-              <Homepage sendRSS={newFeed} />
-            </ContextUser.Provider>
+            <Homepage currUser={currUser} token={token} />
           </Route>
           <ProtectedRoute exact path="/profile" auth={authToken}>
             <UserPage />

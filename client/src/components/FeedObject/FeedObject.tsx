@@ -1,7 +1,7 @@
 import { IMessage } from "../../types/IMessage";
 import { IRSSItem } from "../../types/IRSS";
 import { useState, useContext } from "react";
-import { ContextFeed } from "../../helpers/ContextFeed";
+import { FeedContext } from "../../helpers/ContextFeed";
 import "./FeedObject.css";
 import { Card, CardBody } from "reactstrap";
 
@@ -13,7 +13,7 @@ export function FeedObject({
   feedID,
   messages,
 }: IFeedObjectProps) {
-  const loadMessages = useContext(ContextFeed).loadMessages;
+  const loadMessages = useContext(FeedContext).loadMessages;
   const feedMessages = messages.filter((message) => message.feedID === feedID);
   console.log({ feedMessages });
 
@@ -25,12 +25,9 @@ export function FeedObject({
   };
 
   return (
-    <Card>
+    <Card className={`${isClicked && "feed-clicked"} ${!visible && "hidden"}`}>
       <CardBody>
-        <div
-          className={`${isClicked && "feed-clicked"} ${!visible && "hidden"}`}
-          onClick={deployMessages}
-        >
+        <div onClick={deployMessages}>
           <img className="feed-img" src={icon} />
           <p>{feedName}</p>
           <p>{feedMessages.length}</p>

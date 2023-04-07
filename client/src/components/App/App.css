@@ -6,14 +6,21 @@ main {
   padding-top: 15vh;
   height: calc(100vh - 56px); /* router view - navbar height */
   overflow: auto;
-  background-color: lightgreen;
+  background-color: rgb(1, 61, 61);
   position: relative;
+  color: white
+}
+
+.card-form{
+  color: black;
 }
 
 form {
   background-color: white;
+  color: black;
   font-size: larger;
   font-weight: bold;
+  padding: 1%;
 }
 
 .card {

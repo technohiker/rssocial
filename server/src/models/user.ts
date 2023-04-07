@@ -5,6 +5,7 @@ import { db } from "../db";
 import { UnauthorizedError } from "../helpers/ExpressError";
 import { BadRequestError } from "../helpers/ExpressError";
 import { IUser } from "../types/IUser";
+import format from "pg-format";
 
 export class User {
   userID: number;
@@ -17,7 +18,7 @@ export class User {
   static async authenticate(username: string, password: string) {
     // try to find the user first
     const result = await db.query(
-      `SELECT   user_id,
+      `SELECT   id,
                 username,
                 password,
                 email
@@ -37,7 +38,7 @@ export class User {
       }
     }
 
-    throw new UnauthorizedError("Invalid username/password");
+    throw new UnauthorizedError("Incorrect username/password");
   }
 
   static async register({ username, password, email }: IUser) {
@@ -72,7 +73,7 @@ export class User {
   /** Return all users.(is this even useful for this project?) */
   static async getAll() {
     const result = await db.query(
-      `SELECT   user_id,
+      `SELECT   id,
                 username,
                 email
                FROM users
@@ -85,7 +86,7 @@ export class User {
   /** Return specific user. */
   static async get(username: string) {
     const userRes = await db.query(
-      `SELECT user_id,
+      `SELECT id,
               username,
               email
            FROM users
@@ -95,5 +96,43 @@ export class User {
 
     const user = userRes.rows[0];
     return user;
+  }
+
+  /** Return all reactions user has made. */
+  static async getReactions(user_id: number) {
+    const query = await db.query(
+      `SELECT r.id, r.name, r.img
+        FROM users u
+          JOIN user_messages um ON u.id = um.user_id
+          JOIN reactions r ON um.react_id = r.id
+        WHERE u.id=$1
+        `,
+      [user_id]
+    );
+    return query.rows;
+  }
+
+  /** Return full object of all messages user has called. */
+  static async getUserMessages(user_id: number) {
+    let requests = await Promise.all([
+      db.query(`SELECT * FROM feeds WHERE user_id=$1`, [user_id]),
+      db.query(
+        `
+        SELECT * FROM folders WHERE user_id=$1`,
+        [user_id]
+      ),
+    ]);
+
+    const feeds = requests[0].rows;
+    const folders = requests[1].rows;
+
+    let feedIDs = feeds.map((feed) => feed.id);
+
+    const msgSql = format(
+      `
+      SELECT * FROM user_messages 
+      WHERE feed_id IN=$1`,
+      [feedIDs]
+    );
   }
 }

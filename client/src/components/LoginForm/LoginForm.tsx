@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
-import { Card, CardBody, CardTitle } from "reactstrap";
+import { Card, CardBody, CardTitle, Button } from "reactstrap";
+import { LinkButton } from "../LinkButton/LinkButton";
 
 /** Form for logging the user in. */
 export function LoginForm({ onSubmission }: ILoginFormProps) {
@@ -20,7 +21,7 @@ export function LoginForm({ onSubmission }: ILoginFormProps) {
   };
 
   return (
-    <Card>
+    <Card className="card-form">
       <CardTitle className="text-center">
         Please submit your username and password.
       </CardTitle>
@@ -46,9 +47,12 @@ export function LoginForm({ onSubmission }: ILoginFormProps) {
                 type={"password"}
                 placeholder={""}
               />
-              <button type="submit" disabled={submitting}>
-                Submit
-              </button>
+              <div className="d-flex justify-content-evenly">
+                <Button type="submit" disabled={submitting}>
+                  Submit
+                </Button>
+                <LinkButton link="/" className="btn-danger" text="Cancel" />
+              </div>
             </form>
           )}
         />

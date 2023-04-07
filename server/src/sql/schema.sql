@@ -1,7 +1,7 @@
 --ERD: https://dbdiagram.io/d
 
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     email TEXT NOT NULL
@@ -10,7 +10,7 @@ CREATE TABLE users (
     bio TEXT
 );
 CREATE TABLE messages (
-    message_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     source_name TEXT NOT NULL,
     author TEXT,
     title TEXT NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE messages (
 ALTER TABLE messages ADD CONSTRAINT unique_title_source_name unique(title,source_name)
 
 CREATE TABLE folders(
-  folder_id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL 
     REFERENCES users ON DELETE CASCADE,
   parent_id INTEGER
@@ -31,19 +31,19 @@ CREATE TABLE folders(
 );
 
 CREATE TABLE sources(   --RSS, Twitter, Reddit, etc.
-  source_id SERIAL PRIMARY KEY,
-  source_name TEXT NOT NULL,
-  source_img TEXT NOT NULL
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  img TEXT NOT NULL
 );
 
 CREATE TABLE reactions (
-    react_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     img TEXT NOT NULL
 );
 
 CREATE TABLE calls(  --User will not make calls every time.  Call info will need to be stored.
-  call_id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   base_url TEXT NOT NULL,
   request_body TEXT, --Hash any passwords.
   request_params TEXT,
@@ -51,7 +51,7 @@ CREATE TABLE calls(  --User will not make calls every time.  Call info will need
 );
 
 CREATE TABLE feeds(
-  feed_id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL 
     REFERENCES users ON DELETE CASCADE,
   folder_id INTEGER
@@ -75,6 +75,8 @@ CREATE TABLE user_messages(
     REFERENCES users ON DELETE CASCADE,
   message_id INTEGER NOT NULL
     REFERENCES messages ON DELETE SET NULL,
+  feed_id INTEGER NOT NULL
+    REFERENCES feeds ON DELETE SET NULL,
   notes TEXT,
   clicks INTEGER DEFAULT 0,
   react_id INTEGER DEFAULT 1

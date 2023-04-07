@@ -13,7 +13,7 @@ const defaultFeeds: IFeed[] = [];
 
 const defaultMessages: IMessage[] = [];
 
-export const ContextFeed = createContext<IContextFeed>({
+export const FeedContext = createContext<IContextFeed>({
   folders: defaultFolders,
   feeds: defaultFeeds,
   messages: defaultMessages,

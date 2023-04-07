@@ -5,12 +5,11 @@ import { IUser } from "../types/IUser";
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 export class ServerCaller {
-  constructor() {}
   static token: string;
 
   static async request(endpoint: string, data = {}, method = "get") {
     const url = `${BASE_URL}/${endpoint}`;
-    const headers = { Authorization: `Bearer ${ServerCaller.token}` };
+    const headers = { Authorization: ServerCaller.token };
     const params = method === "get" ? data : {};
 
     console.log("API Call:", url, data, method);

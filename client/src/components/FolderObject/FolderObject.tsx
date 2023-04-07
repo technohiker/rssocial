@@ -1,9 +1,9 @@
 import { useState, useContext } from "react";
 import { Card, CardBody } from "reactstrap";
 import { FeedObject } from "../FeedObject/FeedObject";
-import { ContextFeed } from "../../helpers/ContextFeed";
+import { FeedContext } from "../../helpers/ContextFeed";
 export function FolderObject({ folderName, folderID }: IFolderObjectProps) {
-  const context = useContext(ContextFeed);
+  const context = useContext(FeedContext);
   const [feeds, setFeeds] = useState(context["feeds"]);
   const [feedsVisible, toggleFeeds] = useState(false);
 

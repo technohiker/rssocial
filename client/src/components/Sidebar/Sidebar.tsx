@@ -1,12 +1,12 @@
 import { FolderObject } from "../FolderObject/FolderObject";
 import "./Sidebar.css";
 import { useState, useContext } from "react";
-import { ContextFeed } from "../../helpers/ContextFeed";
+import { FeedContext } from "../../helpers/ContextFeed";
 import { Accordion, AccordionItem, UncontrolledAccordion } from "reactstrap";
 
 /** Contains all RSS info. */
 export function Sidebar({ items }: ISidebarProps<any>) {
-  const context = useContext(ContextFeed);
+  const context = useContext(FeedContext);
   const [folders, setFolders] = useState(context["folders"]);
   return (
     <UncontrolledAccordion flush className="sidebar">
