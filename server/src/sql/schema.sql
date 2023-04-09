@@ -19,13 +19,12 @@ CREATE TABLE messages (
     source_link TEXT NOT NULL
 );
 
-ALTER TABLE messages ADD CONSTRAINT unique_title_source_name unique(title,source_name)
+ALTER TABLE messages ADD CONSTRAINT unique_title_source_name unique(title,source_name);
 
 CREATE TABLE folders(
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL 
     REFERENCES users ON DELETE CASCADE,
-  parent_id INTEGER
   folder_name TEXT NOT NULL,
   icon TEXT
 );

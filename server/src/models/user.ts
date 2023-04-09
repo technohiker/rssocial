@@ -113,26 +113,42 @@ export class User {
   }
 
   /** Return full object of all messages user has called. */
-  static async getUserMessages(user_id: number) {
+  static async getUserMessages(userID: number) {
     let requests = await Promise.all([
-      db.query(`SELECT * FROM feeds WHERE user_id=$1`, [user_id]),
-      db.query(
-        `
-        SELECT * FROM folders WHERE user_id=$1`,
-        [user_id]
-      ),
+      db.query(`SELECT * FROM feeds WHERE user_id=$1`, [userID]),
+      db.query(`SELECT * FROM folders WHERE user_id=$1`, [userID]),
     ]);
 
     const feeds = requests[0].rows;
     const folders = requests[1].rows;
 
-    let feedIDs = feeds.map((feed) => feed.id);
+    let promises = [];
 
-    const msgSql = format(
-      `
-      SELECT * FROM user_messages 
-      WHERE feed_id IN=$1`,
-      [feedIDs]
+    for (let feed of feeds) {
+      folders[feed.folder_id].feeds.push(feed);
+      promises.push((feed.messages = await this.getMessagesByFeed(feed.id)));
+    }
+
+    await Promise.all([promises]);
+
+    // let feedIDs = feeds.map((feed) => feed.id);
+
+    // const msgSql = format(
+    //   `SELECT * FROM user_messages
+    //   WHERE feedID= ANY($1)`,
+    //   [feedIDs]
+    // );
+  }
+
+  /** Get object of messages by feed ID.
+   * Done to easily add array of messages to feed object,
+   * instead of checking each feed ID on a message to determine whether to add it.
+   */
+  static async getMessagesByFeed(feedID: number) {
+    const msgQuery = await db.query(
+      `SELECT * FROM user_messages WHERE feedID=$1`,
+      [feedID]
     );
+    return msgQuery.rows;
   }
 }
