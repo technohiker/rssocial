@@ -21,7 +21,8 @@ VALUES ('RSS Feed', 'https://example.com/icons/rss.jpg'),
 
 -- Insert some sample reactions
 INSERT INTO reactions (name, img) 
-VALUES ('Like', 'https://example.com/icons/like.jpg'),
+VALUES ('Select Reaction','https://example.com/icon/neutral.jpg')
+        ('Like', 'https://example.com/icons/like.jpg'),
        ('Dislike', 'https://example.com/icons/dislike.jpg');
 
 -- Insert some sample calls

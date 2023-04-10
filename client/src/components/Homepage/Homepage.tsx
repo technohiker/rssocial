@@ -27,6 +27,11 @@ export function Homepage({ currUser, token }: IHomepageProps) {
   //   makeCall();
   // }, []);
 
+  
+  const postReaction = async (reactID: number,messageID: number){
+    const res = await ServerCaller.postReaction(reactID,messageID,currUser.userID)
+  }
+
   const makeCall = async (url: string) => {
     setLoading(true);
 
