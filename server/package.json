@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
-    "database": "src/generator.ts",
+    "database": "ts-node src/generator.ts",
     "test": "jest -i"
   },
   "jest": {

@@ -11,9 +11,9 @@ const pool = new Pool({
 });
 
 export async function runGenerator() {
-  console.log("Is this running?");
   let tableData = await getDatabaseInfo(pool);
-  console.log({ tableData });
+  //console.log(tableData);
+  generateSeedData(tableData, 5)
 }
 async function getDatabaseInfo(pool: Pool) {
   const res = await pool.query<ColumnData>(
@@ -32,53 +32,96 @@ async function getDatabaseInfo(pool: Pool) {
   return tableColumns;
 }
 
-function generateSeedData(tableColumns: TableColumns<ColumnData>) {
-  tableColumns;
+function generateSeedData(tableColumns: TableColumns<ColumnData>, numRows: number) {
   let seedData = "";
-  for (let rows of tableColumns.keys) {
+  Object.entries(tableColumns).forEach(([tableName, rows]) => {
     let values = "";
-    for (let row of rows) {
-      let value;
-      switch (row.data_type) {
-        case "integer":
-          value = faker.datatype.number();
-          break;
-        case "bigint":
-          value = faker.datatype.number({
-            min: -9223372036854775808,
-            max: 9223372036854775807,
-          });
-          break;
-        case "boolean":
-          value = faker.datatype.boolean();
-          break;
-        case "character varying":
-        case "text":
-          value = faker.lorem.sentence();
-          break;
-        case "date":
-          value = faker.date.past();
-          break;
-        case "timestamp without time zone":
-          value = faker.date.past().toISOString();
-          break;
-        default:
-          value = null;
-          break;
+    for (let i = 0; i < numRows; i++) {
+      for (let row of rows) {
+        let value;
+        console.log({ row })
+        switch (row.data_type) {
+          case "integer":
+            value = faker.datatype.number({ min: 1, max: numRows, }); //Hack to make any IDs match the highest possible number.
+            break;
+          case "bigint":
+            value = faker.datatype.number({
+              min: -9223372036854775808,
+              max: 9223372036854775807,
+            });
+            break;
+          case "boolean":
+            value = faker.datatype.boolean();
+            break;
+          case "character varying":
+          case "text":
+            value = faker.lorem.sentence();
+            break;
+          case "date":
+            value = faker.date.past();
+            break;
+          case "timestamp without time zone":
+            value = faker.date.past().toISOString();
+            break;
+          default:
+            value = null;
+            break;
+        }
+        if (value === null && row.is_nullable === "NO") {
+          value = row.column_default || "";
+        }
+        values += `${JSON.stringify(value)},`;
+        console.log({ values })
       }
-      if (value === null && row.is_nullable === "NO") {
-        value = row.column_default || "";
-      }
-      values += `${JSON.stringify(value)},`;
     }
-    values = values.slice(0, -1); // remove trailing comma
-    seedData += `INSERT INTO ${rows.table_name} (${tableColumns.keys
-      .map((row) => row.column_name)
-      .join(",")}) VALUES (${values});\n`;
-  }
-}
 
-//runGenerator();
+    values = values.slice(0, -1); // remove trailing comma
+    seedData += `INSERT INTO ${tableName} (${rows.map((row) => row.column_name).join(",")}) VALUES (${values});\n`;
+  })
+  console.log({ seedData })
+}
+// for (let key in Object.keys(tableColumns)) {
+//   let arr = tableColumns[key].values()
+//   let value;
+//   for (let row of arr) {
+//     console.log({ row })
+//     switch (row.data_type) {
+//       case "integer":
+//         value = faker.datatype.number();
+//         break;
+//       case "bigint":
+//         value = faker.datatype.number({
+//           min: -9223372036854775808,
+//           max: 9223372036854775807,
+//         });
+//         break;
+//       case "boolean":
+//         value = faker.datatype.boolean();
+//         break;
+//       case "character varying":
+//       case "text":
+//         value = faker.lorem.sentence();
+//         break;
+//       case "date":
+//         value = faker.date.past();
+//         break;
+//       case "timestamp without time zone":
+//         value = faker.date.past().toISOString();
+//         break;
+//       default:
+//         value = null;
+//         break;
+//     }
+//     if (value === null && row.is_nullable === "NO") {
+//       value = row.column_default || "";
+//     }
+//     values += `${JSON.stringify(value)},`;
+//   }
+
+//   values = values.slice(0, -1); // remove trailing comma
+
+// seedData += `INSERT INTO ${key} (${tableColumns[key].map((row) => row.column_name).join(",")}) VALUES (${values});\n`;
+// console.log({ seedData })
 
 interface ColumnData {
   table_name: string;
