@@ -3,7 +3,7 @@ import { IRSSItem } from "../../types/IRSS";
 import { useState, useContext } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
 import "./FeedObject.css";
-import { Card, CardBody } from "reactstrap";
+import { Button, Card, CardBody } from "reactstrap";
 
 /** Displays render of clickable feed object.  Clicking on this opens up view of feed messages. */
 export function FeedObject({
@@ -12,6 +12,7 @@ export function FeedObject({
   feedName,
   feedID,
   messages,
+  removeFeed,
 }: IFeedObjectProps) {
   const loadMessages = useContext(FeedContext).loadMessages;
   const feedMessages = messages.filter((message) => message.feedID === feedID);
@@ -24,16 +25,25 @@ export function FeedObject({
     loadMessages(feedMessages);
   };
 
+  const deleteFeed = async () => {
+    await removeFeed(feedID);
+  };
+
   return (
-    <Card className={`${isClicked && "feed-clicked"} ${!visible && "hidden"}`}>
-      <CardBody>
-        <div onClick={deployMessages}>
-          <img className="feed-img" src={icon} />
-          <p>{feedName}</p>
-          <p>{feedMessages.length}</p>
-        </div>
-      </CardBody>
-    </Card>
+    <>
+      <Card
+        className={`${isClicked && "feed-clicked"} ${!visible && "hidden"}`}
+      >
+        <CardBody>
+          <div onClick={deployMessages}>
+            <img className="feed-img" src={icon} />
+            <p>{feedName}</p>
+            <p>{feedMessages.length}</p>
+          </div>
+        </CardBody>
+      </Card>
+      <Button onClick={deleteFeed}>X</Button>
+    </>
   );
 }
 
@@ -43,4 +53,5 @@ interface IFeedObjectProps {
   feedName: string;
   feedID: number;
   messages: IMessage[];
+  removeFeed: (id: number) => Promise<void>;
 }

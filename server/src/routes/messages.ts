@@ -15,10 +15,12 @@ msgRouter.get("/test", async function (req, res, next) {
 } as RequestHandler);
 
 /** Get single message. */
-msgRouter.get(":id", async function (req, res, next) {} as RequestHandler);
+msgRouter.get("/:id", async function (req, res, next) {
+  return res.json({ response: "Success!" });
+} as RequestHandler);
 
 /** Mark post as read. */
-msgRouter.post(":id/read", async function (req, res, next) {
+msgRouter.post("/:id/read", async function (req, res, next) {
   try {
     const { id } = req.params;
     const { user_id } = res.locals.user;
@@ -29,9 +31,17 @@ msgRouter.post(":id/read", async function (req, res, next) {
 } as RequestHandler);
 
 /** Add reaction to message. */
-msgRouter.post(":id", async function (req, res, next) {
-  const { react_id } = req.body;
-  const { message_id } = req.params;
-  const { user_id } = res.locals.user;
-  let response = await Reaction.addReaction(react_id, +message_id, user_id);
+msgRouter.post("/:id/react", async function (req, res, next) {
+  console.log("Reached.");
+  try {
+    const { react_id } = req.body;
+    const message_id = req.params.id;
+    const { user_id } = res.locals.user;
+
+    let reaction = await Reaction.addReaction(react_id, +message_id, user_id);
+
+    return res.json({ reaction: reaction });
+  } catch (e: any) {
+    return next(e);
+  }
 } as RequestHandler); //How to get user ID?  Can I get token info from middleware?  Res.locals?

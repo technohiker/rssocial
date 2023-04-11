@@ -21,12 +21,22 @@ userRouter.get("/:username", async function (req, res, next) {
   }
 } as RequestHandler);
 
-userRouter.get('/', async function (req, res, next) {
+userRouter.get("/", async function (req, res, next) {
   try {
-    const users: IUser[] = await User.getAll()
-    return res.json({ users })
-  }
-  catch (err) {
+    const users: IUser[] = await User.getAll();
+    return res.json({ users });
+  } catch (err) {
     return next(err);
   }
-} as RequestHandler)
+} as RequestHandler);
+
+/** Return all user messages, folders, feeds, and reactions. */
+userRouter.get("/feeds", async function (req, res, next) {
+  try {
+    const { userID } = res.locals;
+    const news = User.getUserMessages(userID);
+    return res.json({ news: news });
+  } catch (e: any) {
+    return next(e);
+  }
+} as RequestHandler);

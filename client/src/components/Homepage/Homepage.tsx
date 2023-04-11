@@ -51,11 +51,8 @@ export function Homepage({ currUser, token }: IHomepageProps) {
   };
 
   const postReaction = async (reactID: number, messageID: number) => {
-    const res = await ServerCaller.postReaction(
-      reactID,
-      messageID,
-      currUser.id
-    );
+    const reaction = await ServerCaller.postReaction(reactID, messageID);
+    return reaction;
   };
 
   const toggleFeedModal = () => setFeedModal(!feedModal);
@@ -127,6 +124,7 @@ export function Homepage({ currUser, token }: IHomepageProps) {
             message={message}
             reactions={defaultReactions}
             postReaction={postReaction}
+            thisReaction={defaultReactions[0]}
           />
         ))}
       </>
@@ -140,9 +138,9 @@ interface IHomepageProps {
 }
 
 const defaultFolders: IFolder[] = [
-  { name: "Folder1", ID: 1, userID: 1 },
-  { name: "Folder2", ID: 2, userID: 1 },
-  { name: "Folder3", ID: 3, userID: 2 },
+  { name: "Folder1", id: 1, userID: 1 },
+  { name: "Folder2", id: 2, userID: 1 },
+  { name: "Folder3", id: 3, userID: 2 },
 ];
 
 const defaultFeeds: IFeed[] = [

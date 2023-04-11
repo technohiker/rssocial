@@ -9,6 +9,7 @@ import folderPatch from "../schemas/folderPatch";
 
 export const folderRouter = Router();
 
+/** Create new folder. */
 folderRouter.post("/new", async function (req, res, next) {
   //Validate req.body
   try {
@@ -25,6 +26,7 @@ folderRouter.post("/new", async function (req, res, next) {
   }
 } as RequestHandler);
 
+/** Adjust folder name. */
 folderRouter.patch("/:folderID", async function (req, res, next) {
   try {
     const validate = jsonschema.validate(req.body, folderPatch);
@@ -37,6 +39,19 @@ folderRouter.patch("/:folderID", async function (req, res, next) {
 
       return res.json({ editFolder });
     }
+  } catch (e: any) {
+    throw new BadRequestError(e);
+  }
+} as RequestHandler);
+
+/** Delete folder. */
+folderRouter.delete("/:folderID", async function (req, res, next) {
+  try {
+    const { folderID } = req.params;
+
+    let deleteFolder = await Folder.deleteFolder(+folderID);
+
+    return res.json({ deleteFolder });
   } catch (e: any) {
     throw new BadRequestError(e);
   }

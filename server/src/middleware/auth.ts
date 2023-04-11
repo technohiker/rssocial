@@ -19,6 +19,7 @@ export const authenticateJWT: RequestHandler = (req, res, next) => {
     if (authHeader) {
       const token = authHeader;
       res.locals.user = jwt.verify(token, SECRET_KEY);
+      console.log("Locals:", res.locals.user);
     }
     return next();
   } catch (e: any) {
@@ -31,6 +32,19 @@ export const authenticateJWT: RequestHandler = (req, res, next) => {
 export const ensureLoggedIn: RequestHandler = (req, res, next) => {
   try {
     if (!res.locals.user) throw new UnauthorizedError();
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+};
+
+/** Check if user stored in res.locals matches user ID given. */
+export const ensureCorrectUser: RequestHandler = (req, res, next) => {
+  try {
+    const user = res.locals.user;
+    if (!(user && user.username === req.params.userID)) {
+      throw new UnauthorizedError();
+    }
     return next();
   } catch (err) {
     return next(err);

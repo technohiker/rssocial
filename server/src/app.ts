@@ -6,18 +6,22 @@ import { callRouter } from "./routes/calls";
 import { msgRouter } from "./routes/messages";
 import { userRouter } from "./routes/users";
 import { authRouter } from "./routes/auth";
+import { folderRouter } from "./routes/folders";
+import { authenticateJWT } from "./middleware/auth";
 
 export const app = Express();
 
 //Set up middleware
 app.use(cors());
 app.use(Express.json());
+app.use(authenticateJWT);
 
 //Link routes.
 app.use("/calls", callRouter);
 app.use("/users", userRouter);
 app.use("/messages", msgRouter);
 app.use("/auth", authRouter);
+app.use("/folders", folderRouter);
 
 /** Returns 404 when invalid URL is called. */
 app.use(((req, res, next) => {

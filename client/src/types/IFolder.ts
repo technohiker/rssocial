@@ -1,5 +1,5 @@
 export interface IFolder {
-  ID: number;
+  id: number;
   name: string;
   userID: number;
 }

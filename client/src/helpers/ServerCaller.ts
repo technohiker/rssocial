@@ -7,7 +7,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 export class ServerCaller {
   static token: string;
 
-  static async request(endpoint: string, data = {}, method = "get") {
+  static async request(endpoint: string, method = "get", data = {}) {
     const url = `${BASE_URL}/${endpoint}`;
     const headers = { Authorization: ServerCaller.token };
     const params = method === "get" ? data : {};
@@ -25,7 +25,7 @@ export class ServerCaller {
 
   /** Send RSS info and retrieve RSS response. */
   static async callRSS(url: string) {
-    const response = await this.request("calls/rss", { rssURL: url }, "post");
+    const response = await this.request("calls/rss", "post", { rssURL: url });
     console.log(response);
     return response.feed;
   }
@@ -33,18 +33,17 @@ export class ServerCaller {
   /** Create new user and receive token. */
   static async registerUser(user: INewUser) {
     console.log("Setting up register call.");
-    let res = await this.request(`auth/register/`, user, "post");
+    let res = await this.request(`auth/register/`, "post", user);
     console.log(res);
     return res.token;
   }
 
   /** Get token with login credentials. */
   static async authUser(username: string, password: string) {
-    let res = await this.request(
-      `auth/token/`,
-      { username: username, password: password },
-      "post"
-    );
+    let res = await this.request(`auth/token/`, "post", {
+      username: username,
+      password: password,
+    });
     return res.token;
   }
 
@@ -62,36 +61,39 @@ export class ServerCaller {
 
   /** Create a new folder. */
   static async postFolder(folderName: string) {
-    let res = await this.request(
-      `folders/new`,
-      { folderName: folderName },
-      "post"
-    );
+    let res = await this.request(`folders/new`, "post", {
+      folderName: folderName,
+    });
     return res.folder;
   }
 
   /** Edit a folder's name. */
   static async patchFolder(folderName: string, folderID: number) {
-    let res = await this.request(
-      `folders/${folderID}`,
-      { folderName: folderName },
-      "patch"
-    );
+    let res = await this.request(`folders/${folderID}`, "patch", {
+      folderName: folderName,
+    });
+    return res.folder;
+  }
+
+  /** Delete a folder. */
+  static async deleteFolder(folderID: number) {
+    let res = await this.request(`folders/${folderID}`, "delete");
     return res.folder;
   }
 
   /** Add/update a reaction to a user's article. */
-  static async postReaction(
-    reactID: number,
-    messageID: number,
-    userID: number
-  ) {
-    let res = await this.request(
-      ``,
-      { reactID: reactID, messageID: messageID, userID: userID },
-      "post"
-    );
+  static async postReaction(reactID: number, messageID: number) {
+    let res = await this.request(`messages/${messageID}/react`, "post", {
+      reactID: reactID,
+    });
     return res.reaction;
   }
+
+  /** Delete a folder. */
+  static async deleteFeed(feedID: number) {
+    let res = await this.request(`feeds/${feedID}`, "delete");
+    return res.feed;
+  }
 }
+
 interface INewUser extends Omit<IUser, "id"> {}
