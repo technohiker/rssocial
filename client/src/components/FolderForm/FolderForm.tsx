@@ -3,13 +3,13 @@ import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
 
-export function FolderForm({ onSubmission }: IRSSFormProps) {
+export function FolderForm({ onSubmission }: IFolderFormProps) {
   const required = (value: any) => (value ? undefined : "Required");
   const [error, setError] = useState("");
   const history = useHistory();
 
-  const submission = async (evt: IRSSFormSubmit) => {
-    let result = await onSubmission(evt.url);
+  const submission = async (evt: IFolderFormSubmit) => {
+    let result = await onSubmission(evt.name);
     if (result) {
       setError(result[0]);
     } else {
@@ -26,39 +26,10 @@ export function FolderForm({ onSubmission }: IRSSFormProps) {
             name="name"
             className="mb-3"
             validation={required}
-            label={"Feed Name:"}
+            label={"Folder Name:"}
             type={"text"}
             placeholder={""}
           />
-          <FieldInput
-            name="url"
-            className="mb-3"
-            validation={required}
-            label={"RSS URL:"}
-            type={"text"}
-            placeholder={""}
-          />
-          {/* <label>
-            Automatically retrieve new data, or schedule when call occurs?
-          </label>
-          <FieldInput
-            name="frequency"
-            className="mb-3"
-            validation={required}
-            label={"Auto:"}
-            type={"radio"}
-            value="auto"
-          />
-          <FieldInput
-            name="frequency"
-            className="mb-3"
-            validation={required}
-            label={"Schedule:"}
-            type={"radio"}
-            value="schedule"
-          />
-
-      <FieldInput name="frequencyField" label="Frequency:" type="number" /> */}
           <button type="submit" disabled={submitting}>
             Submit
           </button>
@@ -68,9 +39,9 @@ export function FolderForm({ onSubmission }: IRSSFormProps) {
   );
 }
 
-interface IRSSFormSubmit {
-  url: string;
+interface IFolderFormSubmit {
+  name: string;
 }
-interface IRSSFormProps {
-  onSubmission: (url: string) => Promise<undefined | string[]>;
+interface IFolderFormProps {
+  onSubmission: (name: string) => Promise<undefined | string[]>;
 }

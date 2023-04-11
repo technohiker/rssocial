@@ -1,14 +1,20 @@
 import { IMessage } from "../../types/IMessage";
+import { useContext } from "react";
 import "./Message.css";
 import DOMPurify from "dompurify";
 import { Button, Card, CardBody, CardFooter, CardTitle } from "reactstrap";
+import { ReactionForm } from "../ReactionForm/ReactionForm";
+import { FeedContext } from "../../helpers/ContextFeed";
+import { IReaction } from "../../types/IReaction";
 
-export function Message({ message }: IMessageProps) {
-  console.log({ message });
+export function Message({ message, postReaction, reactions }: IMessageProps) {
   const sanitizedHTML = DOMPurify.sanitize(message.content);
 
   let author = "";
   if (message.author) author = `by ${message.author}`;
+
+  const context = useContext(FeedContext);
+  console.log(context);
 
   //Have function that, when user clicks link, sends backend request to mark message as read.
   return (
@@ -29,7 +35,14 @@ export function Message({ message }: IMessageProps) {
         ></h5>
       </CardBody>
       <CardFooter>
-        <Button name="emoteButton">React</Button>
+        <ReactionForm
+          onSubmission={postReaction}
+          reactOptions={reactions.map((react) => ({
+            value: react.id,
+            text: react.name,
+          }))}
+          messageID={message.messageID}
+        />
         <Button name="folderButton">Add to Folder</Button>
       </CardFooter>
     </Card>
@@ -38,4 +51,6 @@ export function Message({ message }: IMessageProps) {
 
 interface IMessageProps {
   message: IMessage;
+  postReaction: (reactID: number, messageID: number) => Promise<void>;
+  reactions: IReaction[];
 }

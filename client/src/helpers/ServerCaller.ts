@@ -31,7 +31,7 @@ export class ServerCaller {
   }
 
   /** Create new user and receive token. */
-  static async registerUser(user: IUser) {
+  static async registerUser(user: INewUser) {
     console.log("Setting up register call.");
     let res = await this.request(`auth/register/`, user, "post");
     console.log(res);
@@ -86,7 +86,12 @@ export class ServerCaller {
     messageID: number,
     userID: number
   ) {
-    let res = await this.request(``, { reactID: reactID }, "post");
+    let res = await this.request(
+      ``,
+      { reactID: reactID, messageID: messageID, userID: userID },
+      "post"
+    );
     return res.reaction;
   }
 }
+interface INewUser extends Omit<IUser, "id"> {}

@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Form } from "react-final-form";
-import { FieldInput } from "../../helpers/FormFields/FieldInput";
+import { Form, Field } from "react-final-form";
 import { FieldSelect } from "../../helpers/FormFields/FieldSelect";
 
-export function RSSForm({ onSubmission, folderOptions }: IReactionFormProps) {
+export function ReactionForm({
+  onSubmission,
+  reactOptions,
+  messageID,
+}: IReactionFormProps) {
   const required = (value: any) => (value ? undefined : "Required");
   const [error, setError] = useState("");
-  const history = useHistory();
+
+  console.log({ reactOptions });
 
   const submission = async (evt: IReactionFormSubmit) => {
-    let result = await onSubmission(evt.url);
-    if (result) {
-      setError(result[0]);
-    } else {
-      history.push("/");
-    }
+    console.log({ evt });
+    await onSubmission(evt.reaction, messageID);
   };
   return (
     // Include default reaction, the current reaction, and means to call reaction.
@@ -24,12 +24,16 @@ export function RSSForm({ onSubmission, folderOptions }: IReactionFormProps) {
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <p className="text-center">{error}</p>
-          <FieldSelect
+          <Field
             name="reaction"
-            validation={required}
-            label={"Reaction:"}
-            options={folderOptions}
-          />
+            validate={required}
+            component="select"
+            onChange={handleSubmit}
+          >
+            {reactOptions.map((option) => (
+              <option value={option.value}>{option.text}</option>
+            ))}
+          </Field>
         </form>
       )}
     />
@@ -37,9 +41,10 @@ export function RSSForm({ onSubmission, folderOptions }: IReactionFormProps) {
 }
 
 interface IReactionFormSubmit {
-  url: string;
+  reaction: number;
 }
 interface IReactionFormProps {
-  onSubmission: (url: string) => Promise<undefined | string[]>;
-  folderOptions: { reactID: number; text: string }[];
+  onSubmission: (reactID: number, messageID: number) => Promise<void>;
+  reactOptions: { value: number; text: string }[];
+  messageID: number;
 }

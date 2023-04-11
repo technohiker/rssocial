@@ -13,6 +13,7 @@ import { IFeed } from "../../types/IFeed";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
 import { IUser } from "../../types/IUser";
+import { IReaction } from "../../types/IReaction";
 
 export function Homepage({ currUser, token }: IHomepageProps) {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
@@ -26,11 +27,6 @@ export function Homepage({ currUser, token }: IHomepageProps) {
   //  useEffect(() => {
   //   makeCall();
   // }, []);
-
-  
-  const postReaction = async (reactID: number,messageID: number){
-    const res = await ServerCaller.postReaction(reactID,messageID,currUser.userID)
-  }
 
   const makeCall = async (url: string) => {
     setLoading(true);
@@ -52,6 +48,14 @@ export function Homepage({ currUser, token }: IHomepageProps) {
     } catch (e: any) {
       return e;
     }
+  };
+
+  const postReaction = async (reactID: number, messageID: number) => {
+    const res = await ServerCaller.postReaction(
+      reactID,
+      messageID,
+      currUser.id
+    );
   };
 
   const toggleFeedModal = () => setFeedModal(!feedModal);
@@ -118,7 +122,12 @@ export function Homepage({ currUser, token }: IHomepageProps) {
           <Sidebar items={folders} />
         </FeedContext.Provider>
         {messages.map((message) => (
-          <Message key={message.title} message={message} />
+          <Message
+            key={message.title}
+            message={message}
+            reactions={defaultReactions}
+            postReaction={postReaction}
+          />
         ))}
       </>
     );
@@ -142,6 +151,12 @@ const defaultFeeds: IFeed[] = [
   { id: 3, icon: "rss.png", name: "Feed3", folderID: 2 },
   { id: 4, icon: "rss.png", name: "Feed4", folderID: 3 },
   { id: 5, icon: "rss.png", name: "Feed5", folderID: 3 },
+];
+
+const defaultReactions: IReaction[] = [
+  { id: 1, name: "None", img: "blankface.jpg" },
+  { id: 2, name: "Like", img: "thumbs-up.jpg" },
+  { id: 3, name: "Dislike", img: "thumbsdown.jpg" },
 ];
 
 const defaultMessages: IMessage[] = [

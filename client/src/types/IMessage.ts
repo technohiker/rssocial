@@ -1,5 +1,5 @@
 export interface IMessage {
-  messageID?: number;
+  messageID: number;
   feedID?: number;
   author: string;
   title: string;

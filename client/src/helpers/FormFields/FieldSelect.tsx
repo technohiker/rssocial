@@ -1,4 +1,4 @@
-import { Field } from "react-final-form";
+import { Field, FieldProps, FieldInputProps } from "react-final-form";
 
 /** Premade field for Select type in React Final Form. */
 export function FieldSelect({

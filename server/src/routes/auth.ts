@@ -15,12 +15,11 @@ authRouter.post("/token", async function (req, res, next) {
   try {
     const { username, password } = req.body;
 
-    const user = await User.authenticate(username, password)
+    const user = await User.authenticate(username, password);
     const token = createToken(user);
-    return res.json({ token })
-  }
-  catch (e: any) {
-    next(e)
+    return res.json({ token });
+  } catch (e: any) {
+    next(e);
   }
 } as RequestHandler);
 
@@ -32,11 +31,10 @@ authRouter.post("/register", async function (req, res, next) {
       const errs = validate.errors.map((e) => e.stack);
       throw new BadRequestError(...errs);
     }
-    console.log("Body", req.body)
+    console.log("Body", req.body);
     const user: IUser = await User.register(req.body);
-    // const token = createToken(user);
-    // return res.status(201).json({ user, token });
-    return res.json({ data: "a" })
+    const token = createToken(user);
+    return res.status(201).json({ user, token });
   } catch (err) {
     return next(err);
   }

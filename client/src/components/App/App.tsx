@@ -12,7 +12,6 @@ import { RegisterForm } from "../RegisterForm/RegisterForm";
 import { Logout } from "../Logout/Logout";
 import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import jwt_decode from "jwt-decode";
-import { UserContext } from "../../helpers/ContextUser";
 
 export function App() {
   const [token, setToken] = useState("");
@@ -33,8 +32,10 @@ export function App() {
       console.log("Calling Register User.");
       const newUser = { username: username, password: password, email: email };
       let token = await ServerCaller.registerUser(newUser);
+      let decoded = jwt_decode<ITokenDecoded>(token);
+      console.log({ decoded });
       setToken(token);
-      setUser(newUser);
+      setUser(decoded);
     } catch (e: any) {
       return e;
     }
@@ -156,7 +157,7 @@ const authRoutes = [
 ];
 
 interface ITokenDecoded {
-  userid: number;
+  id: number;
   username: string;
   email: string;
 }

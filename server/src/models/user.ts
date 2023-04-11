@@ -48,7 +48,6 @@ export class User {
          WHERE username = $1`,
       [username]
     );
-    console.log({ duplicateCheck });
 
     if (duplicateCheck.rows[0]) {
       throw new BadRequestError(`Duplicate username: ${username}`);
@@ -62,7 +61,7 @@ export class User {
           password,
           email)
          VALUES ($1, $2, $3)
-         RETURNING username, email`,
+         RETURNING id AS id, username, email`,
       [username, hashedPassword, email]
     );
 
