@@ -3,18 +3,18 @@
 import Router from "express";
 import { User } from "../models/user";
 import { RequestHandler } from "express";
-import { createToken } from "../helpers/tokens";
 import { IUser } from "../types/IUser";
+import { ensureCorrectUser } from "../middleware/auth";
 
 export const userRouter = Router();
 
 
 /** Return all user messages, folders, feeds, and reactions. */
-userRouter.get("/feeds", async function (req, res, next) {
+userRouter.get("/:username/feeds",ensureCorrectUser, async function (req, res, next) {
   try {
-    const { id } = res.locals.user;
+    const userID = res.locals.user.id;
 
-    const news = await User.getUserMessages(id);
+    const news = await User.getUserMessages(userID);
 
     return res.json({ news: news });
   } catch (e: any) {
@@ -27,7 +27,7 @@ userRouter.get("/feeds", async function (req, res, next) {
  *
  * Returns {id, username, email, profile_img, bio}
  */
-userRouter.get("/:username", async function (req, res, next) {
+userRouter.get("/:username",ensureCorrectUser, async function (req, res, next) {
   try {
     const user: IUser = await User.get(req.params.username);
     return res.json({ user });

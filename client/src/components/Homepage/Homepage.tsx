@@ -15,7 +15,7 @@ import { FolderForm } from "../FolderForm/FolderForm";
 import { IUser } from "../../types/IUser";
 import { IReaction } from "../../types/IReaction";
 
-export function Homepage({ currUser, token }: IHomepageProps) {
+export function Homepage({ currUser }: IHomepageProps) {
   const [rss, setRSS] = useState<IRSSFeed>({} as IRSSFeed);
   const [feedModal, setFeedModal] = useState(false);
   const [folderModal, setFolderModal] = useState(false);
@@ -62,7 +62,7 @@ export function Homepage({ currUser, token }: IHomepageProps) {
     setMessages(newMessages);
   };
 
-  if (!token) {
+  if (!currUser.id) {
     return (
       <p>
         Welcome to the RSS Social Media conglomerate! Unfortunately, you need to
@@ -134,8 +134,12 @@ export function Homepage({ currUser, token }: IHomepageProps) {
 
 interface IHomepageProps {
   currUser: IUser;
-  token: string;
+  userFeeds: {}
 }
+
+
+
+
 
 const defaultFolders: IFolder[] = [
   { name: "Folder1", id: 1, userID: 1 },

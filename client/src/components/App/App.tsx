@@ -14,14 +14,25 @@ import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import jwt_decode from "jwt-decode";
 
 export function App() {
+  const [userFeeds, setUserFeeds] = useState({})
   const [token, setToken] = useState("");
   const [currUser, setUser] = useState<IUser>({} as IUser);
 
   /** Set API caller's token to the state's token upon change. */
   useEffect(() => {
-    console.log({ token });
     ServerCaller.token = token;
+    getUserFeeds(currUser.id)
   }, [token]);
+
+  const getUserFeeds = async (username: strin) => {
+    try{
+      const feeds = await ServerCaller.getFeeds(userID)
+      setUserFeeds(feeds)
+    }
+    catch(e: any){
+      throw e
+    }
+  }
 
   /** Add a new user */
   const registerUser = async (
@@ -30,13 +41,14 @@ export function App() {
     email: string
   ): Promise<undefined | string[]> => {
     try {
-      console.log("Calling Register User.");
       const newUser = { username: username, password: password, email: email };
+
       let token = await ServerCaller.registerUser(newUser);
       let decoded = jwt_decode<ITokenDecoded>(token);
-      console.log({ decoded });
+
       setToken(token);
       setUser(decoded);
+
     } catch (e: any) {
       return e;
     }
@@ -51,8 +63,10 @@ export function App() {
     try {
       let token = await ServerCaller.authUser(username, password);
       setToken(token);
+
       let newUser: IUser = await ServerCaller.getUser(username);
       setUser(newUser);
+
     } catch (e: any) {
       console.log({ e });
       setToken("");
@@ -60,10 +74,11 @@ export function App() {
     }
   };
 
-  /** */
+  /** Convert user-related states to nothing. */
   const logoutUser = () => {
     setUser({} as IUser);
     setToken("");
+    setUserFeeds({})
   };
 
   /** Check if token is authentic. */
@@ -71,7 +86,6 @@ export function App() {
     try {
       //Decode current token.
       let decoded = jwt_decode<ITokenDecoded>(token);
-      // JoblyApi.token = token;
 
       //Run auth check to see if token is valid.
       let user = await ServerCaller.getUser(decoded["username"]);
@@ -85,15 +99,15 @@ export function App() {
     }
   };
 
-  /** Send user's RSS info to backend. */
-  const newFeed = async (rssURL: string) => {
-    try {
-      let res = await ServerCaller.callRSS(rssURL);
-    } catch (e: any) {
-      return e;
-    }
-    return undefined;
-  };
+  // /** Send user's RSS info to backend. */
+  // const newFeed = async (rssURL: string) => {
+  //   try {
+  //     let res = await ServerCaller.callRSS(rssURL);
+  //   } catch (e: any) {
+  //     return e;
+  //   }
+  //   return undefined;
+  // };
 
   /** Store folder info created by user. */
   const newFolder = async (folderName: string) => {
@@ -114,7 +128,7 @@ export function App() {
       <main>
         <Switch>
           <Route exact path="/">
-            <Homepage currUser={currUser} token={token} />
+            <Homepage currUser={currUser} userFeeds={userFeeds}/>
           </Route>
           <ProtectedRoute exact path="/profile" auth={authToken}>
             <UserPage />

@@ -18,8 +18,6 @@ export const authenticateJWT: RequestHandler = (req, res, next) => {
   try {
     if (authHeader) {
       const token = authHeader;
-      console.log({ token })
-      console.log({ SECRET_KEY })
       res.locals.user = jwt.verify(token, SECRET_KEY);
       console.log("Locals:", res.locals.user);
     }
@@ -45,7 +43,7 @@ export const ensureLoggedIn: RequestHandler = (req, res, next) => {
 export const ensureCorrectUser: RequestHandler = (req, res, next) => {
   try {
     const user = res.locals.user;
-    if (!(user && user.username === req.params.userID)) {
+    if (!(user && user.username === req.params.username)) {
       throw new UnauthorizedError();
     }
     return next();

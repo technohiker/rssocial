@@ -20,11 +20,11 @@ msgRouter.get("/:id", async function (req, res, next) {
 } as RequestHandler);
 
 /** Mark post as read. */
-msgRouter.post("/:id/read", async function (req, res, next) {
+msgRouter.post("/:msgID/read", async function (req, res, next) {
   try {
-    const { id } = req.params;
-    const { user_id } = res.locals.user;
-    Message.messageRead(+id, user_id);
+    const { msgID } = req.params;
+    const userID = res.locals.user.id;
+    Message.messageRead(userID, +msgID);
   } catch (e: any) {
     return next(e);
   }

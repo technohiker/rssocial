@@ -53,9 +53,9 @@ export class ServerCaller {
     return res.user;
   }
 
-  static async getFeeds(userID: number) {
+  static async getFeeds(username: string) {
     //Use token with ID instead of userID?
-    let res = await this.request(`users/${userID}/feeds`);
+    let res = await this.request(`users/${username}/feeds`);
     return res.feeds;
   }
 

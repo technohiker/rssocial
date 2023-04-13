@@ -16,7 +16,7 @@ folderRouter.post("/new", async function (req, res, next) {
     const validate = jsonschema.validate(req.body, folderNew);
     if (validate) {
       const { folderName } = req.body;
-      const { userID } = res.locals.user;
+      const userID = res.locals.user.id;
 
       let newFolder = await Folder.newFolder(userID, folderName);
       return res.json({ newFolder });
@@ -32,7 +32,6 @@ folderRouter.patch("/:folderID", async function (req, res, next) {
     const validate = jsonschema.validate(req.body, folderPatch);
     if (validate) {
       const { folderName } = req.body;
-      const { userID } = res.locals.user;
       const { folderID } = req.params;
 
       let editFolder = await Folder.patchFolder(+folderID, folderName);
