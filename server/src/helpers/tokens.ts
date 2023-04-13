@@ -6,8 +6,7 @@ import { IUser } from "../types/IUser";
 
 export function createToken(user: IUser) {
   let payload = {
-    username: user.username,
-    email: user.email,
+    ...user
   };
 
   return jwt.sign(payload, SECRET_KEY);

@@ -8,6 +8,21 @@ import { IUser } from "../types/IUser";
 
 export const userRouter = Router();
 
+
+/** Return all user messages, folders, feeds, and reactions. */
+userRouter.get("/feeds", async function (req, res, next) {
+  try {
+    const { id } = res.locals.user;
+
+    const news = await User.getUserMessages(id);
+
+    return res.json({ news: news });
+  } catch (e: any) {
+    console.log({ e })
+    return next(e);
+  }
+} as RequestHandler);
+
 /** Returns user info.
  *
  * Returns {id, username, email, profile_img, bio}
@@ -21,22 +36,12 @@ userRouter.get("/:username", async function (req, res, next) {
   }
 } as RequestHandler);
 
+
 userRouter.get("/", async function (req, res, next) {
   try {
     const users: IUser[] = await User.getAll();
     return res.json({ users });
   } catch (err) {
     return next(err);
-  }
-} as RequestHandler);
-
-/** Return all user messages, folders, feeds, and reactions. */
-userRouter.get("/feeds", async function (req, res, next) {
-  try {
-    const { userID } = res.locals;
-    const news = User.getUserMessages(userID);
-    return res.json({ news: news });
-  } catch (e: any) {
-    return next(e);
   }
 } as RequestHandler);

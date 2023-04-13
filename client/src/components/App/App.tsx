@@ -19,6 +19,7 @@ export function App() {
 
   /** Set API caller's token to the state's token upon change. */
   useEffect(() => {
+    console.log({ token });
     ServerCaller.token = token;
   }, [token]);
 

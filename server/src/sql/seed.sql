@@ -1,7 +1,7 @@
 -- Insert some sample users
 INSERT INTO users (username, password, email, profile_img, bio) 
-VALUES ('john_doe', '$2a$01$6cK8WkRf6vGfezP3UyLOa.G3q9XfVTVkKjSHZlCrYi3w4GG.K4ROK', 'johndoe@example.com', 'https://example.com/profile.jpg', 'I am a software developer'),
-       ('jane_doe', '$2a$01$uswoitDwQ2nm/0Mx1yfjKu8pN9e./Rh06P55C0H.7aOn0JfZj7aGK', 'janedoe@example.com', 'https://example.com/profile2.jpg', 'I am a graphic designer');
+VALUES ('john_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mnq', 'johndoe@example.com', 'https://example.com/profile.jpg', 'I am a software developer'),
+       ('jane_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mnq', 'janedoe@example.com', 'https://example.com/profile2.jpg', 'I am a graphic designer');
 
 -- Insert some sample messages
 INSERT INTO messages (source_name, author, title, content, date_created, source_link) 

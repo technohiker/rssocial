@@ -61,11 +61,12 @@ export class User {
           password,
           email)
          VALUES ($1, $2, $3)
-         RETURNING id AS id, username, email`,
+         RETURNING id AS userID, username, email`,
       [username, hashedPassword, email]
     );
 
     const user = result.rows[0];
+    console.log("New User:", user)
     return user;
   }
 
@@ -120,15 +121,22 @@ export class User {
 
     const feeds = requests[0].rows;
     const folders = requests[1].rows;
+    console.log({ feeds })
+    console.log({ folders })
 
     let promises = [];
 
     for (let feed of feeds) {
-      folders[feed.folder_id].feeds.push(feed);
+      folders[feed.folder_id - 1].feeds = []
+      folders[feed.folder_id - 1].feeds.push(feed);
       promises.push((feed.messages = await this.getMessagesByFeed(feed.id)));
     }
 
     await Promise.all([promises]);
+
+    console.log(folders[0].feeds[0].messages)
+
+    return folders;
 
     // let feedIDs = feeds.map((feed) => feed.id);
 
@@ -145,7 +153,12 @@ export class User {
    */
   static async getMessagesByFeed(feedID: number) {
     const msgQuery = await db.query(
-      `SELECT * FROM user_messages WHERE feedID=$1`,
+      `SELECT 
+        m.id, feed_id AS feedID, notes, clicks, react_id AS reactID, source_name AS sourceName,
+        author, title, content, date_created AS dateCreated, source_link AS sourceLink 
+      FROM user_messages um 
+      JOIN messages m ON um.message_id = m.id
+      WHERE feed_id=$1`,
       [feedID]
     );
     return msgQuery.rows;

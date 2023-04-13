@@ -31,9 +31,11 @@ authRouter.post("/register", async function (req, res, next) {
       const errs = validate.errors.map((e) => e.stack);
       throw new BadRequestError(...errs);
     }
-    console.log("Body", req.body);
     const user: IUser = await User.register(req.body);
+    console.log("New User(route)", user)
+
     const token = createToken(user);
+
     return res.status(201).json({ user, token });
   } catch (err) {
     return next(err);

@@ -18,11 +18,14 @@ export const authenticateJWT: RequestHandler = (req, res, next) => {
   try {
     if (authHeader) {
       const token = authHeader;
+      console.log({ token })
+      console.log({ SECRET_KEY })
       res.locals.user = jwt.verify(token, SECRET_KEY);
       console.log("Locals:", res.locals.user);
     }
     return next();
   } catch (e: any) {
+    console.log("Auth Error:", e)
     return next();
   }
 };
