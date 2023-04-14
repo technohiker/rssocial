@@ -43,6 +43,8 @@ export const ensureLoggedIn: RequestHandler = (req, res, next) => {
 export const ensureCorrectUser: RequestHandler = (req, res, next) => {
   try {
     const user = res.locals.user;
+    console.log({ user })
+    console.log("Params:", req.params)
     if (!(user && user.username === req.params.username)) {
       throw new UnauthorizedError();
     }

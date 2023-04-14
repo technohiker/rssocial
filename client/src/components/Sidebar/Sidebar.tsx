@@ -24,7 +24,7 @@ export function Sidebar({ items }: ISidebarProps<any>) {
         <AccordionItem>
           <FolderObject
             folderID={folder.id}
-            folderName={folder.name}
+            folderName={folder.folder_name}
             removeFolder={removeFolder}
           />
         </AccordionItem>

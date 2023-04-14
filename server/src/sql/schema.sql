@@ -15,6 +15,7 @@ CREATE TABLE messages (
     author TEXT,
     title TEXT NOT NULL,
     content TEXT,
+    description TEXT,
     date_created DATE NOT NULL,
     source_link TEXT NOT NULL
 );

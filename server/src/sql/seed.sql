@@ -33,6 +33,7 @@ VALUES ('https://api.twitter.com/1.1/statuses/user_timeline.json', '', 'user_id=
 INSERT INTO feeds (user_id, folder_id, source_id, feed_name, call_id) 
 VALUES (1, 1, 1, 'Web Development', NULL),
        (1, 2, 2, 'Software Development', 1),
+       (1, 2, 2, 'Gaming', 1),
        (2, 3, 1, 'Personal Blog', NULL);
 
 -- Insert some sample feed messages

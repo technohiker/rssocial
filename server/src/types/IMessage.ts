@@ -19,3 +19,18 @@ export interface IMessage {
   // source_link TEXT NOT NULL,
   // unread BOOLEAN DEFAULT TRUE
 }
+
+export interface IUserMessage {
+  id: number;
+  notes: number;
+  clicks: number;
+  react_id: number;
+  feed_id: number;
+
+  author: string;
+  title: string;
+  content?: string;
+  description?: string;
+  date_created: Date;
+  source_link: string;
+}

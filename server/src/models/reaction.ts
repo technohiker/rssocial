@@ -5,7 +5,7 @@ export class Reaction {
     const result = await db.query(
       `UPDATE user_messages  
                 SET react_id=$1
-                WHERE user_id = $2 && message_id = $3
+                WHERE user_id = $2 AND message_id = $3
                 RETURNING *`,
       [reactID, userID, messageID]
     );

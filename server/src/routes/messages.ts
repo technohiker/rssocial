@@ -7,7 +7,7 @@ import { Reaction } from "../models/reaction";
 export const msgRouter = Router();
 
 /** Get all messages that have been imported. */
-msgRouter.get("/all", async function (req, res, next) {} as RequestHandler);
+msgRouter.get("/all", async function (req, res, next) { } as RequestHandler);
 
 msgRouter.get("/test", async function (req, res, next) {
   const obj = { test: "Testaroo" };
@@ -32,7 +32,6 @@ msgRouter.post("/:msgID/read", async function (req, res, next) {
 
 /** Add reaction to message. */
 msgRouter.post("/:id/react", async function (req, res, next) {
-  console.log("Reached.");
   try {
     const { react_id } = req.body;
     const message_id = req.params.id;

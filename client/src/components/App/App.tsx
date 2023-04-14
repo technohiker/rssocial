@@ -6,6 +6,7 @@ import { Homepage } from "../Homepage/Homepage";
 import { UserPage } from "../UserPage/UserPage";
 import { LoginForm } from "../LoginForm/LoginForm";
 import { IUser } from "../../types/IUser";
+import { INews } from "../../types/INews";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { AuthorizedRoute } from "../../helpers/AuthorizedRoute";
 import { RegisterForm } from "../RegisterForm/RegisterForm";
@@ -14,27 +15,50 @@ import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import jwt_decode from "jwt-decode";
 
 export function App() {
-  const [userFeeds, setUserFeeds] = useState({})
+  const [userFeeds, setUserFeeds] = useState({} as INews);
   const [token, setToken] = useState("");
   const [currUser, setUser] = useState<IUser>({} as IUser);
 
-  /** Set API caller's token to the state's token upon change. */
+  /** Call when token is changed. */
   useEffect(() => {
-    ServerCaller.token = token;
-    getUserFeeds(currUser.id)
+    changeToken(token);
   }, [token]);
 
-  const getUserFeeds = async (username: strin) => {
-    try{
-      const feeds = await ServerCaller.getFeeds(userID)
-      setUserFeeds(feeds)
+  /** Call when currUser is changed. */
+  useEffect(() => {
+    if (currUser.id) {
+      getUserFeeds(currUser.username);
     }
-    catch(e: any){
-      throw e
-    }
-  }
+  }, [currUser]);
 
-  /** Add a new user */
+  /** Set the API caller's token to what App's token is now.
+   * If token exists, use it to get the current user.
+   */
+  const changeToken = async (token: string) => {
+    ServerCaller.token = token;
+
+    if (token) {
+      let decoded = jwt_decode<ITokenDecoded>(token);
+
+      const user = await ServerCaller.getUser(decoded.username);
+      setUser(user);
+    }
+  };
+
+  /** Receive massive object of folders, feeds and messages. */
+  const getUserFeeds = async (username: string) => {
+    try {
+      const feeds = await ServerCaller.getNews(username);
+      console.log({ feeds });
+      setUserFeeds(feeds);
+    } catch (e: any) {
+      throw e;
+    }
+  };
+
+  /** Add a new user to backend.
+   * Receives token. {id, username, email}
+   */
   const registerUser = async (
     username: string,
     password: string,
@@ -44,11 +68,7 @@ export function App() {
       const newUser = { username: username, password: password, email: email };
 
       let token = await ServerCaller.registerUser(newUser);
-      let decoded = jwt_decode<ITokenDecoded>(token);
-
       setToken(token);
-      setUser(decoded);
-
     } catch (e: any) {
       return e;
     }
@@ -63,10 +83,6 @@ export function App() {
     try {
       let token = await ServerCaller.authUser(username, password);
       setToken(token);
-
-      let newUser: IUser = await ServerCaller.getUser(username);
-      setUser(newUser);
-
     } catch (e: any) {
       console.log({ e });
       setToken("");
@@ -78,7 +94,7 @@ export function App() {
   const logoutUser = () => {
     setUser({} as IUser);
     setToken("");
-    setUserFeeds({})
+    setUserFeeds({} as INews);
   };
 
   /** Check if token is authentic. */
@@ -128,7 +144,7 @@ export function App() {
       <main>
         <Switch>
           <Route exact path="/">
-            <Homepage currUser={currUser} userFeeds={userFeeds}/>
+            <Homepage currUser={currUser} userFeeds={userFeeds} />
           </Route>
           <ProtectedRoute exact path="/profile" auth={authToken}>
             <UserPage />

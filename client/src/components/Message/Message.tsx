@@ -1,4 +1,4 @@
-import { IMessage } from "../../types/IMessage";
+import { IMessage, IUserMessage } from "../../types/IMessage";
 import { useContext, useState } from "react";
 import "./Message.css";
 import DOMPurify from "dompurify";
@@ -46,7 +46,7 @@ export function Message({
             value: react.id,
             text: react.name,
           }))}
-          messageID={message.messageID}
+          messageID={message.id}
           defaultValue={1}
         />
         <Button name="folderButton">Add to Folder</Button>
@@ -56,8 +56,8 @@ export function Message({
 }
 
 interface IMessageProps {
-  message: IMessage;
+  message: IUserMessage;
   postReaction: (reactID: number, messageID: number) => Promise<void>;
   reactions: IReaction[];
-  thisReaction: IReaction;
+  thisReaction: number;
 }

@@ -14,6 +14,7 @@ export const authRouter = Router();
 authRouter.post("/token", async function (req, res, next) {
   try {
     const { username, password } = req.body;
+    console.log({ username, password })
 
     const user = await User.authenticate(username, password);
     const token = createToken(user);

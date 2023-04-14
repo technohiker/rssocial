@@ -86,9 +86,7 @@ export class User {
   /** Return specific user. */
   static async get(username: string) {
     const userRes = await db.query(
-      `SELECT id,
-              username,
-              email
+      `SELECT id, username, email, profile_img, bio
            FROM users
            WHERE username = $1`,
       [username]
@@ -112,10 +110,13 @@ export class User {
     return query.rows;
   }
 
-  /** Return full object of all messages user has called. */
-  static async getUserMessages(userID: number) {
+  /** Return full object of all user folders, feeds and messages. */
+  static async getUserMessagesNested(userID: number) {
     let requests = await Promise.all([
-      db.query(`SELECT * FROM feeds WHERE user_id=$1`, [userID]),
+      db.query(`SELECT f.id, f.folder_id, s.name AS source_name, s.img AS source_img, feed_name 
+              FROM feeds f 
+              JOIN sources s ON f.source_id = s.id
+              WHERE user_id=$1`, [userID]),
       db.query(`SELECT * FROM folders WHERE user_id=$1`, [userID]),
     ]);
 
@@ -127,7 +128,10 @@ export class User {
     let promises = [];
 
     for (let feed of feeds) {
-      folders[feed.folder_id - 1].feeds = []
+      if (!folders[feed.folder_id - 1].feeds) {
+        folders[feed.folder_id - 1].feeds = []
+      }
+
       folders[feed.folder_id - 1].feeds.push(feed);
       promises.push((feed.messages = await this.getMessagesByFeed(feed.id)));
     }
@@ -154,8 +158,8 @@ export class User {
   static async getMessagesByFeed(feedID: number) {
     const msgQuery = await db.query(
       `SELECT 
-        m.id, feed_id AS feedID, notes, clicks, react_id AS reactID, source_name AS sourceName,
-        author, title, content, date_created AS dateCreated, source_link AS sourceLink 
+        m.id, feed_id notes, clicks, react_id, source_name
+        author, title, content, date_created, source_link
       FROM user_messages um 
       JOIN messages m ON um.message_id = m.id
       WHERE feed_id=$1`,
@@ -163,4 +167,31 @@ export class User {
     );
     return msgQuery.rows;
   }
+  static async getUserMessages(userID: number) {
+    let requests = await Promise.all([
+      db.query(`SELECT * FROM folders 
+            WHERE user_id=$1`, [userID]),
+      db.query(`SELECT f.id, f.folder_id, s.name AS source_name, s.img AS source_img, feed_name 
+            FROM feeds f 
+            JOIN sources s ON f.source_id = s.id
+            WHERE user_id=$1`, [userID]),
+      db.query(`SELECT 
+              m.id, feed_id notes, clicks, react_id, feed_id, source_name,
+              author, title, content, date_created, source_link
+            FROM user_messages um 
+            JOIN messages m ON um.message_id = m.id
+            WHERE user_id=$1`, [userID]),
+      db.query(`SELECT * FROM reactions`)
+    ]);
+
+    const masterFeeds = {
+      folders: requests[0].rows,
+      feeds: requests[1].rows,
+      messages: requests[2].rows,
+      reactions: requests[3].rows
+    }
+
+    return masterFeeds
+  }
 }
+

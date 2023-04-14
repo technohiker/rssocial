@@ -36,12 +36,12 @@ export function FolderObject({
         </CardBody>
       </Card>
       {feeds.map((feed) => {
-        if (feed.folderID === folderID)
+        if (feed.folder_id === folderID)
           return (
             <FeedObject
               visible={feedsVisible}
-              icon={feed.icon}
-              feedName={feed.name}
+              icon={feed.source_img}
+              feedName={feed.feed_name}
               feedID={feed.id}
               messages={context.messages}
               removeFeed={removeFeed}

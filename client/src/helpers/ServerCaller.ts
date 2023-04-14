@@ -49,6 +49,7 @@ export class ServerCaller {
 
   /** Retrieve user info by username. */
   static async getUser(username: string) {
+    console.log({ username });
     let res = await this.request(`users/${username}`);
     return res.user;
   }
@@ -56,7 +57,15 @@ export class ServerCaller {
   static async getFeeds(username: string) {
     //Use token with ID instead of userID?
     let res = await this.request(`users/${username}/feeds`);
-    return res.feeds;
+    console.log({ res })
+    return res.folders;
+  }
+
+  static async getNews(username: string) {
+    //Use token with ID instead of userID?
+    let res = await this.request(`users/${username}/feeds2`);
+    console.log({ res })
+    return res.news;
   }
 
   /** Create a new folder. */
@@ -96,4 +105,7 @@ export class ServerCaller {
   }
 }
 
-interface INewUser extends Omit<IUser, "id"> {}
+interface INewUser {
+  username: string,
+  password: string
+}

@@ -1,4 +1,4 @@
-import { IMessage } from "../../types/IMessage";
+import { IMessage, IUserMessage } from "../../types/IMessage";
 import { IRSSItem } from "../../types/IRSS";
 import { useState, useContext } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
@@ -15,7 +15,8 @@ export function FeedObject({
   removeFeed,
 }: IFeedObjectProps) {
   const loadMessages = useContext(FeedContext).loadMessages;
-  const feedMessages = messages.filter((message) => message.feedID === feedID);
+  console.log({ feedID });
+  const feedMessages = messages.filter((message) => message.feed_id === feedID);
   console.log({ feedMessages });
 
   const [isClicked, toggleClicked] = useState(false);
@@ -52,6 +53,6 @@ interface IFeedObjectProps {
   icon: string;
   feedName: string;
   feedID: number;
-  messages: IMessage[];
+  messages: IUserMessage[];
   removeFeed: (id: number) => Promise<void>;
 }

@@ -10,9 +10,12 @@ export class Call {
     try {
       const parser = new Parser()
       const xml: Output<Item> = await parser.parseURL(url)
+      //console.log({ xml })
+      return xml.items[0]
       const messages = xml.items.map(item => this.makeMessage(item))
-      xml.items = messages
-      return xml
+      // xml.items = messages
+      //return messages[0]
+      // return xml
     } catch (e: any) {
       console.log(e);
       return e;
@@ -22,7 +25,8 @@ export class Call {
   /** Convert RSS messages into IMessage for storage.
    *  Checks for any missing fields when needed.
   */
-  static makeMessage(message: Item) {
+  static makeMessage(message: ItemEx) {
+    console.log({ message })
     const newMessage = {} as IMessage
 
     if (message.creator) newMessage.author = message.creator;
@@ -48,10 +52,25 @@ export class Call {
       newMessage.source_link = ""
     }
 
-    if (message.content) {
+    if (message["content:encoded"]) {
+      newMessage.content = message["content:encoded"]
+    }
+    else if (message.content) {
       newMessage.content = message.content
+    }
+
+    if (message["content:encodedSnippet"]) {
+      newMessage.description = message["content:encodedSnippet"]
+    }
+    else if (message.contentSnippet) {
+      newMessage.description = message.contentSnippet
     }
 
     return newMessage
   }
+}
+
+interface ItemEx extends Item {
+  "content:encoded"?: string,
+  "content:encodedSnippet"?: string
 }
