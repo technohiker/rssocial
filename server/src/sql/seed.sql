@@ -17,7 +17,7 @@ VALUES (1, 'Development', 'https://example.com/icons/folder1.jpg'),
 -- Insert some sample sources
 INSERT INTO sources (name, img) 
 VALUES ('RSS Feed', 'https://example.com/icons/rss.jpg'),
-       ('Twitter', 'https://example.com/icons/twitter.jpg');
+       ('Twitter', 'https://example.com/icons/twitter.jpg',TRUE);
 
 -- Insert some sample reactions
 INSERT INTO reactions (name, img) 

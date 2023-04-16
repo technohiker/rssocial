@@ -6,6 +6,7 @@ import { UnauthorizedError } from "../helpers/ExpressError";
 import { BadRequestError } from "../helpers/ExpressError";
 import { IUser } from "../types/IUser";
 import format from "pg-format";
+import { createToken } from "../helpers/tokens";
 
 export class User {
   userID: number;
@@ -65,9 +66,32 @@ export class User {
       [username, hashedPassword, email]
     );
 
-    const user = result.rows[0];
+    const user: IUser = result.rows[0];
+
+    //Generate code for verification, then email it to user.
+
+    const hashValue = bcrypt.hash(username+email,BCRYPT_WORK_FACTOR)
+
+    createToken({
+      id: user.id,
+      hash: hashValue
+    },{expiresIn: '1h'})
+
     console.log("New User:", user)
     return user;
+  }
+
+  /** Verify user. */
+  static async verify(userID: number): Promise<IUser>{
+    const result = await db.query(
+      `UPDATE users
+       SET verified=true
+       WHERE user_id=$1
+       RETURNING user_id,username,email,profile_img,bio`
+       ,[userID]
+    )
+
+    return result.rows[0]
   }
 
   /** Return all users.(is this even useful for this project?) */
@@ -141,14 +165,6 @@ export class User {
     console.log(folders[0].feeds[0].messages)
 
     return folders;
-
-    // let feedIDs = feeds.map((feed) => feed.id);
-
-    // const msgSql = format(
-    //   `SELECT * FROM user_messages
-    //   WHERE feedID= ANY($1)`,
-    //   [feedIDs]
-    // );
   }
 
   /** Get object of messages by feed ID.

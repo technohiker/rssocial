@@ -7,6 +7,8 @@ import userRegisterSchema from "../schemas/userRegister";
 import { BadRequestError } from "../helpers/ExpressError";
 import { createToken } from "../helpers/tokens";
 import { IUser } from "../types/IUser";
+import { checkVerifyToken } from "../middleware/auth";
+
 
 export const authRouter = Router();
 
@@ -17,7 +19,7 @@ authRouter.post("/token", async function (req, res, next) {
     console.log({ username, password })
 
     const user = await User.authenticate(username, password);
-    const token = createToken(user);
+    const token = createToken(user,{expiresIn: '1w'});
     return res.json({ token });
   } catch (e: any) {
     next(e);
@@ -35,10 +37,24 @@ authRouter.post("/register", async function (req, res, next) {
     const user: IUser = await User.register(req.body);
     console.log("New User(route)", user)
 
-    const token = createToken(user);
+    const token = createToken(user,{expiresIn: '1w'});
 
     return res.status(201).json({ user, token });
   } catch (err) {
     return next(err);
   }
 } as RequestHandler);
+
+/** Receive verification token and verify user. */
+authRouter.post('/verify',checkVerifyToken, async function (req, res, next) {
+  try{
+    //Check token.
+    const userID = res.locals.user.id
+    //Approve user.
+    const verUser = await User.verify(userID)
+    return res.redirect('/')
+  }
+  catch(e: any){
+    return next(e)
+  }
+} as RequestHandler)

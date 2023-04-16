@@ -4,12 +4,9 @@ import { IUser } from "../types/IUser";
 
 /** return signed JWT from user data. */
 
-export function createToken(user: IUser) {
+export function createToken(values: {},options: jwt.SignOptions = {}) {
   let payload = {
-    id: user.id,
-    username: user.username,
-    email: user.email
+    ...values
   };
-
-  return jwt.sign(payload, SECRET_KEY);
+  return jwt.sign(payload, SECRET_KEY,options);
 }

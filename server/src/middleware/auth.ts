@@ -4,7 +4,7 @@
  */
 
 import { RequestHandler } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { SECRET_KEY } from "../config";
 import { UnauthorizedError } from "../helpers/ExpressError";
 
@@ -53,3 +53,27 @@ export const ensureCorrectUser: RequestHandler = (req, res, next) => {
     return next(err);
   }
 };
+
+/** Decode token sent in body. */
+export const checkVerifyToken: RequestHandler = (req, res, next) => {
+  try{
+    const {verToken} = req.body
+    //Verify token.
+    const verified = <IVerifiedToken>jwt.verify(verToken,SECRET_KEY)
+    //Set locals.
+    res.locals.user.id = verified.id
+    //What if user was already verified?
+  }
+  catch(err: any){
+    return next(err)
+  }
+}
+
+interface IVerifiedToken extends JwtPayload{
+  id: number,
+  username: string,
+  email: string,
+  verifyID: string,
+  iat: number,
+  exp: number
+}

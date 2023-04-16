@@ -7,7 +7,8 @@ CREATE TABLE users (
     email TEXT NOT NULL
       CHECK (position('@' IN email) > 1),
     profile_img TEXT,
-    bio TEXT
+    bio TEXT,
+    verified BOOLEAN DEFAULT FALSE
 );
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
@@ -33,7 +34,8 @@ CREATE TABLE folders(
 CREATE TABLE sources(   --RSS, Twitter, Reddit, etc.
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  img TEXT NOT NULL
+  img TEXT NOT NULL,
+  token BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE reactions (
