@@ -13,6 +13,12 @@ export const { pg_password } = process.env;
 export const { pg_host } = process.env;
 export const { pg_database } = process.env;
 export const { pg_port } = process.env;
+export const { email_address } = process.env;
+export const { email_password } = process.env;
+export const { email_host } = process.env;
+export const { email_port } = process.env;
+
+export const { sendinblue_key } = process.env;
 
 export const PORT = +(process.env.PORT ?? 3001);
 

@@ -1,7 +1,7 @@
 -- Insert some sample users
-INSERT INTO users (username, password, email, profile_img, bio) 
-VALUES ('john_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mnq', 'johndoe@example.com', 'https://example.com/profile.jpg', 'I am a software developer'),
-       ('jane_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mnq', 'janedoe@example.com', 'https://example.com/profile2.jpg', 'I am a graphic designer');
+INSERT INTO users (username, password, email, profile_img, bio, verified) 
+VALUES ('john_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mnq', 'johndoe@example.com', 'https://example.com/profile.jpg', 'I am a software developer', TRUE),
+       ('jane_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mnq', 'janedoe@example.com', 'https://example.com/profile2.jpg', 'I am a graphic designer', FALSE);
 
 -- Insert some sample messages
 INSERT INTO messages (source_name, author, title, content, date_created, source_link) 
@@ -15,8 +15,8 @@ VALUES (1, 'Development', 'https://example.com/icons/folder1.jpg'),
        (2, 'Personal', 'https://example.com/icons/folder3.jpg');
 
 -- Insert some sample sources
-INSERT INTO sources (name, img) 
-VALUES ('RSS Feed', 'https://example.com/icons/rss.jpg'),
+INSERT INTO sources (name, img, token) 
+VALUES ('RSS Feed', 'https://example.com/icons/rss.jpg', FALSE),
        ('Twitter', 'https://example.com/icons/twitter.jpg',TRUE);
 
 -- Insert some sample reactions

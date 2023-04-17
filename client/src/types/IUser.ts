@@ -4,5 +4,6 @@ export interface IUser {
   email: string;
   profile_img: string,
   bio: string,
+  verified: boolean
 
 }

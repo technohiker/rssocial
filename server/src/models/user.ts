@@ -7,6 +7,7 @@ import { BadRequestError } from "../helpers/ExpressError";
 import { IUser } from "../types/IUser";
 import format from "pg-format";
 import { createToken } from "../helpers/tokens";
+import { sendEmail } from "../helpers/email";
 
 export class User {
   userID: number;
@@ -62,7 +63,7 @@ export class User {
           password,
           email)
          VALUES ($1, $2, $3)
-         RETURNING id AS userID, username, email`,
+         RETURNING id, username, email`,
       [username, hashedPassword, email]
     );
 
@@ -70,25 +71,32 @@ export class User {
 
     //Generate code for verification, then email it to user.
 
-    const hashValue = bcrypt.hash(username+email,BCRYPT_WORK_FACTOR)
+    const hashValue = await bcrypt.hash(username + email, BCRYPT_WORK_FACTOR)
 
-    createToken({
+    console.log("Registered User ID:", user.id)
+
+    const verifyToken = createToken({
       id: user.id,
       hash: hashValue
-    },{expiresIn: '1h'})
+    }, { expiresIn: '1w' })
+    console.log({ verifyToken })
+
+    const verifyHTML = `<p>Click this link to verify your email: http://localhost:3000/verify?verToken=${verifyToken}</p>`
+
+    sendEmail(user.email, "Verify Account", verifyHTML)
 
     console.log("New User:", user)
     return user;
   }
 
   /** Verify user. */
-  static async verify(userID: number): Promise<IUser>{
+  static async verify(userID: number): Promise<IUser> {
     const result = await db.query(
       `UPDATE users
        SET verified=true
-       WHERE user_id=$1
-       RETURNING user_id,username,email,profile_img,bio`
-       ,[userID]
+       WHERE id=$1
+       RETURNING id,username,email,profile_img,bio`
+      , [userID]
     )
 
     return result.rows[0]
@@ -110,7 +118,7 @@ export class User {
   /** Return specific user. */
   static async get(username: string) {
     const userRes = await db.query(
-      `SELECT id, username, email, profile_img, bio
+      `SELECT id, username, email, profile_img, bio, verified
            FROM users
            WHERE username = $1`,
       [username]

@@ -15,9 +15,7 @@ export function FeedObject({
   removeFeed,
 }: IFeedObjectProps) {
   const loadMessages = useContext(FeedContext).loadMessages;
-  console.log({ feedID });
   const feedMessages = messages.filter((message) => message.feed_id === feedID);
-  console.log({ feedMessages });
 
   const [isClicked, toggleClicked] = useState(false);
 

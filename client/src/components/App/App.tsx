@@ -13,6 +13,7 @@ import { RegisterForm } from "../RegisterForm/RegisterForm";
 import { Logout } from "../Logout/Logout";
 import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import jwt_decode from "jwt-decode";
+import { VerifyRedirect } from "../VerifyRedirect/VerifyRedirect";
 
 export function App() {
   const [userFeeds, setUserFeeds] = useState({} as INews);
@@ -21,14 +22,18 @@ export function App() {
 
   /** Call when token is changed. */
   useEffect(() => {
+    console.log("Token changed:", token);
     changeToken(token);
   }, [token]);
 
   /** Call when currUser is changed. */
   useEffect(() => {
+    console.log("currUser changed: ", currUser.id);
+
     if (currUser.id) {
       getUserFeeds(currUser.username);
     }
+    console.log({ currUser });
   }, [currUser]);
 
   /** Set the API caller's token to what App's token is now.
@@ -157,6 +162,9 @@ export function App() {
           </AuthorizedRoute>
           <Route exact path="/logout">
             <Logout logout={logoutUser} />
+          </Route>
+          <Route exact path="/verify">
+            <VerifyRedirect setToken={setToken} />
           </Route>
         </Switch>
       </main>

@@ -82,6 +82,14 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
         get you started.
       </p>
     );
+  } else if (!currUser.verified) {
+    return (
+      <p>
+        Welcome to the RSS Social Media conglomerate! Unfortunately, your
+        account is not verified. Please check your email and click on the link
+        sent to you.
+      </p>
+    );
   } else if (isLoading) {
     return (
       <>
@@ -92,7 +100,7 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
           <div></div>
           <div></div>
         </div>
-        <p>{"Not available yet."}</p>;
+        <p>{"Not available yet."}</p>
       </>
     );
   } else {

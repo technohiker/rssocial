@@ -56,20 +56,23 @@ export const ensureCorrectUser: RequestHandler = (req, res, next) => {
 
 /** Decode token sent in body. */
 export const checkVerifyToken: RequestHandler = (req, res, next) => {
-  try{
-    const {verToken} = req.body
+  try {
+    const { verToken } = req.body
+    if (!verToken) return res.json({ verified: false })
     //Verify token.
-    const verified = <IVerifiedToken>jwt.verify(verToken,SECRET_KEY)
+    const verified = <IVerifiedToken>jwt.verify(verToken, SECRET_KEY)
+    console.log({ verified })
     //Set locals.
-    res.locals.user.id = verified.id
+    res.locals.userID = verified.id
     //What if user was already verified?
+    return next()
   }
-  catch(err: any){
-    return next(err)
+  catch (err: any) {
+    return res.json({ verified: false, token: "" })
   }
 }
 
-interface IVerifiedToken extends JwtPayload{
+interface IVerifiedToken extends JwtPayload {
   id: number,
   username: string,
   email: string,

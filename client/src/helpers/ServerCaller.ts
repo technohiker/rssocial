@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IUser } from "../types/IUser";
+import { Redirect } from "react-router-dom";
 /** Call server endpoints that trigger RSS/API fetches. */
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
@@ -49,9 +50,24 @@ export class ServerCaller {
 
   /** Retrieve user info by username. */
   static async getUser(username: string) {
-    console.log({ username });
     let res = await this.request(`users/${username}`);
+    console.log({ res })
     return res.user;
+  }
+
+  /** Send token to backend to verify new user. */
+  static async verifyUser(token: string) {
+    console.log("Now verifying...")
+    let res = await this.request(`auth/verify`, 'post', {
+      verToken: token
+    })
+    console.log({ res })
+
+    return {
+      verified: res.verified,
+      token: res.token
+    }
+    //Need to give message if verification failed.
   }
 
   static async getFeeds(username: string) {
