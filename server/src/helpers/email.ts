@@ -1,4 +1,3 @@
-//import nodemailer from 'nodemailer-sendinblue-transport';
 import SendinBlueTransport from 'nodemailer-sendinblue-transport';
 //import SendinBlueTransport from '../types/nodemailer-sendinblue-transport';
 import { createTransport } from 'nodemailer'

@@ -120,31 +120,11 @@ export function App() {
     }
   };
 
-  // /** Send user's RSS info to backend. */
-  // const newFeed = async (rssURL: string) => {
-  //   try {
-  //     let res = await ServerCaller.callRSS(rssURL);
-  //   } catch (e: any) {
-  //     return e;
-  //   }
-  //   return undefined;
-  // };
-
-  /** Store folder info created by user. */
-  const newFolder = async (folderName: string) => {
-    try {
-      let res = await ServerCaller.postFolder(folderName);
-    } catch (e: any) {
-      return e;
-    }
-    return undefined;
-  };
-
   return (
     <BrowserRouter>
       <NavBar
         routes={token === "" ? unauthRoutes : authRoutes}
-        text="RSSFeed"
+        text="RSSocial"
       />
       <main>
         <Switch>

@@ -74,6 +74,15 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
     setCurrMessages(newMessages);
   };
 
+  const addCall = async (url: string) => {
+    try {
+      const newRSS = await ServerCaller.callRSS(url);
+      setMessages(newRSS.items);
+    } catch (e: any) {
+      return e;
+    }
+  };
+
   if (!currUser.id) {
     return (
       <p>
@@ -120,12 +129,17 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
         <Modal isOpen={feedModal} toggle={toggleFeedModal}>
           <ModalHeader toggle={toggleFeedModal}>Generate New Feed</ModalHeader>
           <ModalBody>
-            {/* <RSSForm
-              onSubmission={makeCall}
-              folderOptions={defaultFolders.map((folder) => {
-                return { value: folder.name, text: folder.name };
-              })}
-            /> */}
+            {
+              <RSSForm
+                onSubmission={addCall}
+                folderOptions={folders.map((folder) => {
+                  return {
+                    value: folder.folder_name,
+                    text: folder.folder_name,
+                  };
+                })}
+              />
+            }
           </ModalBody>
         </Modal>
         <FeedContext.Provider

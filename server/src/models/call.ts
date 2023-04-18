@@ -10,12 +10,10 @@ export class Call {
     try {
       const parser = new Parser()
       const xml: Output<Item> = await parser.parseURL(url)
-      //console.log({ xml })
-      return xml.items[0]
+      console.log({ xml })
       const messages = xml.items.map(item => this.makeMessage(item))
-      // xml.items = messages
-      //return messages[0]
-      // return xml
+      xml.items = messages
+      return xml
     } catch (e: any) {
       console.log(e);
       return e;
