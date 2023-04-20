@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Form } from "react-final-form";
+import { Field, Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
+import { FieldSelect } from "../../helpers/FormFields/FieldSelect";
 
 export function FolderForm({ onSubmission }: IFolderFormProps) {
-  const required = (value: any) => (value ? undefined : "Required");
+  const required = (value: any) => {
+    console.log({ value });
+    return value ? undefined : "Required";
+  };
   const [error, setError] = useState("");
   const history = useHistory();
 
   const submission = async (evt: IFolderFormSubmit) => {
+    console.log("Fired!");
     let result = await onSubmission(evt.name);
     if (result) {
       setError(result[0]);

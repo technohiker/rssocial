@@ -19,7 +19,8 @@ folderRouter.post("/new", async function (req, res, next) {
       const userID = res.locals.user.id;
 
       let newFolder = await Folder.newFolder(userID, folderName);
-      return res.json({ newFolder });
+      console.log({ newFolder })
+      return res.json({ folder: newFolder });
     }
   } catch (e: any) {
     throw new BadRequestError(e);

@@ -8,14 +8,16 @@ export function FieldSelect({
   options,
 }: IFieldSelectProps) {
   return (
-    <label>
-      {label}
-      <Field name={name} validate={validation} component="select">
-        {options.map((option) => (
-          <option value={option.value}>{option.text}</option>
-        ))}
-      </Field>
-    </label>
+    <div className="mb-3">
+      <label className="form-label">
+        {label}
+        <Field name={name} validate={validation} component="select">
+          {options.map((option) => (
+            <option value={option.value}>{option.text}</option>
+          ))}
+        </Field>
+      </label>
+    </div>
   );
 }
 

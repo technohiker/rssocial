@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IUser } from "../types/IUser";
 import { Redirect } from "react-router-dom";
+import { IRSSFormSubmit } from "../components/RSSForm/RSSForm";
 /** Call server endpoints that trigger RSS/API fetches. */
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
@@ -29,6 +30,13 @@ export class ServerCaller {
     const response = await this.request("calls/rss", "post", { rssURL: url });
     console.log(response);
     return response.feed;
+  }
+
+  /** Send info for new call and feed. */
+  static async postCall(body: IRSSFormSubmit) {
+    const response = await this.request(`calls/new?source=${body.source}`, "post", { ...body })
+    console.log({ response })
+    return response.feed
   }
 
   /** Create new user and receive token. */

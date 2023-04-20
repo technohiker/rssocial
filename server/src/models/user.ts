@@ -205,14 +205,16 @@ export class User {
             FROM user_messages um 
             JOIN messages m ON um.message_id = m.id
             WHERE user_id=$1`, [userID]),
-      db.query(`SELECT * FROM reactions`)
+      db.query(`SELECT * FROM reactions`),
+      db.query(`SELECT * FROM sources`)
     ]);
 
     const masterFeeds = {
       folders: requests[0].rows,
       feeds: requests[1].rows,
       messages: requests[2].rows,
-      reactions: requests[3].rows
+      reactions: requests[3].rows,
+      sources: requests[4].rows
     }
 
     return masterFeeds

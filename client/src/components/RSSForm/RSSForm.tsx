@@ -4,21 +4,26 @@ import { Field, Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
 import { FieldSelect } from "../../helpers/FormFields/FieldSelect";
 import { IFolder } from "../../types/IFolder";
+import { ISource } from "../../types/ISource";
+import { Conditional } from "../../helpers/FormFields/FieldCondition";
 
-export function RSSForm({ onSubmission, folderOptions }: IRSSFormProps) {
-  const required = (value: any) => (value ? undefined : "Required");
+export function RSSForm({ onSubmission, folders, sources }: IRSSFormProps) {
+  const required = (value: any) => {
+    console.log({ value });
+    return value ? undefined : "Required";
+  };
   const [error, setError] = useState("");
   const history = useHistory();
 
-  const folders = [
-    { value: "Pick an option", text: "Pick an option" },
-    ...folderOptions,
-  ];
+  // let folders = [];
 
-  const [feedOption, setFeedOption] = useState("Pick an option.");
+  // if (folderOptions.length === 0) {
+  //   folders.push();
+  // }
 
   const submission = async (evt: IRSSFormSubmit) => {
-    let result = await onSubmission(evt.url);
+    console.log({ evt });
+    let result = await onSubmission(evt);
     if (result) {
       setError(result[0]);
     } else {
@@ -27,37 +32,58 @@ export function RSSForm({ onSubmission, folderOptions }: IRSSFormProps) {
   };
   return (
     <Form
+      initialValues={{
+        folder: folders[0].id,
+        source: sources[0].name,
+      }}
       onSubmit={submission}
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <p className="text-center">{error}</p>
-          {/* <FieldSelect
+          <FieldSelect
             name="folder"
             validation={required}
             label={"Pick a Folder:"}
             options={[
-              { value: "Pick an option", text: "Pick an option" },
-              ...folderOptions,
+              ...folders.map((folder) => {
+                return {
+                  value: folder.id,
+                  text: folder.folder_name,
+                };
+              }),
             ]}
-          /> */}
-          <Field name="folder" validate={required}>
+          />
+
+          {/* <Field name="source" validate={required}>
             {(props) => (
-              <>
+              <div className="mb-3">
+                <label className="form-label">Feed Type: </label>
                 <select
+                  {...props.input}
+                  className="form-control"
                   onChange={(e) => {
-                    setFeedOption(e.currentTarget.value);
+                    setSelectedSource(e.currentTarget.value);
                     return props.input.onChange;
                   }}
                 >
-                  {folders.map((folder, idx) => (
-                    <option key={idx} value={folder.value}>
-                      {folder.text}
+                  {sources.map((source) => (
+                    <option {...props.input} key={source.id} value={source.id}>
+                      {source.name}
                     </option>
                   ))}
                 </select>
-              </>
+              </div>
             )}
-          </Field>
+          </Field> */}
+
+          <FieldSelect
+            name="source"
+            validation={required}
+            label={"Pick a Source:"}
+            options={sources.map((source) => {
+              return { value: source.name, text: source.name };
+            })}
+          />
 
           <FieldInput
             name="name"
@@ -75,16 +101,18 @@ export function RSSForm({ onSubmission, folderOptions }: IRSSFormProps) {
             type={"text"}
             placeholder={""}
           />
-          {feedOption === "Pick an option" && (
+          {/* <Conditional when="source" is="RSS Feed">
+            <FieldInput
+              name="frequency"
+              className="mb-3"
+              validation={required}
+              label={"Auto:"}
+              type={"text"}
+              value="auto"
+            />
+          </Conditional> */}
+          {/* {selectedSource === "Pick an option" && (
             <>
-              <FieldInput
-                name="url"
-                className="mb-3"
-                validation={required}
-                label={"This should now be showing."}
-                type={"text"}
-                placeholder={""}
-              />
               <FieldInput
                 name="frequency"
                 className="mb-3"
@@ -102,7 +130,7 @@ export function RSSForm({ onSubmission, folderOptions }: IRSSFormProps) {
                 value="schedule"
               />
             </>
-          )}
+          )} */}
           {/* <label>
             Automatically retrieve new data, or schedule when call occurs?
           </label>
@@ -118,10 +146,18 @@ export function RSSForm({ onSubmission, folderOptions }: IRSSFormProps) {
   );
 }
 
-interface IRSSFormSubmit {
+export interface IRSSFormSubmit {
+  folder: string;
+  source: string;
+  name: string;
   url: string;
+  twt_hashtag?: string;
+  twt_list?: string;
+  twt_searchTerm?: string;
+  twt_user?: string;
 }
 interface IRSSFormProps {
-  onSubmission: (url: string) => Promise<undefined | string[]>;
-  folderOptions: { value: string; text: string }[];
+  onSubmission: (evt: IRSSFormSubmit) => Promise<undefined | string[]>;
+  folders: IFolder[];
+  sources: ISource[];
 }

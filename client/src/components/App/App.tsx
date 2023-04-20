@@ -87,6 +87,7 @@ export function App() {
   ): Promise<undefined | string[]> => {
     try {
       let token = await ServerCaller.authUser(username, password);
+      console.log({ token });
       setToken(token);
     } catch (e: any) {
       console.log({ e });

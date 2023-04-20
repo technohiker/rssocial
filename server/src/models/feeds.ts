@@ -19,7 +19,7 @@ export class Feeds {
     callID: number
   ) {
     const query = await db.query(
-      `INSERT INTO feeds
+      `INSERT INTO feeds (user_id, folder_id, source_id, call_id, feed_name)
       VALUES($1,$2,$3,$4,$5)
       RETURNING *`,
       [userID, folderID, sourceID, callID, feedName]

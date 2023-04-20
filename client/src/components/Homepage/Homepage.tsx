@@ -1,6 +1,6 @@
 import "./Homepage.css";
 import { useState, useEffect, useContext } from "react";
-import { RSSForm } from "../RSSForm/RSSForm";
+import { IRSSFormSubmit, RSSForm } from "../RSSForm/RSSForm";
 import { Message } from "../Message/Message";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { IMessage, IUserMessage } from "../../types/IMessage";
@@ -14,12 +14,14 @@ import { FolderForm } from "../FolderForm/FolderForm";
 import { IUser } from "../../types/IUser";
 import { IReaction } from "../../types/IReaction";
 import { INews } from "../../types/INews";
+import { ISource } from "../../types/ISource";
 
 export function Homepage({ currUser, userFeeds }: IHomepageProps) {
   const [folders, setFolders] = useState<Array<IFolder>>([]);
   const [feeds, setFeeds] = useState<Array<IFeed>>([]);
   const [messages, setMessages] = useState<Array<IUserMessage>>([]);
   const [reactions, setReactions] = useState<Array<IReaction>>([]);
+  const [sources, setSources] = useState<Array<ISource>>([]);
 
   const [feedModal, setFeedModal] = useState(false);
   const [folderModal, setFolderModal] = useState(false);
@@ -33,6 +35,7 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
       setFeeds(userFeeds.feeds);
       setMessages(userFeeds.messages);
       setReactions(userFeeds.reactions);
+      setSources(userFeeds.sources);
 
       setLoading(false);
     } else {
@@ -40,22 +43,10 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
     }
   }, [userFeeds]);
 
-  // const makeCall = async (url: string) => {
-  //   setLoading(true);
-
-  //   try {
-  //     const newRSS = await ServerCaller.callRSS(url);
-  //     setRSS(newRSS);
-  //     setMessages(newRSS.items);
-  //   } catch (e: any) {
-  //     return e;
-  //   }
-  //   setLoading(false);
-  // };
-
   const newFolder = async (name: string) => {
     try {
       const newFolder = await ServerCaller.postFolder(name);
+      console.log({ newFolder });
       setFolders((folders) => [...folders, newFolder]);
     } catch (e: any) {
       return e;
@@ -74,10 +65,11 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
     setCurrMessages(newMessages);
   };
 
-  const addCall = async (url: string) => {
+  /** Submit information for a new call, and return a new feed object. */
+  const addCall = async (body: IRSSFormSubmit) => {
     try {
-      const newRSS = await ServerCaller.callRSS(url);
-      setMessages(newRSS.items);
+      const newFeed = await ServerCaller.postCall(body);
+      setFeeds([...feeds, newFeed]);
     } catch (e: any) {
       return e;
     }
@@ -132,12 +124,8 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
             {
               <RSSForm
                 onSubmission={addCall}
-                folderOptions={folders.map((folder) => {
-                  return {
-                    value: folder.folder_name,
-                    text: folder.folder_name,
-                  };
-                })}
+                sources={sources}
+                folders={folders}
               />
             }
           </ModalBody>
@@ -170,81 +158,3 @@ interface IHomepageProps {
   currUser: IUser;
   userFeeds: INews;
 }
-
-// const defaultFolders: IFolder[] = [
-//   { name: "Folder1", id: 1, userID: 1 },
-//   { name: "Folder2", id: 2, userID: 1 },
-//   { name: "Folder3", id: 3, userID: 2 },
-// ];
-
-// const defaultFeeds: IFeed[] = [
-//   { id: 1, icon: "rss.png", name: "Feed1", folderID: 1 },
-//   { id: 2, icon: "rss.png", name: "Feed2", folderID: 2 },
-//   { id: 3, icon: "rss.png", name: "Feed3", folderID: 2 },
-//   { id: 4, icon: "rss.png", name: "Feed4", folderID: 3 },
-//   { id: 5, icon: "rss.png", name: "Feed5", folderID: 3 },
-// ];
-
-// const defaultReactions: IReaction[] = [
-//   { id: 1, name: "None", img: "blankface.jpg" },
-//   { id: 2, name: "Like", img: "thumbs-up.jpg" },
-//   { id: 3, name: "Dislike", img: "thumbsdown.jpg" },
-// ];
-
-// const defaultMessages: IMessage[] = [
-//   {
-//     messageID: 1,
-//     feedID: 1,
-//     author: "Tiny Tim",
-//     title: "Title 1",
-//     content: "Here's some test text",
-//     description: "Is this field even used by rss-parser?",
-//     date_created: "04/02/2023",
-//     source_link: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//   },
-//   {
-//     messageID: 2,
-//     feedID: 2,
-//     author: "Tiny Tim",
-//     title: "Title 2",
-//     content: "Here's some test text",
-//     description: "Is this field even used by rss-parser?",
-//     date_created: "04/02/2023",
-//     source_link: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//   },
-//   {
-//     messageID: 3,
-//     feedID: 3,
-//     author: "Tiny Tim",
-//     title: "Title 3",
-//     content: "Here's some test text",
-//     description: "Is this field even used by rss-parser?",
-//     date_created: "04/02/2023",
-//     source_link: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//   },
-//   {
-//     messageID: 4,
-//     feedID: 4,
-//     author: "Tiny Tim",
-//     title: "Title 4",
-//     content: "Here's some test text",
-//     description: "Is this field even used by rss-parser?",
-//     date_created: "04/02/2023",
-//     source_link: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//   },
-//   {
-//     messageID: 5,
-//     feedID: 4,
-//     author: "Tiny Tim",
-//     title: "Title 5",
-//     content: "Here's some test text",
-//     description: "Is this field even used by rss-parser?",
-//     date_created: "04/02/2023",
-//     source_link: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//     thumbnail: "rick-astley-never-gonna-give-you-up_35327903_ver1.jpg",
-//   },
-// ];

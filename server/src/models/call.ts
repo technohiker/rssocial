@@ -2,6 +2,7 @@
 import { IMessage } from "../types/IMessage";
 import { Item, Output } from "rss-parser";
 import Parser from "rss-parser";
+import { db } from "../db";
 
 export class Call {
 
@@ -65,6 +66,23 @@ export class Call {
     }
 
     return newMessage
+  }
+
+  /** Use info received from front-end to create calls tailored to RSS feeds. */
+  static makeRSSCall(url: string) {
+    console.log({ url })
+    return this.newCall(url)
+  }
+
+  static async newCall(url: string, body: string | null = null, params: string | null = null, headers: string | null = null) {
+    console.log({ url })
+    const query = await db.query(
+      `INSERT INTO calls (base_url, request_body, request_params, request_headers)
+        VALUES($1,$2,$3,$4)
+        RETURNING *`, [url, body, params, headers]
+    )
+
+    return query.rows[0]
   }
 }
 

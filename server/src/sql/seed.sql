@@ -5,8 +5,8 @@ VALUES ('john_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mn
 
 -- Insert some sample messages
 INSERT INTO messages (source_name, author, title, content, date_created, source_link) 
-VALUES ('RSS Feed', 'Jane Smith', 'New article on web development', 'Check out this great article on web development', '2022-01-01', 'https://example.com/article1'),
-       ('Twitter', 'John Doe', 'Just published a new blog post', 'Check out my latest blog post on software development', '2022-01-02', 'https://example.com/blogpost1');
+VALUES ('rss', 'Jane Smith', 'New article on web development', 'Check out this great article on web development', '2022-01-01', 'https://example.com/article1'),
+       ('twitter', 'John Doe', 'Just published a new blog post', 'Check out my latest blog post on software development', '2022-01-02', 'https://example.com/blogpost1');
 
 -- Insert some sample folders
 INSERT INTO folders (user_id, folder_name, icon) 
@@ -16,8 +16,8 @@ VALUES (1, 'Development', 'https://example.com/icons/folder1.jpg'),
 
 -- Insert some sample sources
 INSERT INTO sources (name, img, token) 
-VALUES ('RSS Feed', 'https://example.com/icons/rss.jpg', FALSE),
-       ('Twitter', 'https://example.com/icons/twitter.jpg',TRUE);
+VALUES ('rss', 'https://example.com/icons/rss.jpg', FALSE),
+       ('twitter', 'https://example.com/icons/twitter.jpg',TRUE);
 
 -- Insert some sample reactions
 INSERT INTO reactions (name, img) 

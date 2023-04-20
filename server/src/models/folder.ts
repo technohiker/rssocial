@@ -1,8 +1,18 @@
 import { db } from "../db";
+import { BadRequestError } from "../helpers/ExpressError";
 
 /** Class for handling user folder objects. */
 export class Folder {
   static async newFolder(userID: number, folderName: string) {
+    //Check if folder name doesn't already exist.
+
+    let dupCheck = await db.query(
+      `SELECT folder_name FROM folders WHERE user_id=$1`, [userID]
+    )
+
+    if (dupCheck.rows[0]) throw new BadRequestError(`Duplicate folder name: ${folderName}`);
+
+
     let query = await db.query(
       `INSERT INTO folders
                 (folder_name,
