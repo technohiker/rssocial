@@ -76,7 +76,7 @@ CREATE TABLE user_messages(
   user_id INTEGER NOT NULL
     REFERENCES users ON DELETE CASCADE,
   message_id INTEGER NOT NULL
-    REFERENCES messages ON DELETE SET NULL,
+    REFERENCES messages ON DELETE CASCADE,
   feed_id INTEGER NOT NULL
     REFERENCES feeds ON DELETE SET NULL,
   notes TEXT,
@@ -85,6 +85,8 @@ CREATE TABLE user_messages(
     REFERENCES reactions ON DELETE SET NULL,
   seen BOOLEAN DEFAULT FALSE
 );
+
+ALTER TABLE user_messages ADD CONSTRAINT unique_user_messages unique(user_id,message_id);
 
 -- Twitter Feed Options:
   -- User/List/Hashtag/Topic(?)/Search result

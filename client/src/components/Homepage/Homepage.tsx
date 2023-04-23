@@ -70,6 +70,7 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
     try {
       const newFeed = await ServerCaller.postCall(body);
       setFeeds([...feeds, newFeed]);
+      await ServerCaller.fetchMessages();
     } catch (e: any) {
       return e;
     }

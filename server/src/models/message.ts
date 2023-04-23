@@ -2,35 +2,72 @@ import { QueryResult } from "pg";
 import { db } from "../db";
 import { IMessage } from "../types/IMessage";
 import format from "pg-format";
+import pgPromise from 'pg-promise'
+
+const pgp = pgPromise()
+const insert = pgp.helpers.insert
+
 
 /** Class for methods regarding messages. */
 export class Message {
   /** Add multiple messages to database. Uses pg-format to allow for dynamic multiple insertion*/
-  static async addMessages(messages: IMessage[], userID: number) {
+  static async addMessages(messages: IMessage[], userID: number, feedID: number, sourceName: string) {
+
+    let msgColumns = new pgp.helpers.ColumnSet(['source_name', 'author', 'title', 'content', 'date_created', 'source_link'], { table: 'messages' })
+
+    let msgValues = insert(messages.map(message => {
+      return {
+        ...message,
+        source_name: sourceName
+      }
+    }), msgColumns)
+
+
     //Insert into messages.
-    let sql = format(
-      `INSERT INTO messages
-    (source_name, author, title, content, date_created, source_link)
-    VALUES %L RETURNING *`,
-      messages
-    );
-    let msgQuery: QueryResult<IMessage> = await db.query(sql);
+    // let sql = format(
+    //   `INSERT INTO messages
+    //   (source_name, author, title, content, date_created, source_link)
+    //   VALUES %L RETURNING *`,
+    //   messages
+    // );
+    // console.log({ sql })
+    let msgQuery: QueryResult<IMessage> = await db.query(`${msgValues} 
+      ON CONFLICT ON CONSTRAINT unique_title_source_name 
+        DO UPDATE SET source_name = $1
+      RETURNING id`, [sourceName]);
+
+    //  console.log({ msgQuery })
+    //  console.log("Row 1:", msgQuery.rows[0])
+
+    if (msgQuery.rows.length === 0) return [{} as IMessage]
 
     const idPairs = msgQuery.rows.map((msg) => ({
-      message_id: msg.messageID,
+      message_id: msg.id,
       user_id: userID,
+      feed_id: feedID
     }));
+    //console.log({ idPairs })
+
+    let usrColumns = new pgp.helpers.ColumnSet(['message_id', 'user_id', 'feed_id'], { table: 'user_messages' })
+
+    let usrValues = insert(idPairs, usrColumns)
+    // console.log({ usrValues })
 
     //Insert into user messages.
     //I need a message ID for each message I insert.  How do I get it?
-    let sql2 = format(
-      `INSERT INTO user_messages
-      (message_id,user_id)
-      VALUES %L RETURNING *`,
-      idPairs
-    );
+    // let sql2 = format(
+    //   `INSERT INTO user_messages
+    //   (message_id,user_id,feed_id)
+    //   VALUES %L RETURNING *`,
+    //   idPairs
+    // );
+    // console.log({ sql2 })
 
-    let userQuery = await db.query(sql);
+    let userQuery = await db.query(`${usrValues} 
+    ON CONFLICT (user_id, message_id) 
+      DO UPDATE SET user_id=$1 
+    RETURNING *`, [userID]);
+    // console.log({ userQuery })
 
     return userQuery.rows;
   }

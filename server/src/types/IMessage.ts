@@ -1,8 +1,8 @@
 export interface IMessage {
-  messageID?: string;
+  id?: string;
   author: string;
   title: string;
-  content?: string;
+  content: string | null;
   description: string;
   date_created: string;
   source_link: string;

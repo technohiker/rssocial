@@ -56,6 +56,13 @@ export class ServerCaller {
     return res.token;
   }
 
+  /** Make RSS call and get new messages. */
+  static async fetchMessages() {
+    let res = await this.request(`/calls/fetch`)
+    console.log({ res })
+    return res
+  }
+
   /** Retrieve user info by username. */
   static async getUser(username: string) {
     let res = await this.request(`users/${username}`);

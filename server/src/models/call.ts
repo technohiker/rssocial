@@ -10,14 +10,16 @@ export class Call {
   static async callRSS(url: string) {
     try {
       const parser = new Parser()
+      console.log({ url })
+      console.log({ parser })
       const xml: Output<Item> = await parser.parseURL(url)
       console.log({ xml })
       const messages = xml.items.map(item => this.makeMessage(item))
-      xml.items = messages
+      //delete xml.items
+      //xml.items = messages
       return xml
     } catch (e: any) {
-      console.log(e);
-      return e;
+      return "Invalid URL";
     }
   }
 
@@ -25,10 +27,15 @@ export class Call {
    *  Checks for any missing fields when needed.
   */
   static makeMessage(message: ItemEx) {
-    console.log({ message })
+    // console.log({ message })
     const newMessage = {} as IMessage
 
-    if (message.creator) newMessage.author = message.creator;
+    if (message.creator) {
+      newMessage.author = message.creator;
+    }
+    else {
+      newMessage.author = "No author."
+    }
 
     if (message.title) {
       newMessage.title = message.title
@@ -57,6 +64,9 @@ export class Call {
     else if (message.content) {
       newMessage.content = message.content
     }
+    else {
+      newMessage.content = null
+    }
 
     if (message["content:encodedSnippet"]) {
       newMessage.description = message["content:encodedSnippet"]
@@ -70,6 +80,7 @@ export class Call {
 
   /** Use info received from front-end to create calls tailored to RSS feeds. */
   static makeRSSCall(url: string) {
+    //Test if URL is a valid RSS URL.
     console.log({ url })
     return this.newCall(url)
   }
@@ -83,6 +94,17 @@ export class Call {
     )
 
     return query.rows[0]
+  }
+
+  static async getByUserID(userID: number) {
+    const query = await db.query(
+      `SELECT c.id, f.id AS feed_id, s.name AS source_name, base_url, request_body, request_params, request_headers
+      FROM calls c
+      JOIN feeds f ON f.call_id = c.id
+      JOIN sources s ON s.id = f.source_id
+      WHERE f.user_id=$1`, [userID]
+    )
+    return query.rows
   }
 }
 
