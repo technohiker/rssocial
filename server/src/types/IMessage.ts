@@ -4,7 +4,7 @@ export interface IMessage {
   title: string;
   content: string | null;
   description: string;
-  date_created: string;
+  date_created: Date;
   source_link: string;
   thumbnail?: string;
   unread?: boolean;
@@ -26,7 +26,7 @@ export interface IUserMessage {
   clicks: number;
   react_id: number;
   feed_id: number;
-
+  source_name: string,
   author: string;
   title: string;
   content?: string;

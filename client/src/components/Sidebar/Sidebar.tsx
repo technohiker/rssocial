@@ -1,6 +1,6 @@
 import { FolderObject } from "../FolderObject/FolderObject";
 import "./Sidebar.css";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { Accordion, AccordionItem, UncontrolledAccordion } from "reactstrap";
 import { ServerCaller } from "../../helpers/ServerCaller";
@@ -8,14 +8,19 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 /** Contains all RSS info. */
 export function Sidebar({ items }: ISidebarProps<any>) {
   const context = useContext(FeedContext);
-  const [folders, setFolders] = useState(context["folders"]);
+  console.log({ context });
+  const { folders, setFolders } = context;
+
+  useEffect(() => {
+    console.log({ folders });
+  }, [folders]);
 
   const removeFolder = async (folderID: number) => {
-    //const folder = await ServerCaller.deleteFolder(folderID);
+    const folder = await ServerCaller.deleteFolder(folderID);
 
-    //if (folder) {
-    setFolders(folders.filter((folder) => !(folder.id === folderID)));
-    // }
+    if (folder) {
+      setFolders(folders.filter((folder) => !(folder.id === folderID)));
+    }
   };
 
   return (
@@ -24,7 +29,7 @@ export function Sidebar({ items }: ISidebarProps<any>) {
         <AccordionItem>
           <FolderObject
             folderID={folder.id}
-            folderName={folder.folder_name}
+            folderName={folder.name}
             removeFolder={removeFolder}
           />
         </AccordionItem>

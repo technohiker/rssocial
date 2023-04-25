@@ -33,7 +33,7 @@ export class ServerCaller {
   }
 
   /** Send info for new call and feed. */
-  static async postCall(body: IRSSFormSubmit) {
+  static async postFeed(body: IRSSFormSubmit) {
     const response = await this.request(`calls/new?source=${body.source}`, "post", { ...body })
     console.log({ response })
     return response.feed
@@ -58,7 +58,7 @@ export class ServerCaller {
 
   /** Make RSS call and get new messages. */
   static async fetchMessages() {
-    let res = await this.request(`/calls/fetch`)
+    let res = await this.request(`calls/fetch`)
     console.log({ res })
     return res
   }
@@ -97,6 +97,12 @@ export class ServerCaller {
     let res = await this.request(`users/${username}/feeds2`);
     console.log({ res })
     return res.news;
+  }
+
+  static async addClick(messageID: number) {
+    let res = await this.request(`messages/${messageID}/click`, "post")
+
+    return res.message
   }
 
   /** Create a new folder. */

@@ -45,14 +45,21 @@ export class Call {
     }
 
     if (message.pubDate) {
-      newMessage.date_created = message.pubDate;
+      newMessage.date_created = new Date(message.pubDate);
     }
     else {
-      newMessage.date_created = new Date().toDateString();
+      newMessage.date_created = new Date();
     }
 
     if (message.guid) {
-      newMessage.source_link = message.guid
+      if (!isNaN(+message.guid)) {  //guid has occasionally been the news article's internal ID instead of a link.  Check for this.
+        if (message.link) {
+          newMessage.source_link = message.link
+        }
+      }
+      else {
+        newMessage.source_link = message.guid
+      }
     }
     else {
       newMessage.source_link = ""

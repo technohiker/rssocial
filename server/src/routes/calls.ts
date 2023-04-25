@@ -8,9 +8,11 @@ import { BadRequestError } from "../helpers/ExpressError";
 import { ICall } from "../types/ICall";
 import { ensureLoggedIn } from "../middleware/auth";
 import { IMessage } from "../types/IMessage";
+import { IFeed } from "../types/IFeed";
 
 export const callRouter = Router();
 
+/** Recieves information for creating a call.  Returns a feed created with call info. */
 callRouter.post('/new', ensureLoggedIn, async function (req, res, next) {
   try {
     const { source } = req.query
@@ -20,19 +22,23 @@ callRouter.post('/new', ensureLoggedIn, async function (req, res, next) {
       id: 999,
       base_url: "Test"
     }
+    let newFeed: IFeed = {} as IFeed
     if (source === "rss") {
       //Make RSS Call.
       newCall = await Call.makeRSSCall(req.body.url)
       //Make RSS Feed.
       Feeds.newFeed(req.body.name, +id, req.body.folder, 1, newCall.id)
+      //TODO: Make sure URL passed in is valid.
     }
     else if (source === "twitter") {
       //Make Twitter Call.
 
       //Make Twitter Feed.
+
+      //TODO: Make sure API call works before saving.
     }
 
-    return (res.json({ call: newCall }))
+    return (res.json({ feed: newFeed }))
   }
   catch (e: any) {
     return next(e)
@@ -57,7 +63,6 @@ callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
       if (xml === "Invalid URL") continue
 
       const messages = xml.items.map((item) => Call.makeMessage(item))
-      //  console.log("Messages:", messages)
       //  }
 
       if (!call.feed_id) return res.json({ "No Feed ID": call })

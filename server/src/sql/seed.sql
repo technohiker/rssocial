@@ -9,15 +9,16 @@ VALUES ('rss', 'Jane Smith', 'New article on web development', 'Check out this g
        ('twitter', 'John Doe', 'Just published a new blog post', 'Check out my latest blog post on software development', '2022-01-02', 'https://example.com/blogpost1');
 
 -- Insert some sample folders
-INSERT INTO folders (user_id, folder_name, icon) 
+INSERT INTO folders (user_id, name, icon) 
 VALUES (1, 'Development', 'https://example.com/icons/folder1.jpg'),
        (1, 'Design', 'https://example.com/icons/folder2.jpg'),
        (2, 'Personal', 'https://example.com/icons/folder3.jpg');
 
 -- Insert some sample sources
 INSERT INTO sources (name, img, token) 
-VALUES ('rss', 'https://example.com/icons/rss.jpg', FALSE),
-       ('twitter', 'https://example.com/icons/twitter.jpg',TRUE);
+VALUES ('rss', 'rss.png', FALSE),
+       ('twitter', 'twitter.png',TRUE),
+       ('reddit', 'reddit.png', TRUE));
 
 -- Insert some sample reactions
 INSERT INTO reactions (name, img) 

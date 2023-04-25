@@ -15,16 +15,21 @@ const defaultReactions: IReaction[] = [];
 
 const defaultFunction = async (): Promise<void> => { };
 
-export const FeedContext = createContext<IContextFeed>({
-  folders: defaultFolders,
-  feeds: defaultFeeds,
-  messages: defaultMessages,
-  loadMessages: function () { },
-});
+// export const FeedContext = createContext<IContextFeed>({
+//   folders: defaultFolders,
+//   feeds: defaultFeeds,
+//   messages: defaultMessages,
+//   loadMessages: function () { },
+//});
+
+export const FeedContext = createContext({} as IContextFeed);
 
 interface IContextFeed {
   folders: IFolder[];
+  setFolders: React.Dispatch<React.SetStateAction<IFolder[]>>
   feeds: IFeed[];
+  setFeeds: React.Dispatch<React.SetStateAction<IFeed[]>>
   messages: IUserMessage[];
+  setMessages: React.Dispatch<React.SetStateAction<IUserMessage[]>>
   loadMessages: (message: IUserMessage[]) => void;
 }

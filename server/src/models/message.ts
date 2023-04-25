@@ -126,4 +126,18 @@ export class Message {
 
     return query.rows[0];
   }
+
+  /** Increment a messages's click counter by 1. */
+  static async addClick(messageID: number) {
+    let query = await db.query(
+      `
+      UPDATE user_messages 
+      SET clicks=clicks+1
+      WHERE message_id=$1
+      RETURNING *`,
+      [messageID]
+    );
+
+    return query.rows[0];
+  }
 }

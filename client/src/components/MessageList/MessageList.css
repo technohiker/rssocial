@@ -1,0 +1,5 @@
+.message-list{
+  overflow-y: auto;
+  width: 50%;
+  border: 10px solid black;
+}

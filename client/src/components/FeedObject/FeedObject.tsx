@@ -7,14 +7,12 @@ import { Button, Card, CardBody } from "reactstrap";
 
 /** Displays render of clickable feed object.  Clicking on this opens up view of feed messages. */
 export function FeedObject({
-  visible,
   icon,
   feedName,
   feedID,
-  messages,
   removeFeed,
 }: IFeedObjectProps) {
-  const loadMessages = useContext(FeedContext).loadMessages;
+  const { messages, loadMessages } = useContext(FeedContext);
   const feedMessages = messages.filter((message) => message.feed_id === feedID);
 
   const [isClicked, toggleClicked] = useState(false);
@@ -30,9 +28,7 @@ export function FeedObject({
 
   return (
     <>
-      <Card
-        className={`${isClicked && "feed-clicked"} ${!visible && "hidden"}`}
-      >
+      <Card className={`${isClicked && "feed-clicked"}`}>
         <CardBody>
           <div onClick={deployMessages}>
             <img className="feed-img" src={icon} />
@@ -47,10 +43,8 @@ export function FeedObject({
 }
 
 interface IFeedObjectProps {
-  visible: boolean;
   icon: string;
   feedName: string;
   feedID: number;
-  messages: IUserMessage[];
   removeFeed: (id: number) => Promise<void>;
 }

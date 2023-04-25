@@ -48,7 +48,7 @@ export function RSSForm({ onSubmission, folders, sources }: IRSSFormProps) {
               ...folders.map((folder) => {
                 return {
                   value: folder.id,
-                  text: folder.folder_name,
+                  text: folder.name,
                 };
               }),
             ]}

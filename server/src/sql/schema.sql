@@ -27,7 +27,7 @@ CREATE TABLE folders(
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL 
     REFERENCES users ON DELETE CASCADE,
-  folder_name TEXT NOT NULL,
+  name TEXT NOT NULL,
   icon TEXT
 );
 

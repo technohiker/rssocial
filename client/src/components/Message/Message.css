@@ -1,8 +1,15 @@
 .message-card {
-  width: 50%;
   border: 10px;
   text-align: center;
   color: black;
+  margin-bottom: 5vh;
+  margin-left: 3vh;
+  margin-right: 3vh;
+}
+
+.card-header {
+  background-color: rgb(7, 212, 212);
+  color: rgb(0, 0, 0);
 }
 
 img{

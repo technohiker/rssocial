@@ -3,6 +3,7 @@
 import Router, { RequestHandler } from "express";
 import { Message } from "../models/message";
 import { Reaction } from "../models/reaction";
+import { ensureCorrectUser } from "../middleware/auth";
 
 export const msgRouter = Router();
 
@@ -33,14 +34,26 @@ msgRouter.post("/:msgID/read", async function (req, res, next) {
 /** Add reaction to message. */
 msgRouter.post("/:id/react", async function (req, res, next) {
   try {
-    const { react_id } = req.body;
-    const message_id = req.params.id;
-    const { user_id } = res.locals.user;
+    const { reactID } = req.body;
+    const messageID = req.params.id;
+    const userID = res.locals.user.id;
 
-    let reaction = await Reaction.addReaction(react_id, +message_id, user_id);
+    let reaction = await Reaction.addReaction(reactID, +messageID, userID);
 
     return res.json({ reaction: reaction });
   } catch (e: any) {
     return next(e);
   }
-} as RequestHandler); //How to get user ID?  Can I get token info from middleware?  Res.locals?
+} as RequestHandler);
+
+msgRouter.post("/:id/click", async function (req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const msg = await Message.addClick(+id);
+    return res.json({ message: msg });
+  }
+  catch (e: any) {
+    return next(e)
+  }
+} as RequestHandler);

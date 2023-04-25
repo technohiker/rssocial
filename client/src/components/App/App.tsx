@@ -1,6 +1,8 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+
 import { NavBar } from "../NavBar/NavBar";
 import { Homepage } from "../Homepage/Homepage";
 import { UserPage } from "../UserPage/UserPage";
@@ -12,13 +14,13 @@ import { AuthorizedRoute } from "../../helpers/AuthorizedRoute";
 import { RegisterForm } from "../RegisterForm/RegisterForm";
 import { Logout } from "../Logout/Logout";
 import { ProtectedRoute } from "../../helpers/ProtectedRoute";
-import jwt_decode from "jwt-decode";
 import { VerifyRedirect } from "../VerifyRedirect/VerifyRedirect";
+import { useLocalStorageState } from "../../helpers/useLocalStorageState";
 
 export function App() {
   const [userFeeds, setUserFeeds] = useState({} as INews);
-  const [token, setToken] = useState("");
-  const [currUser, setUser] = useState<IUser>({} as IUser);
+  const [token, setToken] = useLocalStorageState("token", "");
+  const [currUser, setUser] = useState({} as IUser);
 
   /** Call when token is changed. */
   useEffect(() => {
@@ -28,8 +30,6 @@ export function App() {
 
   /** Call when currUser is changed. */
   useEffect(() => {
-    console.log("currUser changed: ", currUser.id);
-
     if (currUser.id) {
       getUserFeeds(currUser.username);
     }
@@ -130,7 +130,11 @@ export function App() {
       <main>
         <Switch>
           <Route exact path="/">
-            <Homepage currUser={currUser} userFeeds={userFeeds} />
+            <Homepage
+              currUser={currUser}
+              userFeeds={userFeeds}
+              getUserFeeds={getUserFeeds}
+            />
           </Route>
           <ProtectedRoute exact path="/profile" auth={authToken}>
             <UserPage />

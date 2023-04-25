@@ -3,20 +3,25 @@ import { useState, useEffect, useContext } from "react";
 import { IRSSFormSubmit, RSSForm } from "../RSSForm/RSSForm";
 import { Message } from "../Message/Message";
 import { ServerCaller } from "../../helpers/ServerCaller";
-import { IMessage, IUserMessage } from "../../types/IMessage";
-import { IFolder } from "../../types/IFolder";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { UserContext } from "../../helpers/ContextUser";
-import { IFeed } from "../../types/IFeed";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
+import { IMessage, IUserMessage } from "../../types/IMessage";
+import { IFolder } from "../../types/IFolder";
+import { IFeed } from "../../types/IFeed";
 import { IUser } from "../../types/IUser";
 import { IReaction } from "../../types/IReaction";
 import { INews } from "../../types/INews";
 import { ISource } from "../../types/ISource";
+import { MessageList } from "../MessageList/MessageList";
 
-export function Homepage({ currUser, userFeeds }: IHomepageProps) {
+export function Homepage({
+  currUser,
+  userFeeds,
+  getUserFeeds,
+}: IHomepageProps) {
   const [folders, setFolders] = useState<Array<IFolder>>([]);
   const [feeds, setFeeds] = useState<Array<IFeed>>([]);
   const [messages, setMessages] = useState<Array<IUserMessage>>([]);
@@ -47,7 +52,8 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
     try {
       const newFolder = await ServerCaller.postFolder(name);
       console.log({ newFolder });
-      setFolders((folders) => [...folders, newFolder]);
+      setFolders([...folders, newFolder]);
+      console.log({ folders });
     } catch (e: any) {
       return e;
     }
@@ -62,18 +68,28 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
   const toggleFolderModal = () => setFolderModal(!folderModal);
 
   const loadMessages = (newMessages: IUserMessage[]) => {
+    newMessages.sort();
     setCurrMessages(newMessages);
   };
 
   /** Submit information for a new call, and return a new feed object. */
   const addCall = async (body: IRSSFormSubmit) => {
     try {
-      const newFeed = await ServerCaller.postCall(body);
+      const newFeed = await ServerCaller.postFeed(body);
+      console.log({ newFeed });
       setFeeds([...feeds, newFeed]);
+      console.log({ feeds });
+
       await ServerCaller.fetchMessages();
+
+      await getUserFeeds(currUser.username);
     } catch (e: any) {
       return e;
     }
+  };
+
+  const showObjects = () => {
+    console.log({ folders });
   };
 
   if (!currUser.id) {
@@ -134,14 +150,22 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
         <FeedContext.Provider
           value={{
             folders: folders,
+            setFolders: setFolders,
             feeds: feeds,
+            setFeeds: setFeeds,
             messages: messages,
+            setMessages: setMessages,
             loadMessages: loadMessages,
           }}
         >
           <Sidebar items={folders} />
         </FeedContext.Provider>
-        {currMessages.map((message) => (
+        <MessageList
+          messages={messages}
+          reactions={reactions}
+          postReaction={postReaction}
+        />
+        {/* {currMessages.map((message) => (
           <Message
             key={message.title}
             message={message}
@@ -149,7 +173,8 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
             postReaction={postReaction}
             thisReaction={message.react_id}
           />
-        ))}
+        ))} */}
+        <button onClick={showObjects} />
       </>
     );
   }
@@ -158,4 +183,5 @@ export function Homepage({ currUser, userFeeds }: IHomepageProps) {
 interface IHomepageProps {
   currUser: IUser;
   userFeeds: INews;
+  getUserFeeds: (username: string) => Promise<void>;
 }
