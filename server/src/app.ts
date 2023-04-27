@@ -8,6 +8,7 @@ import { userRouter } from "./routes/users";
 import { authRouter } from "./routes/auth";
 import { folderRouter } from "./routes/folders";
 import { authenticateJWT } from "./middleware/auth";
+import { bookmarkRouter } from "./routes/bookmarks";
 
 export const app = Express();
 
@@ -22,6 +23,7 @@ app.use("/users", userRouter);
 app.use("/messages", msgRouter);
 app.use("/auth", authRouter);
 app.use("/folders", folderRouter);
+app.use('/bookmarks', bookmarkRouter)
 
 /** Returns 404 when invalid URL is called. */
 app.use(((req, res, next) => {

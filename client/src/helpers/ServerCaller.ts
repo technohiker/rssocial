@@ -140,6 +140,18 @@ export class ServerCaller {
     let res = await this.request(`feeds/${feedID}`, "delete");
     return res.feed;
   }
+
+  /** Delete a bookmark. */
+  static async deleteBookmark(bookmarkID: number) {
+    let res = await this.request(`bookmarks/${bookmarkID}`, "delete");
+    return res.bookmark;
+  }
+
+  /** Add a message to a bookmark. */
+  static async postBookmark(messageID: number, bookmarkID: number) {
+    let res = await this.request(`bookmarks/${bookmarkID}?msgID=${messageID}`, "post");
+    return res.bookmark;
+  }
 }
 
 interface INewUser {

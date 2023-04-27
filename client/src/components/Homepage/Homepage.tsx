@@ -16,6 +16,7 @@ import { IReaction } from "../../types/IReaction";
 import { INews } from "../../types/INews";
 import { ISource } from "../../types/ISource";
 import { MessageList } from "../MessageList/MessageList";
+import { IBookmark } from "../../types/IBookmark";
 
 export function Homepage({
   currUser,
@@ -27,6 +28,7 @@ export function Homepage({
   const [messages, setMessages] = useState<Array<IUserMessage>>([]);
   const [reactions, setReactions] = useState<Array<IReaction>>([]);
   const [sources, setSources] = useState<Array<ISource>>([]);
+  const [bookmarks, setBookmarks] = useState<Array<IBookmark>>([]);
 
   const [feedModal, setFeedModal] = useState(false);
   const [folderModal, setFolderModal] = useState(false);
@@ -41,6 +43,7 @@ export function Homepage({
       setMessages(userFeeds.messages);
       setReactions(userFeeds.reactions);
       setSources(userFeeds.sources);
+      setBookmarks(userFeeds.bookmarks);
 
       setLoading(false);
     } else {
@@ -89,7 +92,17 @@ export function Homepage({
   };
 
   const showObjects = () => {
-    console.log({ folders });
+    console.log({ bookmarks });
+  };
+
+  const updateMessage = (uMessage: IUserMessage) => {
+    setMessages((messages) => {
+      return messages.map((message) =>
+        uMessage.id === message.id
+          ? { ...message, bookmark_id: uMessage.bookmark_id }
+          : message
+      );
+    });
   };
 
   if (!currUser.id) {
@@ -155,25 +168,23 @@ export function Homepage({
             setFeeds: setFeeds,
             messages: messages,
             setMessages: setMessages,
+            bookmarks: bookmarks,
+            setBookmarks: setBookmarks,
             loadMessages: loadMessages,
           }}
         >
           <Sidebar items={folders} />
         </FeedContext.Provider>
-        <MessageList
-          messages={messages}
-          reactions={reactions}
-          postReaction={postReaction}
-        />
-        {/* {currMessages.map((message) => (
-          <Message
-            key={message.title}
-            message={message}
+        {currMessages.length === 0 ? (
+          "No messages yet."
+        ) : (
+          <MessageList
+            messages={currMessages}
             reactions={reactions}
             postReaction={postReaction}
-            thisReaction={message.react_id}
+            bookmarks={bookmarks}
           />
-        ))} */}
+        )}
         <button onClick={showObjects} />
       </>
     );

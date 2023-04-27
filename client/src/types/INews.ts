@@ -1,3 +1,4 @@
+import { IBookmark } from "./IBookmark";
 import { IFeed } from "./IFeed";
 import { IFolder } from "./IFolder";
 import { IUserMessage } from "./IMessage";
@@ -9,5 +10,6 @@ export interface INews {
   feeds: IFeed[],
   messages: IUserMessage[],
   reactions: IReaction[],
-  sources: ISource[]
+  sources: ISource[],
+  bookmarks: IBookmark[],
 }

@@ -65,11 +65,12 @@ CREATE TABLE feeds(
     REFERENCES calls ON DELETE SET NULL
 );
 
-CREATE TABLE feed_messages(
-  message_id INTEGER NOT NULL
-    REFERENCES messages ON DELETE CASCADE,
-  feed_id INTEGER NOT NULL
-    REFERENCES feeds ON DELETE SET NULL
+CREATE TABLE bookmarks(
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL
+    REFERENCES users ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  icon TEXT NOT NULL DEFAULT 'bookmark.png'
 );
 
 CREATE TABLE user_messages(
@@ -79,6 +80,8 @@ CREATE TABLE user_messages(
     REFERENCES messages ON DELETE CASCADE,
   feed_id INTEGER NOT NULL
     REFERENCES feeds ON DELETE SET NULL,
+  bookmark_id INTEGER DEFAULT NULL
+    REFERENCES bookmarks ON DELETE SET NULL,
   notes TEXT,
   clicks INTEGER DEFAULT 0,
   react_id INTEGER DEFAULT 1

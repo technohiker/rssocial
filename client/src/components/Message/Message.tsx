@@ -14,14 +14,19 @@ import { ReactionForm } from "../ReactionForm/ReactionForm";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { IReaction } from "../../types/IReaction";
 import { ServerCaller } from "../../helpers/ServerCaller";
+import { BookmarkFormAdd } from "../BookmarkFormAdd/BookmarkFormAdd";
+import { IBookmark } from "../../types/IBookmark";
 
 export function Message({
   message,
   postReaction,
   reactions,
   thisReaction,
+  bookmarks,
 }: IMessageProps) {
   const sanitizedHTML = DOMPurify.sanitize(message.content);
+
+  console.log({ bookmarks });
 
   let author = "";
   if (message.author) author = `by ${message.author}`;
@@ -29,6 +34,14 @@ export function Message({
   const addClick = async () => {
     const res = await ServerCaller.addClick(message.id);
     console.log({ res });
+  };
+
+  const addToBookmark = async (bookmarkID: number) => {
+    const bkID = await ServerCaller.postBookmark(message.id, bookmarkID);
+
+    if (bkID) {
+      message.bookmark_id = bkID.bookmark_id;
+    }
   };
 
   //Have function that, when user clicks link, sends backend request to mark message as read.
@@ -69,7 +82,15 @@ export function Message({
           messageID={message.id}
           defaultValue={thisReaction}
         />
-        <Button name="folderButton">Add to Folder</Button>
+        {/* <Button name="folderButton">Add Bookmark</Button> */}
+        <BookmarkFormAdd
+          onSubmission={addToBookmark}
+          bookmarkOptions={bookmarks.map((bookmark) => ({
+            value: bookmark.id,
+            text: bookmark.name,
+          }))}
+          messageID={message.id}
+        />
       </CardFooter>
     </Card>
   );
@@ -80,4 +101,5 @@ interface IMessageProps {
   postReaction: (reactID: number, messageID: number) => Promise<void>;
   reactions: IReaction[];
   thisReaction: number;
+  bookmarks: IBookmark[];
 }

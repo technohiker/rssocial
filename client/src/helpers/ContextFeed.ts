@@ -3,6 +3,7 @@ import { IFeed } from "../types/IFeed";
 import { IFolder } from "../types/IFolder";
 import { IMessage, IUserMessage } from "../types/IMessage";
 import { IReaction } from "../types/IReaction";
+import { IBookmark } from "../types/IBookmark";
 
 const defaultFolders: IFolder[] = [
 ];
@@ -31,5 +32,7 @@ interface IContextFeed {
   setFeeds: React.Dispatch<React.SetStateAction<IFeed[]>>
   messages: IUserMessage[];
   setMessages: React.Dispatch<React.SetStateAction<IUserMessage[]>>
+  bookmarks: IBookmark[];
+  setBookmarks: React.Dispatch<React.SetStateAction<IBookmark[]>>
   loadMessages: (message: IUserMessage[]) => void;
 }

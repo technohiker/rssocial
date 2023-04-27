@@ -18,7 +18,7 @@ VALUES (1, 'Development', 'https://example.com/icons/folder1.jpg'),
 INSERT INTO sources (name, img, token) 
 VALUES ('rss', 'rss.png', FALSE),
        ('twitter', 'twitter.png',TRUE),
-       ('reddit', 'reddit.png', TRUE));
+       ('reddit', 'reddit.png', TRUE);
 
 -- Insert some sample reactions
 INSERT INTO reactions (name, img) 
@@ -37,12 +37,13 @@ VALUES (1, 1, 1, 'Web Development', NULL),
        (1, 2, 2, 'Gaming', 1),
        (2, 3, 1, 'Personal Blog', NULL);
 
--- Insert some sample feed messages
-INSERT INTO feed_messages (message_id, feed_id) 
-VALUES (1, 1),
-       (2, 2);
+INSERT INTO bookmarks(user_id, name)
+VALUES(1,'Bookmark 1'),
+      (1,'Bookmark 2'),
+      (2,'Bookmark 3');
+
 
 -- Insert some sample user messages
-INSERT INTO user_messages (user_id, message_id, feed_id, notes, clicks, react_id, seen) 
-VALUES (1, 1, 1, 'This is a great article!', 10, 1, TRUE),
-       (2, 2, 2, 'I enjoyed reading this post', 5, 2, FALSE);
+INSERT INTO user_messages (user_id, message_id, feed_id, bookmark_id, notes, clicks, react_id, seen) 
+VALUES (1, 1, 1,1, 'This is a great article!', 10, 1, TRUE),
+       (2, 2, 2,NULL, 'I enjoyed reading this post', 5, 2, FALSE);

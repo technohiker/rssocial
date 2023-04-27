@@ -200,13 +200,14 @@ export class User {
             JOIN sources s ON f.source_id = s.id
             WHERE user_id=$1`, [userID]),
       db.query(`SELECT 
-              m.id, feed_id notes, clicks, react_id, feed_id, source_name,
-              author, title, content, date_created, source_link
+              m.id, feed_id notes, clicks, react_id, feed_id, bookmark_id,
+              source_name, author, title, content, date_created, source_link
             FROM user_messages um 
             JOIN messages m ON um.message_id = m.id
             WHERE user_id=$1`, [userID]),
       db.query(`SELECT * FROM reactions`),
-      db.query(`SELECT * FROM sources`)
+      db.query(`SELECT * FROM sources`),
+      db.query(`SELECT * FROM bookmarks WHERE user_id=$1`, [userID]),
     ]);
 
     const masterFeeds = {
@@ -214,7 +215,8 @@ export class User {
       feeds: requests[1].rows,
       messages: requests[2].rows,
       reactions: requests[3].rows,
-      sources: requests[4].rows
+      sources: requests[4].rows,
+      bookmarks: requests[5].rows
     }
 
     return masterFeeds
