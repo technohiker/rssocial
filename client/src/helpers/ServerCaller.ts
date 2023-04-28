@@ -151,6 +151,20 @@ export class ServerCaller {
   static async postBookmark(messageID: number, bookmarkID: number) {
     let res = await this.request(`bookmarks/${bookmarkID}?msgID=${messageID}`, "post");
     return res.bookmark;
+
+  }
+  /** Add notes to a message */
+  static async addNotes(messageID: number, notes: string) {
+    let res = await this.request(`messages/${messageID}/notes`, "post", {
+      notes: notes,
+    });
+    return res.message;
+  }
+
+  /** Get metrics of user. */
+  static async getMetrics(username: string) {
+    let res = await this.request(`users/${username}/metrics`);
+    return res.metrics;
   }
 }
 

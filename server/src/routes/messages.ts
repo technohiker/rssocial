@@ -57,3 +57,18 @@ msgRouter.post("/:id/click", async function (req, res, next) {
     return next(e)
   }
 } as RequestHandler);
+
+/** Add notes to message. */
+msgRouter.post("/:id/notes", async function (req, res, next) {
+  try {
+    const { notes } = req.body;
+    const messageID = req.params.id;
+    const userID = res.locals.user.id;
+
+    let message = await Message.addNotes(notes, +messageID, userID);
+
+    return res.json({ message: message });
+  } catch (e: any) {
+    return next(e);
+  }
+} as RequestHandler);

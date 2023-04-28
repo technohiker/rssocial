@@ -23,7 +23,7 @@ export interface IMessage {
 
 export interface IUserMessage {
   id: number;
-  notes: number;
+  notes: string;
   clicks: number;
   react_id: number;
   feed_id: number;

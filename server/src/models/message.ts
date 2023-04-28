@@ -91,9 +91,8 @@ export class Message {
   /** Get all messages that match a certain feed ID. */
   static async getMessagesByFeed(feedID: number) {
     let query = await db.query(
-      `
-    SELECT * FROM user_messages
-    WHERE message_id=$1`,
+      `SELECT * FROM user_messages
+      WHERE message_id=$1`,
       [feedID]
     );
 
@@ -116,8 +115,7 @@ export class Message {
   /** Change unread to false. */
   static async messageRead(userID: number, messageID: number) {
     let query = await db.query(
-      `
-      UPDATE user_messages 
+      `UPDATE user_messages 
       SET seen=true
       WHERE message_id=$1 AND user_id=$2
       RETURNING message_id,seen`,
@@ -130,12 +128,24 @@ export class Message {
   /** Increment a messages's click counter by 1. */
   static async addClick(messageID: number) {
     let query = await db.query(
-      `
-      UPDATE user_messages 
+      `UPDATE user_messages 
       SET clicks=clicks+1
       WHERE message_id=$1
       RETURNING *`,
       [messageID]
+    );
+
+    return query.rows[0];
+  }
+
+  /** Add or update notes to a message. */
+  static async addNotes(notes: string, messageID: number, userID: number) {
+    let query = await db.query(
+      `UPDATE user_messages 
+      SET notes=$1
+      WHERE message_id=$2 AND user_id=$3
+      RETURNING *`,
+      [notes, messageID, userID]
     );
 
     return query.rows[0];

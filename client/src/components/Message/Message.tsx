@@ -15,6 +15,7 @@ import { FeedContext } from "../../helpers/ContextFeed";
 import { IReaction } from "../../types/IReaction";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { BookmarkFormAdd } from "../BookmarkFormAdd/BookmarkFormAdd";
+import { NotesForm } from "../../NotesForm/NotesForm";
 import { IBookmark } from "../../types/IBookmark";
 
 export function Message({
@@ -42,6 +43,11 @@ export function Message({
     if (bkID) {
       message.bookmark_id = bkID.bookmark_id;
     }
+  };
+
+  const addNotes = async (notes: string) => {
+    const res = await ServerCaller.addNotes(message.id, notes);
+    console.log({ res });
   };
 
   //Have function that, when user clicks link, sends backend request to mark message as read.
@@ -91,6 +97,7 @@ export function Message({
           }))}
           messageID={message.id}
         />
+        <NotesForm onSubmission={addNotes} defaultNote={message.notes} />
       </CardFooter>
     </Card>
   );

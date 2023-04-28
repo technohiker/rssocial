@@ -18,7 +18,6 @@ userRouter.get("/:username/feeds2", ensureCorrectUser, async function (req, res,
 
     return res.json({ news: news });
   } catch (e: any) {
-    console.log({ e })
     return next(e);
   }
 } as RequestHandler);
@@ -32,7 +31,6 @@ userRouter.get("/:username/feeds", ensureCorrectUser, async function (req, res, 
 
     return res.json({ folders: news });
   } catch (e: any) {
-    console.log({ e })
     return next(e);
   }
 } as RequestHandler);
@@ -45,8 +43,8 @@ userRouter.get("/:username", ensureCorrectUser, async function (req, res, next) 
   try {
     const user: IUser = await User.get(req.params.username);
     return res.json({ user });
-  } catch (err) {
-    return next(err);
+  } catch (e: any) {
+    return next(e);
   }
 } as RequestHandler);
 
@@ -55,7 +53,19 @@ userRouter.get("/", async function (req, res, next) {
   try {
     const users: IUser[] = await User.getAll();
     return res.json({ users });
-  } catch (err) {
-    return next(err);
+  } catch (e: any) {
+    return next(e);
+  }
+} as RequestHandler);
+
+/** Retrieve user metrics. */
+userRouter.get("/:username/metrics", ensureCorrectUser, async function (req, res, next) {
+  try {
+    const userID = res.locals.user.id;
+    const metrics = await User.getMetrics(userID);
+    console.log(metrics.clicks)
+    return res.json({ metrics });
+  } catch (e: any) {
+    return next(e);
   }
 } as RequestHandler);

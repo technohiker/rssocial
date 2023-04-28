@@ -9,6 +9,7 @@ import { UserPage } from "../UserPage/UserPage";
 import { LoginForm } from "../LoginForm/LoginForm";
 import { IUser } from "../../types/IUser";
 import { INews } from "../../types/INews";
+import { IMetrics } from "../../types/IMetrics";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { AuthorizedRoute } from "../../helpers/AuthorizedRoute";
 import { RegisterForm } from "../RegisterForm/RegisterForm";
@@ -16,11 +17,13 @@ import { Logout } from "../Logout/Logout";
 import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import { VerifyRedirect } from "../VerifyRedirect/VerifyRedirect";
 import { useLocalStorageState } from "../../helpers/useLocalStorageState";
+import { Metrics } from "../Metrics/Metrics";
 
 export function App() {
   const [userFeeds, setUserFeeds] = useState({} as INews);
   const [token, setToken] = useLocalStorageState("token", "");
   const [currUser, setUser] = useState({} as IUser);
+  const [metrics, setMetrics] = useState({} as IMetrics);
 
   /** Call when token is changed. */
   useEffect(() => {
@@ -32,8 +35,10 @@ export function App() {
   useEffect(() => {
     if (currUser.id) {
       getUserFeeds(currUser.username);
+      getMetrics();
     }
     console.log({ currUser });
+    console.log({ metrics });
   }, [currUser]);
 
   /** Set the API caller's token to what App's token is now.
@@ -47,6 +52,16 @@ export function App() {
 
       const user = await ServerCaller.getUser(decoded.username);
       setUser(user);
+    }
+  };
+
+  /** Pull metric information. */
+  const getMetrics = async () => {
+    try {
+      const metrics = await ServerCaller.getMetrics(currUser.username);
+      setMetrics(metrics);
+    } catch (e: any) {
+      throw e;
     }
   };
 
@@ -145,6 +160,12 @@ export function App() {
           <AuthorizedRoute exact path="/login" token={token}>
             <LoginForm onSubmission={loginUser} />
           </AuthorizedRoute>
+          <Route exact path="/metrics">
+            <Metrics
+              metrics={metrics}
+              totalMessages={userFeeds.messages ? userFeeds.messages.length : 0}
+            />
+          </Route>
           <Route exact path="/logout">
             <Logout logout={logoutUser} />
           </Route>
@@ -173,6 +194,10 @@ const authRoutes = [
   {
     path: "/profile/edit",
     text: "Profile",
+  },
+  {
+    path: "/metrics",
+    text: "Metrics",
   },
   {
     path: "/logout",

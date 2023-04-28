@@ -221,5 +221,28 @@ export class User {
 
     return masterFeeds
   }
+
+  static async getMetrics(userID: number) {
+    const clicks = await db.query(`SELECT f.feed_name AS feed_name, SUM(clicks) AS feed_clicks
+     FROM user_messages um
+     JOIN feeds f ON f.id = um.feed_id
+     WHERE um.user_id=$1
+     GROUP BY GROUPING SETS (f.feed_name, ())
+     ORDER BY f.feed_name NULLS LAST`, [userID])
+
+    const reactions = await db.query(`SELECT f.feed_name AS feed_name, r.name AS react_name, SUM(r.id) AS sum_reactions
+     FROM user_messages um
+     JOIN feeds f ON f.id = um.feed_id
+     JOIN reactions r ON r.id = um.react_id
+     WHERE um.user_id=$1
+     GROUP BY f.feed_name, r.name`, [userID])
+
+    const seenMsg = await db.query(`SELECT COUNT(seen) AS seen_messages
+     FROM user_messages
+     WHERE seen=true AND user_id=$1
+     GROUP BY user_id;`, [userID])
+
+    return ({ clicks: clicks.rows, reactions: reactions.rows, messages: seenMsg.rows })
+  }
 }
 
