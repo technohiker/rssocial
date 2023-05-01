@@ -36,7 +36,7 @@ export function BookmarkObject({
           </div>
         </CardBody>
       </Card>
-      <Button onClick={deleteBookmark}>X</Button>
+      <Button onClick={deleteBookmark}>Delete Bookmark</Button>
     </>
   );
 }

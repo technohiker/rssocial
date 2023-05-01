@@ -7,7 +7,7 @@ import { Message } from "../models/message";
 import { BadRequestError } from "../helpers/ExpressError";
 import { ICall } from "../types/ICall";
 import { ensureLoggedIn } from "../middleware/auth";
-import { IMessage } from "../types/IMessage";
+import { IMessage, IUserMessage } from "../types/IMessage";
 import { IFeed } from "../types/IFeed";
 
 export const callRouter = Router();
@@ -48,11 +48,10 @@ callRouter.post('/new', ensureLoggedIn, async function (req, res, next) {
 callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
   try {
     const { id } = res.locals.user
-    // Get all calls from user.
-    const calls: ICall[] = await Call.getByUserID(id)
-    console.log({ calls })
 
-    const allMessages: IMessage[] = []
+    const calls: ICall[] = await Call.getByUserID(id)
+
+    const allMessages: IUserMessage[] = []
 
     //Run each call.
     for (let call of calls) {

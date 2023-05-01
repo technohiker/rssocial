@@ -15,19 +15,17 @@ import { FeedContext } from "../../helpers/ContextFeed";
 import { IReaction } from "../../types/IReaction";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { BookmarkFormAdd } from "../BookmarkFormAdd/BookmarkFormAdd";
-import { NotesForm } from "../../NotesForm/NotesForm";
+import { NotesForm } from "../NotesForm/NotesForm";
 import { IBookmark } from "../../types/IBookmark";
 
 export function Message({
   message,
-  postReaction,
   reactions,
   thisReaction,
   bookmarks,
+  updateMessage,
 }: IMessageProps) {
   const sanitizedHTML = DOMPurify.sanitize(message.content);
-
-  console.log({ bookmarks });
 
   let author = "";
   if (message.author) author = `by ${message.author}`;
@@ -35,24 +33,43 @@ export function Message({
   const addClick = async () => {
     const res = await ServerCaller.addClick(message.id);
     console.log({ res });
+
+    if (res) updateMessage({ ...message, clicks: res });
   };
 
   const addToBookmark = async (bookmarkID: number) => {
-    const bkID = await ServerCaller.postBookmark(message.id, bookmarkID);
+    console.log({ bookmarkID });
+    const bkID = await ServerCaller.setBookmark(message.id, bookmarkID);
+    console.log({ bkID });
 
-    if (bkID) {
-      message.bookmark_id = bkID.bookmark_id;
-    }
+    if (bkID) updateMessage({ ...message, bookmark_id: bkID });
   };
 
   const addNotes = async (notes: string) => {
     const res = await ServerCaller.addNotes(message.id, notes);
     console.log({ res });
+
+    if (res) updateMessage({ ...message, notes: res });
   };
 
+  const addReaction = async (reactID: number) => {
+    const res = await ServerCaller.postReaction(reactID, message.id);
+    console.log({ res });
+
+    if (res) updateMessage({ ...message, react_id: res });
+  };
+
+  const addSeen = async () => {
+    const res = await ServerCaller.addSeen(message.id);
+    console.log({ res });
+
+    //TODO:  Update message to have seen value.
+
+    if (res) updateMessage({ ...message });
+  };
   //Have function that, when user clicks link, sends backend request to mark message as read.
   return (
-    <Card className="message-card">
+    <Card className="message-card" onMouseLeave={addSeen}>
       <CardHeader>
         <p>{message.source_name}</p>
       </CardHeader>
@@ -80,7 +97,7 @@ export function Message({
       </CardBody>
       <CardFooter>
         <ReactionForm
-          onSubmission={postReaction}
+          onSubmission={addReaction}
           reactOptions={reactions.map((react) => ({
             value: react.id,
             text: react.name,
@@ -96,6 +113,7 @@ export function Message({
             text: bookmark.name,
           }))}
           messageID={message.id}
+          defaultValue={message.bookmark_id}
         />
         <NotesForm onSubmission={addNotes} defaultNote={message.notes} />
       </CardFooter>
@@ -105,8 +123,8 @@ export function Message({
 
 interface IMessageProps {
   message: IUserMessage;
-  postReaction: (reactID: number, messageID: number) => Promise<void>;
   reactions: IReaction[];
   thisReaction: number;
   bookmarks: IBookmark[];
+  updateMessage: (message: IUserMessage) => void;
 }

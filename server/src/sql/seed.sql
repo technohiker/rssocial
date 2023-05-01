@@ -45,5 +45,5 @@ VALUES(1,'Bookmark 1'),
 
 -- Insert some sample user messages
 INSERT INTO user_messages (user_id, message_id, feed_id, bookmark_id, notes, clicks, react_id, seen) 
-VALUES (1, 1, 1,1, 'This is a great article!', 10, 1, TRUE),
-       (2, 2, 2,NULL, 'I enjoyed reading this post', 5, 2, FALSE);
+VALUES (1, 1, 1, 1, 'This is a great article!', 10, 1, TRUE),
+       (2, 2, 2, NULL, 'I enjoyed reading this post', 5, 2, FALSE);

@@ -14,7 +14,7 @@ bookmarkRouter.get('/:id', async function (req, res, next) {
   try {
     const { id } = req.params
     const bookmark = await Bookmark.getBookmark(+id)
-    return res.json({ bookmark: bookmark })
+    return res.json({ bookmark })
   }
   catch (e: any) {
     return next(e)
@@ -23,14 +23,15 @@ bookmarkRouter.get('/:id', async function (req, res, next) {
 
 
 /** Create new bookmark.*/
-bookmarkRouter.post('/', ensureCorrectUser, async function (req, res, next) {
+bookmarkRouter.post('/new', async function (req, res, next) {
   try {
     const validate = jsonschema.validate(req.body, bookmarkNew);
     if (validate) {
       const userID = res.locals.user.id
-      const { name, icon } = req.body
-      const bookmark = await Bookmark.newBookmark(+userID, name, icon)
-      return res.json({ bookmark: bookmark })
+      const { bookmarkName } = req.body
+      const bookmark = await Bookmark.newBookmark(+userID, bookmarkName)
+      console.log({ bookmark })
+      return res.json({ bookmark })
     }
   }
   catch (e: any) {
@@ -47,7 +48,7 @@ bookmarkRouter.patch('/:id', ensureCorrectUser, async function (req, res, next) 
       const { id } = res.locals.user
       const { name } = req.body
       const bookmark = await Bookmark.changeName(+id, name)
-      return res.json({ bookmark: bookmark })
+      return res.json({ bookmark })
     }
   }
   catch (e: any) {
@@ -61,7 +62,7 @@ bookmarkRouter.delete('/:id', ensureCorrectUser, async function (req, res, next)
   try {
     const { id } = res.locals.user
     const bookmark = await Bookmark.deleteBookmark(+id)
-    return res.json({ bookmark: bookmark })
+    return res.json({ bookmark })
   }
   catch (e: any) {
     return next(e)
@@ -74,7 +75,7 @@ bookmarkRouter.get('/', ensureCorrectUser, async function (req, res, next) {
   try {
     const { id } = res.locals.user
     const bookmarks = await Bookmark.getByUserID(+id)
-    return res.json({ bookmarks: bookmarks })
+    return res.json({ bookmarks })
   }
   catch (e: any) {
     return next(e)
@@ -87,10 +88,11 @@ bookmarkRouter.post('/:id', async function (req, res, next) {
     const userID = res.locals.user.id
     const { id } = req.params
     const { msgID } = req.query
-    if (!msgID) throw new BadRequestError('msgID is required')
-    const bookmark = await Bookmark.addMessageToBookmark(+id, +msgID, +userID)
-    console.log({ bookmark })
-    return res.json({ bookmark: bookmark })
+
+    if (!msgID) throw new BadRequestError('Message ID is required')
+    const bookmarkID = await Bookmark.addMessageToBookmark(+id, +msgID, +userID)
+
+    return res.json({ bookmarkID })
   }
   catch (e: any) {
     return next(e)

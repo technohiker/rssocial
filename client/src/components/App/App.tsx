@@ -19,11 +19,13 @@ import { VerifyRedirect } from "../VerifyRedirect/VerifyRedirect";
 import { useLocalStorageState } from "../../helpers/useLocalStorageState";
 import { Metrics } from "../Metrics/Metrics";
 
+//Update piece of state: https://stackoverflow.com/questions/28121272/whats-the-best-way-to-update-an-object-in-an-array-in-reactjs
+//  https://stackoverflow.com/questions/37662708/updating-react-state-when-state-is-an-array-of-objects
+
 export function App() {
   const [userFeeds, setUserFeeds] = useState({} as INews);
   const [token, setToken] = useLocalStorageState("token", "");
   const [currUser, setUser] = useState({} as IUser);
-  const [metrics, setMetrics] = useState({} as IMetrics);
 
   /** Call when token is changed. */
   useEffect(() => {
@@ -35,10 +37,8 @@ export function App() {
   useEffect(() => {
     if (currUser.id) {
       getUserFeeds(currUser.username);
-      getMetrics();
     }
     console.log({ currUser });
-    console.log({ metrics });
   }, [currUser]);
 
   /** Set the API caller's token to what App's token is now.
@@ -55,19 +55,11 @@ export function App() {
     }
   };
 
-  /** Pull metric information. */
-  const getMetrics = async () => {
-    try {
-      const metrics = await ServerCaller.getMetrics(currUser.username);
-      setMetrics(metrics);
-    } catch (e: any) {
-      throw e;
-    }
-  };
-
   /** Receive massive object of folders, feeds and messages. */
   const getUserFeeds = async (username: string) => {
     try {
+      //Make RSS/API call to fetch any new messages.
+      const res = await ServerCaller.fetchMessages();
       const feeds = await ServerCaller.getNews(username);
       console.log({ feeds });
       setUserFeeds(feeds);
@@ -162,7 +154,7 @@ export function App() {
           </AuthorizedRoute>
           <Route exact path="/metrics">
             <Metrics
-              metrics={metrics}
+              currUser={currUser}
               totalMessages={userFeeds.messages ? userFeeds.messages.length : 0}
             />
           </Route>

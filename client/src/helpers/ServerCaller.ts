@@ -148,7 +148,7 @@ export class ServerCaller {
   }
 
   /** Add a message to a bookmark. */
-  static async postBookmark(messageID: number, bookmarkID: number) {
+  static async setBookmark(messageID: number, bookmarkID: number) {
     let res = await this.request(`bookmarks/${bookmarkID}?msgID=${messageID}`, "post");
     return res.bookmark;
 
@@ -165,6 +165,20 @@ export class ServerCaller {
   static async getMetrics(username: string) {
     let res = await this.request(`users/${username}/metrics`);
     return res.metrics;
+  }
+
+  /** Mark a message as seen */
+  static async addSeen(messageID: number) {
+    let res = await this.request(`messages/${messageID}/seen`, "post");
+    return res.message;
+  }
+
+  /** Add a new bookmark. */
+  static async postBookmark(bookmarkName: string) {
+    let res = await this.request(`bookmarks/new`, "post", {
+      bookmarkName: bookmarkName,
+    });
+    return res.bookmark;
   }
 }
 

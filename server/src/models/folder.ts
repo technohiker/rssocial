@@ -1,12 +1,14 @@
+import { QueryResult, QueryResultRow } from "pg";
 import { db } from "../db";
 import { BadRequestError } from "../helpers/ExpressError";
+import { IFolder } from "../types/IFolder";
 
 /** Class for handling user folder objects. */
 export class Folder {
-  static async newFolder(userID: number, folderName: string) {
+  static async newFolder(userID: number, folderName: string): Promise<IFolder> {
     //Make sure folder name doesn't already exist.
 
-    let dupCheck = await db.query(
+    let dupCheck: QueryResult<{ name: string }> = await db.query(
       `SELECT name FROM folders WHERE user_id=$1 AND name=$2`, [userID, folderName]
     )
     console.log({ dupCheck })
@@ -14,7 +16,7 @@ export class Folder {
     if (dupCheck.rows[0]) throw new BadRequestError(`Duplicate folder name: ${folderName}`);
 
 
-    let query = await db.query(
+    let query: QueryResult<IFolder> = await db.query(
       `INSERT INTO folders
                 (name,
                 user_id)
@@ -25,16 +27,16 @@ export class Folder {
 
     return query.rows[0];
   }
-  static async getFolder(folderID: number) {
-    let query = await db.query(
+  static async getFolder(folderID: number): Promise<IFolder> {
+    let query: QueryResult<IFolder> = await db.query(
       `SELECT * FROM folders
         WHERE id=$1 RETURNING *`,
       [folderID]
     );
     return query.rows[0];
   }
-  static async getFoldersOfUser(userID: number) {
-    let query = await db.query(
+  static async getFoldersOfUser(userID: number): Promise<IFolder[]> {
+    let query: QueryResult<IFolder> = await db.query(
       `SELECT * FROM folders
         WHERE user_id=$1 
         RETURNING *`,
@@ -43,8 +45,8 @@ export class Folder {
     return query.rows;
   }
 
-  static async deleteFolder(folderID: number) {
-    let query = await db.query(
+  static async deleteFolder(folderID: number): Promise<IFolder> {
+    let query: QueryResult<IFolder> = await db.query(
       `DELETE FROM folders
          WHERE id=$1
          RETURNING *`,
@@ -52,18 +54,18 @@ export class Folder {
     );
     return query.rows[0];
   }
-  static async deleteFoldersOfUser(userID: number) {
-    let query = await db.query(
+  static async deleteFoldersOfUser(userID: number): Promise<IFolder[]> {
+    let query: QueryResult<IFolder> = await db.query(
       `DELETE FROM folders
            WHERE user_id=$1
            RETURNING *`,
       [userID]
     );
-    return query.rows[0];
+    return query.rows;
   }
 
-  static async patchFolder(folderID: number, folderName: string) {
-    let query = await db.query(
+  static async patchFolder(folderID: number, folderName: string): Promise<IFolder> {
+    let query: QueryResult<IFolder> = await db.query(
       `UPDATE folders
         SET name=$1
         WHERE id=$2

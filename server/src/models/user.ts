@@ -4,26 +4,20 @@ import { BCRYPT_WORK_FACTOR } from "../config";
 import { db } from "../db";
 import { UnauthorizedError } from "../helpers/ExpressError";
 import { BadRequestError } from "../helpers/ExpressError";
-import { IUser } from "../types/IUser";
-import format from "pg-format";
 import { createToken } from "../helpers/tokens";
+
+import { IUser } from "../types/IUser";
+import { IReaction } from "../types/IReaction";
 import { sendEmail } from "../helpers/email";
+import { QueryResult } from "pg";
 
 export class User {
-  userID: number;
-  username: string;
-  constructor(userID: number, username: string) {
-    (this.userID = userID), (this.username = username);
-  }
 
   /** Check if credentials match a user. */
-  static async authenticate(username: string, password: string) {
+  static async authenticate(username: string, password: string): Promise<IUser> {
     // try to find the user first
-    const result = await db.query(
-      `SELECT   id,
-                username,
-                password,
-                email
+    const result: QueryResult<IUser> = await db.query(
+      `SELECT *
               FROM users
               WHERE username = $1`,
       [username]
@@ -35,7 +29,7 @@ export class User {
       // compare hashed password to a new hash from password
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid === true) {
-        delete user.password;
+        user.password = ""
         return user;
       }
     }
@@ -44,7 +38,7 @@ export class User {
   }
 
   static async register({ username, password, email }: IUser) {
-    const duplicateCheck = await db.query(
+    const duplicateCheck: QueryResult<{ username: string }> = await db.query(
       `SELECT username
          FROM users
          WHERE username = $1`,
@@ -103,8 +97,8 @@ export class User {
   }
 
   /** Return all users.(is this even useful for this project?) */
-  static async getAll() {
-    const result = await db.query(
+  static async getAll(): Promise<IUser[]> {
+    const result: QueryResult<IUser> = await db.query(
       `SELECT   id,
                 username,
                 email
@@ -116,8 +110,8 @@ export class User {
   }
 
   /** Return specific user. */
-  static async get(username: string) {
-    const userRes = await db.query(
+  static async get(username: string): Promise<IUser> {
+    const userRes: QueryResult<IUser> = await db.query(
       `SELECT id, username, email, profile_img, bio, verified
            FROM users
            WHERE username = $1`,
@@ -129,8 +123,8 @@ export class User {
   }
 
   /** Return all reactions user has made. */
-  static async getReactions(user_id: number) {
-    const query = await db.query(
+  static async getReactions(user_id: number): Promise<IReaction[]> {
+    const query: QueryResult<IReaction> = await db.query(
       `SELECT r.id, r.name, r.img
         FROM users u
           JOIN user_messages um ON u.id = um.user_id
@@ -154,11 +148,11 @@ export class User {
 
     const feeds = requests[0].rows;
     const folders = requests[1].rows;
-    console.log({ feeds })
-    console.log({ folders })
 
     let promises = [];
 
+    //Attach feeds to their corresponding folders.
+    //Each instance of a feed is put into a Promise array, so all calls are done at once.
     for (let feed of feeds) {
       if (!folders[feed.folder_id - 1].feeds) {
         folders[feed.folder_id - 1].feeds = []
@@ -170,14 +164,12 @@ export class User {
 
     await Promise.all([promises]);
 
-    console.log(folders[0].feeds[0].messages)
-
     return folders;
   }
 
   /** Get object of messages by feed ID.
    * Done to easily add array of messages to feed object,
-   * instead of checking each feed ID on a message to determine whether to add it.
+   * instead of checking each feed ID on a message to determine whether to add it.(Currenly unused)
    */
   static async getMessagesByFeed(feedID: number) {
     const msgQuery = await db.query(
@@ -200,7 +192,7 @@ export class User {
             JOIN sources s ON f.source_id = s.id
             WHERE user_id=$1`, [userID]),
       db.query(`SELECT 
-              m.id, feed_id notes, clicks, react_id, feed_id, bookmark_id,
+              m.id, feed_id, notes, clicks, react_id, feed_id, bookmark_id,
               source_name, author, title, content, date_created, source_link
             FROM user_messages um 
             JOIN messages m ON um.message_id = m.id
@@ -223,26 +215,52 @@ export class User {
   }
 
   static async getMetrics(userID: number) {
-    const clicks = await db.query(`SELECT f.feed_name AS feed_name, SUM(clicks) AS feed_clicks
+    const promises = await Promise.all([
+      db.query(`SELECT f.feed_name AS feed_name, SUM(clicks) AS feed_clicks
      FROM user_messages um
      JOIN feeds f ON f.id = um.feed_id
      WHERE um.user_id=$1
      GROUP BY GROUPING SETS (f.feed_name, ())
-     ORDER BY f.feed_name NULLS LAST`, [userID])
-
-    const reactions = await db.query(`SELECT f.feed_name AS feed_name, r.name AS react_name, SUM(r.id) AS sum_reactions
+     ORDER BY f.feed_name NULLS LAST`, [userID]),
+      db.query(`SELECT f.feed_name AS feed_name, r.name AS react_name, SUM(r.id) AS sum_reactions
      FROM user_messages um
      JOIN feeds f ON f.id = um.feed_id
      JOIN reactions r ON r.id = um.react_id
      WHERE um.user_id=$1
-     GROUP BY f.feed_name, r.name`, [userID])
-
-    const seenMsg = await db.query(`SELECT COUNT(seen) AS seen_messages
+     GROUP BY f.feed_name, r.name`, [userID]),
+      db.query(`SELECT COUNT(seen) AS seen_messages
      FROM user_messages
      WHERE seen=true AND user_id=$1
      GROUP BY user_id;`, [userID])
+    ])
 
-    return ({ clicks: clicks.rows, reactions: reactions.rows, messages: seenMsg.rows })
+    const allFeeds = {
+      clicks: promises[0].rows,
+      reactions: promises[1].rows,
+      messages: promises[2].rows
+    }
+
+    return allFeeds
+    // const clicks = await db.query(`SELECT f.feed_name AS feed_name, SUM(clicks) AS feed_clicks
+    //  FROM user_messages um
+    //  JOIN feeds f ON f.id = um.feed_id
+    //  WHERE um.user_id=$1
+    //  GROUP BY GROUPING SETS (f.feed_name, ())
+    //  ORDER BY f.feed_name NULLS LAST`, [userID])
+
+    // const reactions = await db.query(`SELECT f.feed_name AS feed_name, r.name AS react_name, SUM(r.id) AS sum_reactions
+    //  FROM user_messages um
+    //  JOIN feeds f ON f.id = um.feed_id
+    //  JOIN reactions r ON r.id = um.react_id
+    //  WHERE um.user_id=$1
+    //  GROUP BY f.feed_name, r.name`, [userID])
+
+    // const seenMsg = await db.query(`SELECT COUNT(seen) AS seen_messages
+    //  FROM user_messages
+    //  WHERE seen=true AND user_id=$1
+    //  GROUP BY user_id;`, [userID])
+
+    // return ({ clicks: clicks.rows, reactions: reactions.rows, messages: seenMsg.rows })
   }
 }
 

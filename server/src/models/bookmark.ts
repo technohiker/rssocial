@@ -1,12 +1,15 @@
+import { QueryResult } from 'pg';
 import { db } from '../db';
 import { BadRequestError } from '../helpers/ExpressError';
+import { IBookmark } from '../types/IBookmark';
 
 export class Bookmark {
-  static async newBookmark(userID: number, name: string, icon: string) {
+  static async newBookmark(userID: number, name: string): Promise<IBookmark> {
     try {
-      const newBookmark = await db.query(
-        `INSERT INTO bookmarks(user_id, name, icon)
-        VALUES ($1,$2,$3)`, [userID, name, icon]
+      const newBookmark: QueryResult<IBookmark> = await db.query(
+        `INSERT INTO bookmarks(user_id, name)
+        VALUES ($1,$2)
+        RETURNING *`, [userID, name]
       )
       return newBookmark.rows[0]
     }
@@ -15,9 +18,9 @@ export class Bookmark {
     }
   }
 
-  static async getBookmark(id: number) {
+  static async getBookmark(id: number): Promise<IBookmark> {
     try {
-      const bookmarks = await db.query(
+      const bookmarks: QueryResult<IBookmark> = await db.query(
         `SELECT * FROM bookmarks WHERE id=$1`, [id]
       )
       return bookmarks.rows[0]
@@ -27,9 +30,9 @@ export class Bookmark {
     }
   }
 
-  static async changeName(id: number, name: string) {
+  static async changeName(id: number, name: string): Promise<IBookmark> {
     try {
-      const bookmark = await db.query(
+      const bookmark: QueryResult<IBookmark> = await db.query(
         `UPDATE bookmarks
         SET name=$2
         WHERE id=$1
@@ -42,9 +45,9 @@ export class Bookmark {
     }
   }
 
-  static async deleteBookmark(id: number) {
+  static async deleteBookmark(id: number): Promise<IBookmark> {
     try {
-      const bookmark = await db.query(
+      const bookmark: QueryResult<IBookmark> = await db.query(
         `DELETE FROM bookmarks
         WHERE id=$1
         RETURNING *`, [id]
@@ -56,9 +59,9 @@ export class Bookmark {
     }
   }
 
-  static async getByUserID(userID: number) {
+  static async getByUserID(userID: number): Promise<IBookmark[]> {
     try {
-      const bookmarks = await db.query(
+      const bookmarks: QueryResult<IBookmark> = await db.query(
         `SELECT * FROM bookmarks
         WHERE user_id=$1`, [userID]
       )
@@ -69,15 +72,15 @@ export class Bookmark {
     }
   }
 
-  static async addMessageToBookmark(bookmarkID: number, messageID: number, userID: number) {
+  static async addMessageToBookmark(bookmarkID: number, messageID: number, userID: number): Promise<number> {
     try {
-      const bookmark = await db.query(
+      const bookmark: QueryResult<{ bookmark_id: number }> = await db.query(
         `UPDATE user_messages 
          SET bookmark_id=$1
          WHERE user_id=$2 AND message_id=$3 
          RETURNING bookmark_id
-         `, [bookmarkID, messageID, userID])
-      return bookmark.rows[0]
+         `, [bookmarkID, userID, messageID])
+      return bookmark.rows[0].bookmark_id
     }
     catch (e: any) {
       throw new BadRequestError(e)

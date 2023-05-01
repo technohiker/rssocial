@@ -37,7 +37,7 @@ export function FeedObject({
           </div>
         </CardBody>
       </Card>
-      <Button onClick={deleteFeed}>X</Button>
+      <Button onClick={deleteFeed}>Remove Feed</Button>
     </>
   );
 }

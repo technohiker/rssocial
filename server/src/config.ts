@@ -1,5 +1,11 @@
 /** Config values to be used across the project. */
 
+import { iTestInterface } from "../../shared/EXAMPLE";
+
+const test: iTestInterface = { test: "string" }
+
+console.log({ test })
+
 import dotenv from "dotenv";
 import colors from "colors";
 

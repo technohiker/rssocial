@@ -1,9 +1,12 @@
+import { useState, useEffect } from "react";
 import { IFeed } from "../../types/IFeed";
 import { IMessage } from "../../types/IMessage";
 import { IMetrics } from "../../types/IMetrics";
 import { IReaction } from "../../types/IReaction";
+import { ServerCaller } from "../../helpers/ServerCaller";
+import { IUser } from "../../types/IUser";
 
-export function Metrics({ metrics, totalMessages }: IMetricsProps) {
+export function Metrics({ currUser, totalMessages }: IMetricsProps) {
   //What metrics do I want?
   //Number of clicks.
   //Number of reactions.
@@ -13,7 +16,25 @@ export function Metrics({ metrics, totalMessages }: IMetricsProps) {
 
   //SQL queries:
 
-  return (
+  const [metrics, setMetrics] = useState({} as IMetrics);
+
+  useEffect(() => {
+    getMetrics();
+  }, []);
+
+  /** Pull metric information. */
+  const getMetrics = async () => {
+    try {
+      console.log({ metrics });
+      const newMetrics = await ServerCaller.getMetrics(currUser.username);
+      console.log({ newMetrics });
+      setMetrics(newMetrics);
+    } catch (e: any) {
+      throw e;
+    }
+  };
+
+  return metrics.messages ? (
     <div>
       <h3>Clicks:</h3>
       {metrics.clicks.map((click) => {
@@ -44,10 +65,12 @@ export function Metrics({ metrics, totalMessages }: IMetricsProps) {
         );
       })}
     </div>
+  ) : (
+    <p>No metrics to display.</p>
   );
 }
 
 interface IMetricsProps {
-  metrics: IMetrics;
+  currUser: IUser;
   totalMessages: number;
 }

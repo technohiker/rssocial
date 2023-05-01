@@ -16,8 +16,7 @@
     "noImplicitAny": true,
     "noEmit": true,
   },
-  "include": ["src", "../shared"],
-  "exclude": ["node_modules"],
+  "include": ["."],
   "ts-node": {
     "files": true
   }

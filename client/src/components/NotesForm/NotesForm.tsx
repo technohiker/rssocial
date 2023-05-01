@@ -14,13 +14,11 @@ export function NotesForm({ onSubmission, defaultNote }: INotesForm) {
   return (
     <Form
       onSubmit={submission}
-      initialValues={defaultNote}
+      initialValues={{ notes: defaultNote }}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <p className="text-center">{error}</p>
-          <Field name="notes" validate={required} component="textarea">
-            {defaultNote}
-          </Field>
+          <Field name="notes" validate={required} component="textarea" />
           <Button type="submit">Add Notes</Button>
         </form>
       )}

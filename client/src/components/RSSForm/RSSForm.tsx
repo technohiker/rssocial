@@ -9,7 +9,6 @@ import { Conditional } from "../../helpers/FormFields/FieldCondition";
 
 export function RSSForm({ onSubmission, folders, sources }: IRSSFormProps) {
   const required = (value: any) => {
-    console.log({ value });
     return value ? undefined : "Required";
   };
   const [error, setError] = useState("");

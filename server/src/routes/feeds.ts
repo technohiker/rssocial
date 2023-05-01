@@ -13,7 +13,7 @@ feedRouter.get('/:username', ensureCorrectUser, async function (req, res, next) 
     return res.json({ feeds: feeds })
   }
   catch (e: any) {
-    throw (e)
+    return next(e)
   }
 } as RequestHandler)
 
@@ -22,6 +22,17 @@ feedRouter.get('/', async function (req, res, next) {
 
   }
   catch (e: any) {
-    throw (e)
+    return next(e)
+  }
+} as RequestHandler)
+
+feedRouter.delete('/:id', async function (req, res, next) {
+  try {
+    const { id } = req.params
+    const feed = await Feeds.deleteFeed(+id)
+    return res.json({ feed })
+  }
+  catch (e: any) {
+    return next(e)
   }
 } as RequestHandler)

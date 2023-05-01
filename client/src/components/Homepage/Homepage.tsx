@@ -17,6 +17,7 @@ import { INews } from "../../types/INews";
 import { ISource } from "../../types/ISource";
 import { MessageList } from "../MessageList/MessageList";
 import { IBookmark } from "../../types/IBookmark";
+import { BookmarkForm } from "../BookmarkFormNew/BookmarkFormNew";
 
 export function Homepage({
   currUser,
@@ -32,6 +33,7 @@ export function Homepage({
 
   const [feedModal, setFeedModal] = useState(false);
   const [folderModal, setFolderModal] = useState(false);
+  const [bookmarkModal, setBookmarkModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [currMessages, setCurrMessages] = useState<Array<IUserMessage>>([]);
 
@@ -62,13 +64,20 @@ export function Homepage({
     }
   };
 
-  const postReaction = async (reactID: number, messageID: number) => {
-    const reaction = await ServerCaller.postReaction(reactID, messageID);
-    return reaction;
+  const newBookmark = async (name: string) => {
+    try {
+      const newBookmark = await ServerCaller.postBookmark(name);
+      console.log({ newBookmark });
+      setBookmarks([...bookmarks, newBookmark]);
+      console.log({ bookmarks });
+    } catch (e: any) {
+      return e;
+    }
   };
 
   const toggleFeedModal = () => setFeedModal(!feedModal);
   const toggleFolderModal = () => setFolderModal(!folderModal);
+  const toggleBookmarkModal = () => setBookmarkModal(!bookmarkModal);
 
   const loadMessages = (newMessages: IUserMessage[]) => {
     newMessages.sort();
@@ -82,8 +91,6 @@ export function Homepage({
       console.log({ newFeed });
       setFeeds([...feeds, newFeed]);
       console.log({ feeds });
-
-      await ServerCaller.fetchMessages();
 
       await getUserFeeds(currUser.username);
     } catch (e: any) {
@@ -103,6 +110,8 @@ export function Homepage({
           : message
       );
     });
+    console.log({ uMessage });
+    console.log({ messages });
   };
 
   if (!currUser.id) {
@@ -160,6 +169,15 @@ export function Homepage({
             }
           </ModalBody>
         </Modal>
+        <button onClick={toggleBookmarkModal}>Create New Bookmark</button>
+        <Modal isOpen={bookmarkModal} toggle={toggleBookmarkModal}>
+          <ModalHeader toggle={toggleBookmarkModal}>
+            Create New Bookmark
+          </ModalHeader>
+          <ModalBody>
+            <BookmarkForm onSubmission={newBookmark} />
+          </ModalBody>
+        </Modal>
         <FeedContext.Provider
           value={{
             folders: folders,
@@ -181,8 +199,8 @@ export function Homepage({
           <MessageList
             messages={currMessages}
             reactions={reactions}
-            postReaction={postReaction}
             bookmarks={bookmarks}
+            updateMessage={updateMessage}
           />
         )}
         <button onClick={showObjects} />

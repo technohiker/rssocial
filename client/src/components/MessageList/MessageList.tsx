@@ -8,8 +8,8 @@ import "./MessageList.css";
 export function MessageList({
   messages,
   reactions,
-  postReaction,
   bookmarks,
+  updateMessage,
 }: IMessageListProps) {
   return (
     <div className="message-list">
@@ -18,9 +18,9 @@ export function MessageList({
           key={message.title}
           message={message}
           reactions={reactions}
-          postReaction={postReaction}
           thisReaction={message.react_id}
           bookmarks={bookmarks}
+          updateMessage={updateMessage}
         />
       ))}
     </div>
@@ -30,6 +30,6 @@ export function MessageList({
 interface IMessageListProps {
   messages: IUserMessage[];
   reactions: IReaction[];
-  postReaction: (reactID: number, messageID: number) => Promise<void>;
   bookmarks: IBookmark[];
+  updateMessage: (message: IUserMessage) => void;
 }

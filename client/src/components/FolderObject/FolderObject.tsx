@@ -38,7 +38,7 @@ export function FolderObject({
   const removeFeed = async (feedID: number) => {
     const feed = await ServerCaller.deleteFeed(feedID);
     if (feed) {
-      setFeeds(feeds.filter((feed) => !(feed.id === feedID)));
+      setFolderFeeds(folderFeeds.filter((feed) => !(feed.id === feedID)));
     }
   };
 
@@ -61,7 +61,7 @@ export function FolderObject({
             />
           );
       })}
-      <Button onClick={deleteFolder}>Y</Button>
+      <Button onClick={deleteFolder}>Remove Folder</Button>
     </>
   );
 }

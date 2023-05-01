@@ -3,6 +3,8 @@ import { IMessage } from "../types/IMessage";
 import { Item, Output } from "rss-parser";
 import Parser from "rss-parser";
 import { db } from "../db";
+import { QueryResult } from "pg";
+import { ICall } from "../types/ICall";
 
 export class Call {
 
@@ -94,7 +96,7 @@ export class Call {
 
   static async newCall(url: string, body: string | null = null, params: string | null = null, headers: string | null = null) {
     console.log({ url })
-    const query = await db.query(
+    const query: QueryResult<ICall> = await db.query(
       `INSERT INTO calls (base_url, request_body, request_params, request_headers)
         VALUES($1,$2,$3,$4)
         RETURNING *`, [url, body, params, headers]
@@ -104,7 +106,7 @@ export class Call {
   }
 
   static async getByUserID(userID: number) {
-    const query = await db.query(
+    const query: QueryResult<ICall> = await db.query(
       `SELECT c.id, f.id AS feed_id, s.name AS source_name, base_url, request_body, request_params, request_headers
       FROM calls c
       JOIN feeds f ON f.call_id = c.id
