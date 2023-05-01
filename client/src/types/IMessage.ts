@@ -30,6 +30,7 @@ export interface IUserMessage {
   bookmark_id: number;
   source_name: string,
   author: string;
+  seen: boolean;
   title: string;
   content: string;
   description: string,

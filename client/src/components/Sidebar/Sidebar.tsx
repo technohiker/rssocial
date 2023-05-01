@@ -1,13 +1,14 @@
 import { FolderObject } from "../FolderObject/FolderObject";
 import "./Sidebar.css";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, ReactElement } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { Accordion, AccordionItem, UncontrolledAccordion } from "reactstrap";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { BookmarkObject } from "../BookmarkObject/BookmarkObject";
+import { HamburgerButton } from "../HamburgerButton/HamburgerButton";
 
 /** Contains all RSS info. */
-export function Sidebar({ items }: ISidebarProps<any>) {
+export function Sidebar({ buttons }: ISidebarProps) {
   const context = useContext(FeedContext);
   console.log({ context });
   const { folders, setFolders } = context;
@@ -36,6 +37,8 @@ export function Sidebar({ items }: ISidebarProps<any>) {
   };
 
   return (
+    <>
+    <HamburgerButton buttons={buttons}/>
     <UncontrolledAccordion flush className="sidebar">
       <div>
         {bookmarks.map((bookmark) => (
@@ -61,9 +64,10 @@ export function Sidebar({ items }: ISidebarProps<any>) {
         ))}
       </div>
     </UncontrolledAccordion>
+    </>
   );
 }
 
-interface ISidebarProps<T> {
-  items: Array<T>;
+interface ISidebarProps {
+  buttons: Array<ReactElement<React.JSXElementConstructor<HTMLButtonElement>>>;
 }

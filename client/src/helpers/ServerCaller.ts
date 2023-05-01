@@ -2,6 +2,13 @@ import axios from "axios";
 import { IUser } from "../types/IUser";
 import { Redirect } from "react-router-dom";
 import { IRSSFormSubmit } from "../components/RSSForm/RSSForm";
+import { IBookmark } from "../types/IBookmark";
+import { IUserMessage } from "../types/IMessage";
+import { IMetrics } from "../types/IMetrics";
+import { IFeed } from "../types/IFeed";
+import { IReaction } from "../types/IReaction";
+import { IFolder } from "../types/IFolder";
+import { INews } from "../types/INews";
 /** Call server endpoints that trigger RSS/API fetches. */
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
@@ -33,14 +40,14 @@ export class ServerCaller {
   }
 
   /** Send info for new call and feed. */
-  static async postFeed(body: IRSSFormSubmit) {
+  static async postFeed(body: IRSSFormSubmit): Promise<IFeed> {
     const response = await this.request(`calls/new?source=${body.source}`, "post", { ...body })
     console.log({ response })
     return response.feed
   }
 
   /** Create new user and receive token. */
-  static async registerUser(user: INewUser) {
+  static async registerUser(user: INewUser): Promise<string> {
     console.log("Setting up register call.");
     let res = await this.request(`auth/register/`, "post", user);
     console.log(res);
@@ -48,7 +55,7 @@ export class ServerCaller {
   }
 
   /** Get token with login credentials. */
-  static async authUser(username: string, password: string) {
+  static async authUser(username: string, password: string): Promise<string> {
     let res = await this.request(`auth/token/`, "post", {
       username: username,
       password: password,
@@ -57,14 +64,15 @@ export class ServerCaller {
   }
 
   /** Make RSS call and get new messages. */
-  static async fetchMessages() {
+  static async fetchMessages(): Promise<IUserMessage[]> {
+    //TODO: Does this even need to return anything?
     let res = await this.request(`calls/fetch`)
     console.log({ res })
     return res
   }
 
   /** Retrieve user info by username. */
-  static async getUser(username: string) {
+  static async getUser(username: string): Promise<IUser> {
     let res = await this.request(`users/${username}`);
     console.log({ res })
     return res.user;
@@ -85,28 +93,29 @@ export class ServerCaller {
     //Need to give message if verification failed.
   }
 
-  static async getFeeds(username: string) {
+  static async getFeeds(username: string): Promise<IFolder[]> {
+    //TODO: Why is this returning folders?  Function's not being used, though.
     //Use token with ID instead of userID?
     let res = await this.request(`users/${username}/feeds`);
     console.log({ res })
     return res.folders;
   }
 
-  static async getNews(username: string) {
+  static async getNews(username: string): Promise<INews> {
     //Use token with ID instead of userID?
     let res = await this.request(`users/${username}/feeds2`);
     console.log({ res })
     return res.news;
   }
 
-  static async addClick(messageID: number) {
+  static async addClick(messageID: number): Promise<number> {
     let res = await this.request(`messages/${messageID}/click`, "post")
 
-    return res.message
+    return res.message.clicks
   }
 
   /** Create a new folder. */
-  static async postFolder(folderName: string) {
+  static async postFolder(folderName: string): Promise<IFolder> {
     let res = await this.request(`folders/new`, "post", {
       folderName: folderName,
     });
@@ -114,7 +123,7 @@ export class ServerCaller {
   }
 
   /** Edit a folder's name. */
-  static async patchFolder(folderName: string, folderID: number) {
+  static async patchFolder(folderName: string, folderID: number): Promise<IFolder> {
     let res = await this.request(`folders/${folderID}`, "patch", {
       folderName: folderName,
     });
@@ -122,59 +131,59 @@ export class ServerCaller {
   }
 
   /** Delete a folder. */
-  static async deleteFolder(folderID: number) {
+  static async deleteFolder(folderID: number): Promise<IFolder> {
     let res = await this.request(`folders/${folderID}`, "delete");
     return res.folder;
   }
 
   /** Add/update a reaction to a user's article. */
-  static async postReaction(reactID: number, messageID: number) {
+  static async postReaction(reactID: number, messageID: number): Promise<number> {
     let res = await this.request(`messages/${messageID}/react`, "post", {
       reactID: reactID,
     });
-    return res.reaction;
+    return res.reaction.id;
   }
 
   /** Delete a folder. */
-  static async deleteFeed(feedID: number) {
+  static async deleteFeed(feedID: number): Promise<IFeed> {
     let res = await this.request(`feeds/${feedID}`, "delete");
     return res.feed;
   }
 
   /** Delete a bookmark. */
-  static async deleteBookmark(bookmarkID: number) {
+  static async deleteBookmark(bookmarkID: number): Promise<IBookmark> {
     let res = await this.request(`bookmarks/${bookmarkID}`, "delete");
     return res.bookmark;
   }
 
   /** Add a message to a bookmark. */
-  static async setBookmark(messageID: number, bookmarkID: number) {
+  static async setBookmark(messageID: number, bookmarkID: number): Promise<number> {
     let res = await this.request(`bookmarks/${bookmarkID}?msgID=${messageID}`, "post");
-    return res.bookmark;
+    return res.bookmarkID;
 
   }
   /** Add notes to a message */
-  static async addNotes(messageID: number, notes: string) {
+  static async addNotes(messageID: number, notes: string): Promise<string> {
     let res = await this.request(`messages/${messageID}/notes`, "post", {
       notes: notes,
     });
-    return res.message;
+    return res.message.notes;
   }
 
   /** Get metrics of user. */
-  static async getMetrics(username: string) {
+  static async getMetrics(username: string): Promise<IMetrics> {
     let res = await this.request(`users/${username}/metrics`);
     return res.metrics;
   }
 
   /** Mark a message as seen */
-  static async addSeen(messageID: number) {
+  static async addSeen(messageID: number): Promise<IUserMessage> {
     let res = await this.request(`messages/${messageID}/seen`, "post");
     return res.message;
   }
 
   /** Add a new bookmark. */
-  static async postBookmark(bookmarkName: string) {
+  static async postBookmark(bookmarkName: string): Promise<IBookmark> {
     let res = await this.request(`bookmarks/new`, "post", {
       bookmarkName: bookmarkName,
     });

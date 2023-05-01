@@ -79,6 +79,12 @@ export function Homepage({
   const toggleFolderModal = () => setFolderModal(!folderModal);
   const toggleBookmarkModal = () => setBookmarkModal(!bookmarkModal);
 
+  const formButtons = [
+    <button onClick={toggleFeedModal}>Make New Feed</button>,
+    <button onClick={toggleFolderModal}>Make New Folder</button>,
+    <button onClick={toggleBookmarkModal}>Make New Bookmark</button>,
+  ]
+
   const loadMessages = (newMessages: IUserMessage[]) => {
     newMessages.sort();
     setCurrMessages(newMessages);
@@ -191,7 +197,7 @@ export function Homepage({
             loadMessages: loadMessages,
           }}
         >
-          <Sidebar items={folders} />
+          <Sidebar buttons={formButtons} />
         </FeedContext.Provider>
         {currMessages.length === 0 ? (
           "No messages yet."

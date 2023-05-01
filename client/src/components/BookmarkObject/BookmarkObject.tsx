@@ -32,7 +32,6 @@ export function BookmarkObject({
           <div onClick={deployMessages}>
             <img className="bookmark-img" src={icon} />
             <p>{name}</p>
-            <p>{feedMessages.length}</p>
           </div>
         </CardBody>
       </Card>

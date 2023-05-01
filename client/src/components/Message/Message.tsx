@@ -30,6 +30,8 @@ export function Message({
   let author = "";
   if (message.author) author = `by ${message.author}`;
 
+  const [isSeen, setIsSeen] = useState(message.seen);
+
   const addClick = async () => {
     const res = await ServerCaller.addClick(message.id);
     console.log({ res });
@@ -60,16 +62,18 @@ export function Message({
   };
 
   const addSeen = async () => {
+    if(isSeen) return;  //Do not need to run if already seen.
     const res = await ServerCaller.addSeen(message.id);
     console.log({ res });
 
     //TODO:  Update message to have seen value.
+    setIsSeen(true)
 
     if (res) updateMessage({ ...message });
   };
   //Have function that, when user clicks link, sends backend request to mark message as read.
   return (
-    <Card className="message-card" onMouseLeave={addSeen}>
+    <Card className={`${isSeen ? 'seen': ''} message-card`} onMouseLeave={addSeen}>
       <CardHeader>
         <p>{message.source_name}</p>
       </CardHeader>

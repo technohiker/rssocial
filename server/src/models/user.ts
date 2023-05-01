@@ -64,10 +64,7 @@ export class User {
     const user: IUser = result.rows[0];
 
     //Generate code for verification, then email it to user.
-
     const hashValue = await bcrypt.hash(username + email, BCRYPT_WORK_FACTOR)
-
-    console.log("Registered User ID:", user.id)
 
     const verifyToken = createToken({
       id: user.id,
@@ -79,7 +76,6 @@ export class User {
 
     sendEmail(user.email, "Verify Account", verifyHTML)
 
-    console.log("New User:", user)
     return user;
   }
 
@@ -174,8 +170,8 @@ export class User {
   static async getMessagesByFeed(feedID: number) {
     const msgQuery = await db.query(
       `SELECT 
-        m.id, feed_id notes, clicks, react_id, source_name
-        author, title, content, date_created, source_link
+        m.id, feed_id notes, clicks, react_id, source_name,
+        seen, author, title, content, date_created, source_link
       FROM user_messages um 
       JOIN messages m ON um.message_id = m.id
       WHERE feed_id=$1`,
@@ -193,10 +189,11 @@ export class User {
             WHERE user_id=$1`, [userID]),
       db.query(`SELECT 
               m.id, feed_id, notes, clicks, react_id, feed_id, bookmark_id,
-              source_name, author, title, content, date_created, source_link
+              seen, source_name, author, title, content, date_created, source_link
             FROM user_messages um 
             JOIN messages m ON um.message_id = m.id
-            WHERE user_id=$1`, [userID]),
+            WHERE user_id=$1
+            ORDER BY SEEN ASC, date_created DESC`, [userID]),
       db.query(`SELECT * FROM reactions`),
       db.query(`SELECT * FROM sources`),
       db.query(`SELECT * FROM bookmarks WHERE user_id=$1`, [userID]),
@@ -241,26 +238,6 @@ export class User {
     }
 
     return allFeeds
-    // const clicks = await db.query(`SELECT f.feed_name AS feed_name, SUM(clicks) AS feed_clicks
-    //  FROM user_messages um
-    //  JOIN feeds f ON f.id = um.feed_id
-    //  WHERE um.user_id=$1
-    //  GROUP BY GROUPING SETS (f.feed_name, ())
-    //  ORDER BY f.feed_name NULLS LAST`, [userID])
-
-    // const reactions = await db.query(`SELECT f.feed_name AS feed_name, r.name AS react_name, SUM(r.id) AS sum_reactions
-    //  FROM user_messages um
-    //  JOIN feeds f ON f.id = um.feed_id
-    //  JOIN reactions r ON r.id = um.react_id
-    //  WHERE um.user_id=$1
-    //  GROUP BY f.feed_name, r.name`, [userID])
-
-    // const seenMsg = await db.query(`SELECT COUNT(seen) AS seen_messages
-    //  FROM user_messages
-    //  WHERE seen=true AND user_id=$1
-    //  GROUP BY user_id;`, [userID])
-
-    // return ({ clicks: clicks.rows, reactions: reactions.rows, messages: seenMsg.rows })
   }
 }
 

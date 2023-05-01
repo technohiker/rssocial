@@ -33,7 +33,6 @@ export function FeedObject({
           <div onClick={deployMessages}>
             <img className="feed-img" src={icon} />
             <p>{feedName}</p>
-            <p>{feedMessages.length}</p>
           </div>
         </CardBody>
       </Card>
