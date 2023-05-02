@@ -3,11 +3,12 @@ import cors from "cors";
 
 import { ExpressError, NotFoundError } from "./helpers/ExpressError";
 import { callRouter } from "./routes/calls";
-import { msgRouter } from "./routes/messages";
+import { umsgRouter } from "./routes/userMessages";
 import { userRouter } from "./routes/users";
 import { authRouter } from "./routes/auth";
 import { folderRouter } from "./routes/folders";
 import { feedRouter } from "./routes/feeds";
+import { sourceRouter } from "./routes/sources";
 import { authenticateJWT } from "./middleware/auth";
 import { bookmarkRouter } from "./routes/bookmarks";
 
@@ -21,11 +22,12 @@ app.use(authenticateJWT);
 //Link routes.
 app.use("/calls", callRouter);
 app.use("/users", userRouter);
-app.use("/messages", msgRouter);
+app.use("/messages", umsgRouter);
 app.use("/auth", authRouter);
 app.use("/folders", folderRouter);
 app.use("/feeds", feedRouter);
 app.use('/bookmarks', bookmarkRouter)
+app.use('/sources', sourceRouter)
 
 /** Returns 404 when invalid URL is called. */
 app.use(((req, res, next) => {

@@ -39,13 +39,16 @@ export function Homepage({
 
   /** Toggle spinning logo when a user's feeds is loading. */
   useEffect(() => {
+    console.log({ userFeeds });
     if (Object.keys(userFeeds).length !== 0) {
+      console.log("Setting state.");
       setFolders(userFeeds.folders);
       setFeeds(userFeeds.feeds);
       setMessages(userFeeds.messages);
       setReactions(userFeeds.reactions);
       setSources(userFeeds.sources);
       setBookmarks(userFeeds.bookmarks);
+      console.log({ folders });
 
       setLoading(false);
     } else {
@@ -83,7 +86,7 @@ export function Homepage({
     <button onClick={toggleFeedModal}>Make New Feed</button>,
     <button onClick={toggleFolderModal}>Make New Folder</button>,
     <button onClick={toggleBookmarkModal}>Make New Bookmark</button>,
-  ]
+  ];
 
   const loadMessages = (newMessages: IUserMessage[]) => {
     newMessages.sort();
@@ -111,9 +114,7 @@ export function Homepage({
   const updateMessage = (uMessage: IUserMessage) => {
     setMessages((messages) => {
       return messages.map((message) =>
-        uMessage.id === message.id
-          ? { ...message, bookmark_id: uMessage.bookmark_id }
-          : message
+        uMessage.id === message.id ? { ...uMessage } : message
       );
     });
     console.log({ uMessage });
@@ -197,7 +198,7 @@ export function Homepage({
             loadMessages: loadMessages,
           }}
         >
-          <Sidebar buttons={formButtons} />
+          <Sidebar buttons={[<button></button>]} />
         </FeedContext.Provider>
         {currMessages.length === 0 ? (
           "No messages yet."

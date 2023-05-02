@@ -10,6 +10,13 @@ import { IUser } from "../types/IUser";
 import { IReaction } from "../types/IReaction";
 import { sendEmail } from "../helpers/email";
 import { QueryResult } from "pg";
+import { Folder } from "./folder";
+import { Feed } from "./feed";
+import { userMessage } from "./userMessage";
+import { Reaction } from "./reaction";
+import { Source } from "./source";
+import { Bookmark } from "./bookmark";
+import { INews } from "../types/INews";
 
 export class User {
 
@@ -155,7 +162,7 @@ export class User {
       }
 
       folders[feed.folder_id - 1].feeds.push(feed);
-      promises.push((feed.messages = await this.getMessagesByFeed(feed.id)));
+      promises.push((feed.messages = await userMessage.getMessagesByFeed(feed.id)));
     }
 
     await Promise.all([promises]);
@@ -163,52 +170,54 @@ export class User {
     return folders;
   }
 
-  /** Get object of messages by feed ID.
-   * Done to easily add array of messages to feed object,
-   * instead of checking each feed ID on a message to determine whether to add it.(Currenly unused)
-   */
-  static async getMessagesByFeed(feedID: number) {
-    const msgQuery = await db.query(
-      `SELECT 
-        m.id, feed_id notes, clicks, react_id, source_name,
-        seen, author, title, content, date_created, source_link
-      FROM user_messages um 
-      JOIN messages m ON um.message_id = m.id
-      WHERE feed_id=$1`,
-      [feedID]
-    );
-    return msgQuery.rows;
-  }
-  static async getUserMessages(userID: number) {
-    let requests = await Promise.all([
-      db.query(`SELECT * FROM folders 
-            WHERE user_id=$1`, [userID]),
-      db.query(`SELECT f.id, f.folder_id, s.name AS source_name, s.img AS source_img, feed_name 
-            FROM feeds f 
-            JOIN sources s ON f.source_id = s.id
-            WHERE user_id=$1`, [userID]),
-      db.query(`SELECT 
-              m.id, feed_id, notes, clicks, react_id, feed_id, bookmark_id,
-              seen, source_name, author, title, content, date_created, source_link
-            FROM user_messages um 
-            JOIN messages m ON um.message_id = m.id
-            WHERE user_id=$1
-            ORDER BY SEEN ASC, date_created DESC`, [userID]),
-      db.query(`SELECT * FROM reactions`),
-      db.query(`SELECT * FROM sources`),
-      db.query(`SELECT * FROM bookmarks WHERE user_id=$1`, [userID]),
-    ]);
+  static async getUserMessages(userID: number): Promise<INews> {
+    // let requests = await Promise.all([
+    //   db.query(`SELECT * FROM folders 
+    //         WHERE user_id=$1`, [userID]),
+    //   db.query(`SELECT f.id, f.folder_id, s.name AS source_name, s.img AS source_img, feed_name 
+    //         FROM feeds f 
+    //         JOIN sources s ON f.source_id = s.id
+    //         WHERE user_id=$1`, [userID]),
+    //   db.query(`SELECT 
+    //   m.id, feed_id, notes, clicks, react_id, feed_id, bookmark_id,
+    //   seen, source_name, author, title, content, date_created, source_link
+    // FROM user_messages um 
+    // JOIN messages m ON um.message_id = m.id
+    // WHERE user_id=$1
+    // ORDER BY SEEN ASC, date_created DESC`, [userID]),
+    //   db.query(`SELECT * FROM reactions`),
+    //   db.query(`SELECT * FROM sources`),
+    //   db.query(`SELECT * FROM bookmarks WHERE user_id=$1`, [userID]),
+    // ]);
 
-    const masterFeeds = {
-      folders: requests[0].rows,
-      feeds: requests[1].rows,
-      messages: requests[2].rows,
-      reactions: requests[3].rows,
-      sources: requests[4].rows,
-      bookmarks: requests[5].rows
+    // const masterFeeds = {
+    //   folders: requests[0].rows,
+    //   feeds: requests[1].rows,
+    //   messages: requests[2].rows,
+    //   reactions: requests[3].rows,
+    //   sources: requests[4].rows,
+    //   bookmarks: requests[5].rows
+    // }
+
+    // return masterFeeds
+
+    const requests = await Promise.all([
+      Folder.getFoldersByUser(userID),
+      Feed.getFeedsByUser(userID),
+      userMessage.getMessagesByUser(userID),
+      Reaction.getReactions(),
+      Source.getAll(),
+      Bookmark.getBookmarksByUser(userID)
+    ])
+
+    return {
+      folders: requests[0],
+      feeds: requests[1],
+      messages: requests[2],
+      reactions: requests[3],
+      sources: requests[4],
+      bookmarks: requests[5]
     }
-
-    return masterFeeds
   }
 
   static async getMetrics(userID: number) {

@@ -35,11 +35,10 @@ export class Folder {
     );
     return query.rows[0];
   }
-  static async getFoldersOfUser(userID: number): Promise<IFolder[]> {
+  static async getFoldersByUser(userID: number): Promise<IFolder[]> {
     let query: QueryResult<IFolder> = await db.query(
       `SELECT * FROM folders
-        WHERE user_id=$1 
-        RETURNING *`,
+        WHERE user_id=$1`,
       [userID]
     );
     return query.rows;

@@ -6,6 +6,7 @@ import { Folder } from "../models/folder";
 import { BadRequestError } from "../helpers/ExpressError";
 import folderNew from "../schemas/folderNew";
 import folderPatch from "../schemas/folderPatch";
+import { ensureCorrectUser } from "../middleware/auth";
 
 export const folderRouter = Router();
 
@@ -43,6 +44,19 @@ folderRouter.patch("/:folderID", async function (req, res, next) {
     throw new BadRequestError(e);
   }
 } as RequestHandler);
+
+folderRouter.delete('/:userID', ensureCorrectUser, async function (req, res, next) {
+  try {
+    const { userID } = req.params
+
+    let deleteFolder = await Folder.deleteFoldersOfUser(+userID)
+
+    return res.json({ deleteFolder })
+  }
+  catch (e: any) {
+    throw new BadRequestError(e)
+  }
+} as RequestHandler)
 
 /** Delete folder. */
 folderRouter.delete("/:folderID", async function (req, res, next) {

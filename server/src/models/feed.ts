@@ -2,7 +2,8 @@ import { QueryResult } from "pg";
 import { db } from "../db";
 import { IFeed } from "../types/IFeed";
 
-export class Feeds {
+export class Feed {
+
   /** Get a feed by it's ID. */
   static async getFeed(feedID: number): Promise<IFeed> {
     const query: QueryResult<IFeed> = await db.query(
@@ -30,7 +31,7 @@ export class Feeds {
     return query.rows[0];
   }
 
-  static async getFeedsByFolder(folderID: number): Promise<IFeed> {
+  static async getFeedsByFolderID(folderID: number): Promise<IFeed[]> {
     const query: QueryResult<IFeed> = await db.query(
       `SELECT f.id, f.user_id, f.folder_id, s.name AS source_name, 
       s.img AS source_img, feed_name, call_id 
@@ -39,19 +40,19 @@ export class Feeds {
       WHERE folder_id=$1`,
       [folderID]
     );
-    return query.rows[0];
+    return query.rows;
   }
 
-  static async getFeedsByUser(userID: number): Promise<IFeed> {
+  static async getFeedsByUser(userID: number): Promise<IFeed[]> {
     const query: QueryResult<IFeed> = await db.query(
       `SELECT f.id, f.user_id, f.folder_id, s.name AS source_name, 
-      s.img AS source_img, feed_name, call_id 
+      s.img AS source_img, feed_name
       FROM feeds f
       JOIN sources s ON f.source_id = s.id
       WHERE user_id=$1`,
       [userID]
     );
-    return query.rows[0];
+    return query.rows;
   }
 
   static async deleteFeed(feedID: number): Promise<IFeed> {

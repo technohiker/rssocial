@@ -2,8 +2,8 @@
 
 import Router, { RequestHandler } from "express";
 import { Call } from "../models/call";
-import { Feeds } from "../models/feeds";
-import { Message } from "../models/message";
+import { Feed } from "../models/feed";
+import { userMessage } from "../models/userMessage";
 import { BadRequestError } from "../helpers/ExpressError";
 import { ICall } from "../types/ICall";
 import { ensureLoggedIn } from "../middleware/auth";
@@ -27,7 +27,7 @@ callRouter.post('/new', ensureLoggedIn, async function (req, res, next) {
       //Make RSS Call.
       newCall = await Call.makeRSSCall(req.body.url)
       //Make RSS Feed.
-      Feeds.newFeed(req.body.name, +id, req.body.folder, 1, newCall.id)
+      Feed.newFeed(req.body.name, +id, req.body.folder, 1, newCall.id)
       //TODO: Make sure URL passed in is valid.
     }
     else if (source === "twitter") {
@@ -66,9 +66,10 @@ callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
 
       if (!call.feed_id) return res.json({ "No Feed ID": call })
       if (!xml.title) return res.json({ "No Source Name": call })
-      const msgRes = await Message.addMessages(messages, id, call.feed_id, xml.title)
+      const msgRes = await userMessage.addMessages(messages, xml.title)
+      const umsgRes = await userMessage.addUserMessages(msgRes, id, call.feed_id)
       console.log({ msgRes })
-      allMessages.push(...msgRes)
+      allMessages.push(...umsgRes)
     }
     console.log({ allMessages })
     return res.json({ "messages": allMessages })

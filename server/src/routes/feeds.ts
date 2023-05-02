@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { RequestHandler } from "express";
-import { Feeds } from "../models/feeds";
+import { Feed } from "../models/feed";
 import { ensureCorrectUser } from "../middleware/auth";
 
 export const feedRouter = Router();
@@ -9,7 +9,7 @@ feedRouter.get('/:username', ensureCorrectUser, async function (req, res, next) 
   try {
     const userID = res.locals.user.id
 
-    const feeds = await Feeds.getFeedsByUser(userID)
+    const feeds = await Feed.getFeedsByUser(userID)
     return res.json({ feeds: feeds })
   }
   catch (e: any) {
@@ -17,9 +17,12 @@ feedRouter.get('/:username', ensureCorrectUser, async function (req, res, next) 
   }
 } as RequestHandler)
 
-feedRouter.get('/', async function (req, res, next) {
+/** Get a single feed. */
+feedRouter.get('/:id', async function (req, res, next) {
   try {
-
+    const { id } = req.params
+    const feed = await Feed.getFeed(+id)
+    return res.json({ feed })
   }
   catch (e: any) {
     return next(e)
@@ -29,7 +32,7 @@ feedRouter.get('/', async function (req, res, next) {
 feedRouter.delete('/:id', async function (req, res, next) {
   try {
     const { id } = req.params
-    const feed = await Feeds.deleteFeed(+id)
+    const feed = await Feed.deleteFeed(+id)
     return res.json({ feed })
   }
   catch (e: any) {

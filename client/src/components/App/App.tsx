@@ -143,21 +143,18 @@ export function App() {
               getUserFeeds={getUserFeeds}
             />
           </Route>
-          <ProtectedRoute exact path="/profile" auth={authToken}>
-            <UserPage />
-          </ProtectedRoute>
           <AuthorizedRoute exact path="/register" token={token}>
             <RegisterForm onSubmission={registerUser} />
           </AuthorizedRoute>
           <AuthorizedRoute exact path="/login" token={token}>
             <LoginForm onSubmission={loginUser} />
           </AuthorizedRoute>
-          <Route exact path="/metrics">
+          <ProtectedRoute exact path="/metrics" auth={authToken}>
             <Metrics
               currUser={currUser}
               totalMessages={userFeeds.messages ? userFeeds.messages.length : 0}
             />
-          </Route>
+          </ProtectedRoute>
           <Route exact path="/logout">
             <Logout logout={logoutUser} />
           </Route>
@@ -183,10 +180,6 @@ const unauthRoutes = [
   },
 ];
 const authRoutes = [
-  {
-    path: "/profile/edit",
-    text: "Profile",
-  },
   {
     path: "/metrics",
     text: "Metrics",

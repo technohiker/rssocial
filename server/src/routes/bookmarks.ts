@@ -74,7 +74,7 @@ bookmarkRouter.delete('/:id', ensureCorrectUser, async function (req, res, next)
 bookmarkRouter.get('/', ensureCorrectUser, async function (req, res, next) {
   try {
     const { id } = res.locals.user
-    const bookmarks = await Bookmark.getByUserID(+id)
+    const bookmarks = await Bookmark.getBookmarksByUser(+id)
     return res.json({ bookmarks })
   }
   catch (e: any) {

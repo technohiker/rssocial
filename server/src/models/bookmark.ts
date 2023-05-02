@@ -59,7 +59,7 @@ export class Bookmark {
     }
   }
 
-  static async getByUserID(userID: number): Promise<IBookmark[]> {
+  static async getBookmarksByUser(userID: number): Promise<IBookmark[]> {
     try {
       const bookmarks: QueryResult<IBookmark> = await db.query(
         `SELECT * FROM bookmarks

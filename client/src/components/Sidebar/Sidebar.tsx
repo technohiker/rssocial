@@ -9,6 +9,7 @@ import { HamburgerButton } from "../HamburgerButton/HamburgerButton";
 
 /** Contains all RSS info. */
 export function Sidebar({ buttons }: ISidebarProps) {
+  console.log({ FeedContext });
   const context = useContext(FeedContext);
   console.log({ context });
   const { folders, setFolders } = context;
@@ -38,32 +39,40 @@ export function Sidebar({ buttons }: ISidebarProps) {
 
   return (
     <>
-    <HamburgerButton buttons={buttons}/>
-    <UncontrolledAccordion flush className="sidebar">
-      <div>
-        {bookmarks.map((bookmark) => (
-          <AccordionItem>
-            <BookmarkObject
-              bookmarkID={bookmark.id}
-              name={bookmark.name}
-              icon={bookmark.icon}
-              removeBookmark={removeBookmark}
-            />
-          </AccordionItem>
-        ))}
-      </div>
-      <div>
-        {folders.map((folder) => (
-          <AccordionItem>
-            <FolderObject
-              folderID={folder.id}
-              folderName={folder.name}
-              removeFolder={removeFolder}
-            />
-          </AccordionItem>
-        ))}
-      </div>
-    </UncontrolledAccordion>
+      <HamburgerButton buttons={buttons} />
+      <UncontrolledAccordion flush className="sidebar">
+        <div>
+          {bookmarks ? (
+            bookmarks.map((bookmark) => (
+              <AccordionItem>
+                <BookmarkObject
+                  bookmarkID={bookmark.id}
+                  name={bookmark.name}
+                  icon={bookmark.icon}
+                  removeBookmark={removeBookmark}
+                />
+              </AccordionItem>
+            ))
+          ) : (
+            <></>
+          )}
+        </div>
+        <div>
+          {folders ? (
+            folders.map((folder) => (
+              <AccordionItem>
+                <FolderObject
+                  folderID={folder.id}
+                  folderName={folder.name}
+                  removeFolder={removeFolder}
+                />
+              </AccordionItem>
+            ))
+          ) : (
+            <></>
+          )}
+        </div>
+      </UncontrolledAccordion>
     </>
   );
 }
