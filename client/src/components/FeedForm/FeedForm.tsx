@@ -7,7 +7,7 @@ import { IFolder } from "../../types/IFolder";
 import { ISource } from "../../types/ISource";
 import { Conditional } from "../../helpers/FormFields/FieldCondition";
 
-export function RSSForm({ onSubmission, folders, sources }: IRSSFormProps) {
+export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
   const required = (value: any) => {
     return value ? undefined : "Required";
   };
@@ -22,6 +22,13 @@ export function RSSForm({ onSubmission, folders, sources }: IRSSFormProps) {
 
   const submission = async (evt: IRSSFormSubmit) => {
     console.log({ evt });
+    if (
+      (evt.source === "rss" && !evt.url) ||
+      (evt.source === "reddit" && !evt.subreddit)
+    ) {
+      setError("Please fill out the whole form.");
+      return;
+    }
     let result = await onSubmission(evt);
     if (result) {
       setError(result[0]);
@@ -92,14 +99,16 @@ export function RSSForm({ onSubmission, folders, sources }: IRSSFormProps) {
             type={"text"}
             placeholder={""}
           />
-          <FieldInput
-            name="url"
-            className="mb-3"
-            validation={required}
-            label={"RSS URL:"}
-            type={"text"}
-            placeholder={""}
-          />
+          <Conditional when="source" is="rss">
+            <FieldInput
+              name="url"
+              className="mb-3"
+              label={"RSS URL:"}
+              type={"text"}
+              placeholder={"https://lifehacker.com/rss"}
+            />
+          </Conditional>
+
           {/* <Conditional when="source" is="RSS Feed">
             <FieldInput
               name="frequency"
@@ -130,6 +139,15 @@ export function RSSForm({ onSubmission, folders, sources }: IRSSFormProps) {
               />
             </>
           )} */}
+          <Conditional when="source" is="reddit">
+            <FieldInput
+              name="subreddit"
+              className="mb-3"
+              label="Subreddit:"
+              type="text"
+              placeholder="news,jokes,nba..."
+            />
+          </Conditional>
           {/* <label>
             Automatically retrieve new data, or schedule when call occurs?
           </label>
@@ -149,11 +167,12 @@ export interface IRSSFormSubmit {
   folder: string;
   source: string;
   name: string;
-  url: string;
+  url?: string;
   twt_hashtag?: string;
   twt_list?: string;
   twt_searchTerm?: string;
   twt_user?: string;
+  subreddit?: string;
 }
 interface IRSSFormProps {
   onSubmission: (evt: IRSSFormSubmit) => Promise<undefined | string[]>;

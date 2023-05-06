@@ -28,4 +28,46 @@ export class Source {
       throw new BadRequestError(e)
     }
   }
+
+  static async deleteSource(id: number) {
+    try {
+      const sources: QueryResult<ISource> = await db.query(
+        `DELETE FROM sources
+        WHERE id=$1
+        RETURNING *`, [id]
+      )
+      return sources.rows[0]
+    }
+    catch (e: any) {
+      throw new BadRequestError(e)
+    }
+  }
+
+  static async changeName(id: number, name: string) {
+    try {
+      const sources: QueryResult<ISource> = await db.query(
+        `UPDATE sources
+        SET name=$2
+        WHERE id=$1
+        RETURNING *`, [id, name]
+      )
+      return sources.rows[0]
+    }
+    catch (e: any) {
+      throw new BadRequestError(e)
+    }
+  }
+
+  static async getSourceID(name: string) {
+    try {
+      const sources: QueryResult<ISource> = await db.query(
+        `SELECT id FROM sources
+        WHERE name=$1`, [name]
+      )
+      return sources.rows[0]
+    }
+    catch (e: any) {
+      throw new BadRequestError(e)
+    }
+  }
 }

@@ -28,7 +28,7 @@ VALUES ('Select Reaction','https://example.com/icon/neutral.jpg'),
 
 -- Insert some sample calls
 INSERT INTO calls (base_url, request_body, request_params, request_headers) 
-VALUES ('https://api.twitter.com/1.1/statuses/user_timeline.json', '', 'user_id=12345', 'Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+VALUES ('https://api.twitter.com/1.1/statuses/user_timeline.json', '', 'user_id=12345', '"Authorization": Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 
 -- Insert some sample feeds
 INSERT INTO feeds (user_id, folder_id, source_id, feed_name, call_id) 

@@ -5,6 +5,11 @@ import Parser from "rss-parser";
 import { db } from "../db";
 import { QueryResult } from "pg";
 import { ICall } from "../types/ICall";
+import { redditCall } from "./reddit";
+import { IRedditPost, IRedditResponse } from "../types/IReddit";
+import { IParams, convertParamsToString } from "../helpers/params";
+import axios, { AxiosRequestHeaders } from "axios";
+import { BadRequestError } from "../helpers/ExpressError";
 
 export class Call {
 
@@ -21,8 +26,15 @@ export class Call {
       //xml.items = messages
       return xml
     } catch (e: any) {
-      return "Invalid URL";
+      throw new BadRequestError("Invalid URL");
     }
+  }
+
+  static async callReddit(url: string, params: string, headers: string) {
+    console.log({ headers })
+    const jsonHeaders = JSON.parse(`{ ${headers} }`)
+    const response: IRedditResponse = await axios.get(url, { params, headers: jsonHeaders })
+    return response.data
   }
 
   /** Convert RSS messages into IMessage for storage.
@@ -87,10 +99,30 @@ export class Call {
     return newMessage
   }
 
+  static redditToMessage(redditMsg: IRedditPost) {
+    const newMessage = {} as IMessage
+
+    newMessage.author = redditMsg.author
+    newMessage.title = redditMsg.title
+    newMessage.date_created = new Date(redditMsg.created_utc * 1000)
+    newMessage.source_link = `https://reddit.com${redditMsg.permalink}`
+    newMessage.content = redditMsg.selftext
+    newMessage.description = ""
+
+    return newMessage
+  }
+
   /** Use info received from front-end to create calls tailored to RSS feeds. */
   static makeRSSCall(url: string) {
     //Test if URL is a valid RSS URL.
-    console.log({ url })
+    try {
+      const parser = new Parser()
+      const xml = parser.parseURL(url)
+    }
+    catch (e: any) {
+      throw new BadRequestError(e)
+    }
+
     return this.newCall(url)
   }
 
@@ -106,6 +138,7 @@ export class Call {
   }
 
   static async getByUserID(userID: number) {
+    //Also returns info to help later on.
     const query: QueryResult<ICall> = await db.query(
       `SELECT c.id, f.id AS feed_id, s.name AS source_name, base_url, request_body, request_params, request_headers
       FROM calls c
@@ -115,6 +148,46 @@ export class Call {
     )
     return query.rows
   }
+
+  static async callRedditSnoowrap(subreddit: string) {
+    console.log({ subreddit })
+    console.log({ redditCall })
+    const result = redditCall.getSubreddit(subreddit)
+    //console.log({ result })
+    const hot = await result.getHot()
+    // console.log({ hot })
+    return hot
+  }
+
+  static async makeRedditCall(subreddit: string, paramBody: IParams = {} as IParams) {
+    const url = `https://oauth.reddit.com/r/${subreddit}`
+
+    console.log("Process:", process.env)
+
+    if (!process.env.reddit_token || !process.env.reddit_useragent) throw new BadRequestError("Reddit environment variables not set.")
+
+    const headers = {
+      "Authorization": `Bearer ${process.env.reddit_token}`,
+      "User-Agent": process.env.reddit_useragent
+    } as AxiosRequestHeaders
+
+    const params = convertParamsToString(paramBody);
+    //Check if call can be made.
+
+    console.log({ url, headers, params })
+
+    try {
+      const response = await axios.get(url, { headers, params })
+      if (response.status === 404) throw new BadRequestError("Invalid subreddit.")
+    }
+    catch (e: any) {
+      console.log({ e })
+    }
+
+
+    return this.newCall(url, null, params, JSON.stringify(headers))
+  }
+
 }
 
 interface ItemEx extends Item {

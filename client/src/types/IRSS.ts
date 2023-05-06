@@ -32,6 +32,10 @@ export interface IRSSItem {
   title: string;
 }
 
+export interface IRedditRSSItem {
+
+}
+
 
 export interface IRSSParserObject { //Only exists due to rss-parser.
   content: string,

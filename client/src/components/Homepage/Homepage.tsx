@@ -1,6 +1,6 @@
 import "./Homepage.css";
 import { useState, useEffect, useContext } from "react";
-import { IRSSFormSubmit, RSSForm } from "../RSSForm/RSSForm";
+import { IRSSFormSubmit, FeedForm } from "../FeedForm/FeedForm";
 import { Message } from "../Message/Message";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { Sidebar } from "../Sidebar/Sidebar";
@@ -168,7 +168,7 @@ export function Homepage({
           <ModalHeader toggle={toggleFeedModal}>Generate New Feed</ModalHeader>
           <ModalBody>
             {
-              <RSSForm
+              <FeedForm
                 onSubmission={addCall}
                 sources={sources}
                 folders={folders}

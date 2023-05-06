@@ -1,7 +1,7 @@
 import axios from "axios";
 import { IUser } from "../types/IUser";
 import { Redirect } from "react-router-dom";
-import { IRSSFormSubmit } from "../components/RSSForm/RSSForm";
+import { IRSSFormSubmit } from "../components/FeedForm/FeedForm";
 import { IBookmark } from "../types/IBookmark";
 import { IUserMessage } from "../types/IMessage";
 import { IMetrics } from "../types/IMetrics";
@@ -41,7 +41,7 @@ export class ServerCaller {
 
   /** Send info for new call and feed. */
   static async postFeed(body: IRSSFormSubmit): Promise<IFeed> {
-    const response = await this.request(`calls/new?source=${body.source}`, "post", { ...body })
+    const response = await this.request(`calls/new/${body.source}`, "post", { ...body })
     console.log({ response })
     return response.feed
   }
