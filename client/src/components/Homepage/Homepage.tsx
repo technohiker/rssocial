@@ -95,6 +95,7 @@ export function Homepage({
 
   /** Submit information for a new call, and return a new feed object. */
   const addCall = async (body: IRSSFormSubmit) => {
+    console.log({ body });
     try {
       const newFeed = await ServerCaller.postFeed(body);
       console.log({ newFeed });

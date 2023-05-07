@@ -15,7 +15,7 @@ export interface IRedditResponse {
 }
 
 export interface IRedditPost {
-  selftext: string,
+  selftext_html: string,
   title: string,
   score: number,
   author: string,

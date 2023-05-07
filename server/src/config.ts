@@ -32,9 +32,6 @@ export const { reddit_token } = process.env;
 export const { reddit_useragent } = process.env;
 export const { reddit_refreshtoken } = process.env;
 
-if (reddit_refreshtoken === undefined) throw new Error("Reddit refresh token not set.")
-
-export const redditToken = validateRedditToken(reddit_refreshtoken)
 
 export const PORT = +(process.env.PORT ?? 3001);
 
@@ -45,16 +42,16 @@ export function getDatabaseUri() {
     : `postgresql://${pg_user}:${pg_password}@${pg_host}:${pg_port}/${pg_database}`;
 }
 
-/** Reddit's access token expires after enough time passes.  Check to see if it's still good.(how do I make this persist between sessions?) */
-async function validateRedditToken(refreshToken: string) {
-  //Define parameters.
-  const params = {
-    grant_type: "authorization_code",
-  }
-  const newToken = await axios.get("https://www.reddit.com/api/v1/access_token", {})
-  //https://www.reddit.com/api/v1/access_token
-  return "access_token"
-}
+// /** Reddit's access token expires after enough time passes.  Check to see if it's still good.(how do I make this persist between sessions?) */
+// async function validateRedditToken(refreshToken: string) {
+//   //Define parameters.
+//   const params = {
+//     grant_type: "authorization_code",
+//   }
+//   const newToken = await axios.get("https://www.reddit.com/api/v1/access_token", {})
+//   //https://www.reddit.com/api/v1/access_token
+//   return "access_token"
+// }
 
 // Speed up bcrypt during tests, since the algorithm safety doesn't need to be tested.
 export const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 14;

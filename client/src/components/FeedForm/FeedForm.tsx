@@ -41,6 +41,7 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
       initialValues={{
         folder: folders[0].id,
         source: sources[0].name,
+        sort: "hot",
       }}
       onSubmit={submission}
       render={({ handleSubmit, submitting }) => (
@@ -148,6 +149,19 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
               placeholder="news,jokes,nba..."
             />
           </Conditional>
+          <Conditional when="source" is={"reddit"}>
+            <FieldSelect
+              name="sort"
+              label="Sort:"
+              options={[
+                { value: "hot", text: "Hot" },
+                { value: "new", text: "New" },
+                { value: "top", text: "Top" },
+                { value: "rising", text: "Rising" },
+                { value: "controversial", text: "Controversial" },
+              ]}
+            />
+          </Conditional>
           {/* <label>
             Automatically retrieve new data, or schedule when call occurs?
           </label>
@@ -173,6 +187,7 @@ export interface IRSSFormSubmit {
   twt_searchTerm?: string;
   twt_user?: string;
   subreddit?: string;
+  sort?: string;
 }
 interface IRSSFormProps {
   onSubmission: (evt: IRSSFormSubmit) => Promise<undefined | string[]>;

@@ -56,6 +56,7 @@ export class userMessage {
     // return userQuery.rows;
   }
 
+  /** New instances of user's messages are added in. */
   static async addUserMessages(messages: IMessage[], userID: number, feedID: number): Promise<IUserMessage[]> {
     const idPairs = messages.map((msg) => ({
       message_id: msg.id,
@@ -69,8 +70,8 @@ export class userMessage {
 
     let userQuery: QueryResult<IUserMessage> = await db.query(`${usrValues} 
     ON CONFLICT (user_id, message_id) 
-      DO UPDATE SET user_id=$1 
-    RETURNING *`, [userID]);
+      DO UPDATE SET feed_id=$1
+    RETURNING *`, [feedID]);
 
     return userQuery.rows;
   }

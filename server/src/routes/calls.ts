@@ -33,11 +33,12 @@ callRouter.post('/new/rss', ensureLoggedIn, async function (req, res, next) {
 
 callRouter.post('/new/reddit', ensureLoggedIn, async function (req, res, next) {
   try {
-    const { subreddit, params } = req.body
+    const { subreddit, params, sort } = req.body
+    console.log("Req.body: ", req.body)
     const sourceID = await Source.getSourceID("reddit")
     const { id } = res.locals.user
 
-    const newCall = await Call.makeRedditCall(subreddit, params)
+    const newCall = await Call.makeRedditCall(subreddit, params, sort)
     const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, sourceID.id, newCall.id)
 
     return res.json({ feed: newFeed })
@@ -52,6 +53,7 @@ callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
     const { id } = res.locals.user
 
     const calls: ICall[] = await Call.getByUserID(id)
+    console.log({ calls })
 
     const allMessages: IUserMessage[] = []
 
@@ -69,20 +71,23 @@ callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
       }
 
       else if (call.source_name === "reddit") {
-        if (!call.request_headers) {
-          console.log("No headers found.  Please update the call in the database.")
-          continue
-        }
 
         if (!call.request_params) call.request_params = ""
 
-        const response = await Call.callReddit(call.base_url, call.request_params, call.request_headers)
+        const response = await Call.callReddit(call.base_url, call.request_params)
+        console.log({ response })
         title = response.children[0].data.subreddit
         messages = response.children.map((item) => Call.redditToMessage(item.data))
       }
 
-      if (!call.feed_id) return res.json({ "No Feed ID": call })
-      if (!title) return res.json({ "No Source Name": call })
+      if (!call.feed_id) {
+        console.log("No feed ID found.  Please update the call in the database.")
+        continue
+      }
+      if (!title) {
+        console.log("No title found.  Please update the call in the database.")
+        continue
+      }
 
       const msgRes = await userMessage.addMessages(messages, title)
       const umsgRes = await userMessage.addUserMessages(msgRes, id, call.feed_id)
@@ -111,9 +116,9 @@ callRouter.post("/rss", async function (req, res, next) {
 //Making Reddit Call.
 callRouter.get("/reddit", async function (req, res, next) {
   try {
-
-    const { subreddit, params } = req.body;
-    const redditFeed = await Call.makeRedditCall(subreddit, params);
+    const { subreddit, params, sort } = req.body;
+    console.log({ sort })
+    const redditFeed = await Call.makeRedditCall(subreddit, params, sort);
     return res.status(201).json({ feed: redditFeed });
     // console.log("Route reached.")
     // // const { subreddit } = req.body;

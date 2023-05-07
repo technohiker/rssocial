@@ -30,11 +30,11 @@ export class Call {
     }
   }
 
-  static async callReddit(url: string, params: string, headers: string) {
-    console.log({ headers })
-    const jsonHeaders = JSON.parse(`{ ${headers} }`)
-    const response: IRedditResponse = await axios.get(url, { params, headers: jsonHeaders })
-    return response.data
+  static async callReddit(url: string, params: string) {
+    const response = await axios.get<IRedditResponse>(url, { params })
+    console.log({ response })
+    console.log("response.data: ", response.data)
+    return response.data.data
   }
 
   /** Convert RSS messages into IMessage for storage.
@@ -104,9 +104,11 @@ export class Call {
 
     newMessage.author = redditMsg.author
     newMessage.title = redditMsg.title
+    console.log(redditMsg.created_utc)
     newMessage.date_created = new Date(redditMsg.created_utc * 1000)
+    console.log(newMessage.date_created)
     newMessage.source_link = `https://reddit.com${redditMsg.permalink}`
-    newMessage.content = redditMsg.selftext
+    newMessage.content = redditMsg.selftext_html
     newMessage.description = ""
 
     return newMessage
@@ -159,33 +161,25 @@ export class Call {
     return hot
   }
 
-  static async makeRedditCall(subreddit: string, paramBody: IParams = {} as IParams) {
-    const url = `https://oauth.reddit.com/r/${subreddit}`
-
-    console.log("Process:", process.env)
+  static async makeRedditCall(subreddit: string, paramBody: IParams = {} as IParams, sort: string) {
+    const url = `https://www.reddit.com/r/${subreddit}/${sort}.json`
 
     if (!process.env.reddit_token || !process.env.reddit_useragent) throw new BadRequestError("Reddit environment variables not set.")
-
-    const headers = {
-      "Authorization": `Bearer ${process.env.reddit_token}`,
-      "User-Agent": process.env.reddit_useragent
-    } as AxiosRequestHeaders
 
     const params = convertParamsToString(paramBody);
     //Check if call can be made.
 
-    console.log({ url, headers, params })
 
     try {
-      const response = await axios.get(url, { headers, params })
-      if (response.status === 404) throw new BadRequestError("Invalid subreddit.")
+      const response = await axios.get(url, { params })
+      console.log("Test Response:", response.status)
     }
     catch (e: any) {
-      console.log({ e })
+      throw new BadRequestError(e)
     }
 
 
-    return this.newCall(url, null, params, JSON.stringify(headers))
+    return this.newCall(url, null, params, null)
   }
 
 }
