@@ -15,7 +15,7 @@ export function MessageList({
     <div className="message-list">
       {messages.map((message) => (
         <Message
-          key={message.title}
+          key={message.id}
           message={message}
           reactions={reactions}
           thisReaction={message.react_id}

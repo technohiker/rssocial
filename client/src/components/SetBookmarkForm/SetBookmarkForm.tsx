@@ -2,7 +2,7 @@ import { Field, Form } from "react-final-form";
 import { useState } from "react";
 import { IBookmark } from "../../types/IBookmark";
 
-export function BookmarkFormAdd({
+export function SetBookmarkForm({
   onSubmission,
   bookmarkOptions,
   messageID,
@@ -14,7 +14,7 @@ export function BookmarkFormAdd({
 
   const submission = async (evt: IBookMarkFormSubmit) => {
     console.log({ evt });
-    await onSubmission(evt.bookmark);
+    let result = await onSubmission(evt.bookmark);
   };
   return (
     <Form

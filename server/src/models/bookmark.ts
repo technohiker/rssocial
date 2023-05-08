@@ -46,6 +46,7 @@ export class Bookmark {
   }
 
   static async deleteBookmark(id: number): Promise<IBookmark> {
+    console.log({ id })
     try {
       const bookmark: QueryResult<IBookmark> = await db.query(
         `DELETE FROM bookmarks

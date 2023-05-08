@@ -14,7 +14,7 @@ import { ReactionForm } from "../ReactionForm/ReactionForm";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { IReaction } from "../../types/IReaction";
 import { ServerCaller } from "../../helpers/ServerCaller";
-import { BookmarkFormAdd } from "../BookmarkFormAdd/BookmarkFormAdd";
+import { SetBookmarkForm } from "../SetBookmarkForm/SetBookmarkForm";
 import { NotesForm } from "../NotesForm/NotesForm";
 import { IBookmark } from "../../types/IBookmark";
 
@@ -25,7 +25,15 @@ export function Message({
   bookmarks,
   updateMessage,
 }: IMessageProps) {
-  const sanitizedHTML = DOMPurify.sanitize(message.content);
+  let DOMString = new DOMParser().parseFromString(message.content, "text/html")
+    .documentElement.textContent;
+
+  if (DOMString === "null" || !DOMString) {
+    //DOMString is returning a string of 'null' instead of null.
+    DOMString = "";
+  }
+
+  const sanitizedHTML = DOMPurify.sanitize(DOMString);
 
   let author = "";
   if (message.author) author = `by ${message.author}`;
@@ -34,30 +42,21 @@ export function Message({
 
   const addClick = async () => {
     const res = await ServerCaller.addClick(message.id);
-    console.log({ res });
-
     if (res) updateMessage({ ...message, clicks: res });
   };
 
   const addToBookmark = async (bookmarkID: number) => {
-    console.log({ bookmarkID });
     const bkID = await ServerCaller.setBookmark(message.id, bookmarkID);
-    console.log({ bkID });
-
     if (bkID) updateMessage({ ...message, bookmark_id: bkID });
   };
 
   const addNotes = async (notes: string) => {
     const res = await ServerCaller.addNotes(message.id, notes);
-    console.log({ res });
-
     if (res) updateMessage({ ...message, notes: res });
   };
 
   const addReaction = async (reactID: number) => {
     const res = await ServerCaller.postReaction(reactID, message.id);
-    console.log({ res });
-
     if (res) updateMessage({ ...message, react_id: res });
   };
 
@@ -90,16 +89,15 @@ export function Message({
             {message.title}
           </a>
         </h2>
-        <h6>{message.date_created.toLocaleString()}</h6>
+        <h6>{new Date(message.date_created).toLocaleDateString()}</h6>
         <h6>{author}</h6>
-        {/** Indicator that message was read. */}
       </CardTitle>
       <CardBody>
         <h4>{message.description}</h4>
-        <h5
+        <div
           className="message-content"
           dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
-        ></h5>
+        ></div>
       </CardBody>
       <CardFooter>
         <ReactionForm
@@ -111,8 +109,7 @@ export function Message({
           messageID={message.id}
           defaultValue={thisReaction}
         />
-        {/* <Button name="folderButton">Add Bookmark</Button> */}
-        <BookmarkFormAdd
+        <SetBookmarkForm
           onSubmission={addToBookmark}
           bookmarkOptions={bookmarks.map((bookmark) => ({
             value: bookmark.id,

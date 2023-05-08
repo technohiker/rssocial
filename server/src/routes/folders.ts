@@ -45,27 +45,17 @@ folderRouter.patch("/:folderID", async function (req, res, next) {
   }
 } as RequestHandler);
 
-folderRouter.delete('/:userID', ensureCorrectUser, async function (req, res, next) {
-  try {
-    const { userID } = req.params
-
-    let deleteFolder = await Folder.deleteFoldersOfUser(+userID)
-
-    return res.json({ deleteFolder })
-  }
-  catch (e: any) {
-    throw new BadRequestError(e)
-  }
-} as RequestHandler)
-
 /** Delete folder. */
 folderRouter.delete("/:folderID", async function (req, res, next) {
   try {
+    console.log("Reached.")
     const { folderID } = req.params;
+    console.log({ folderID })
 
-    let deleteFolder = await Folder.deleteFolder(+folderID);
+    let folder = await Folder.deleteFolder(+folderID);
+    console.log({ folder })
 
-    return res.json({ deleteFolder });
+    return res.json({ folder });
   } catch (e: any) {
     throw new BadRequestError(e);
   }

@@ -17,7 +17,7 @@ import { INews } from "../../types/INews";
 import { ISource } from "../../types/ISource";
 import { MessageList } from "../MessageList/MessageList";
 import { IBookmark } from "../../types/IBookmark";
-import { BookmarkForm } from "../BookmarkFormNew/BookmarkFormNew";
+import { AddBookmarkForm } from "../AddBookmarkForm/AddBookmarkForm";
 
 export function Homepage({
   currUser,
@@ -48,8 +48,6 @@ export function Homepage({
       setReactions(userFeeds.reactions);
       setSources(userFeeds.sources);
       setBookmarks(userFeeds.bookmarks);
-      console.log({ folders });
-
       setLoading(false);
     } else {
       setLoading(true);
@@ -59,9 +57,7 @@ export function Homepage({
   const newFolder = async (name: string) => {
     try {
       const newFolder = await ServerCaller.postFolder(name);
-      console.log({ newFolder });
       setFolders([...folders, newFolder]);
-      console.log({ folders });
     } catch (e: any) {
       return e;
     }
@@ -70,9 +66,23 @@ export function Homepage({
   const newBookmark = async (name: string) => {
     try {
       const newBookmark = await ServerCaller.postBookmark(name);
-      console.log({ newBookmark });
       setBookmarks([...bookmarks, newBookmark]);
-      console.log({ bookmarks });
+    } catch (e: any) {
+      return e;
+    }
+  };
+
+  /** Submit information for a new call, and return a new feed object. */
+  const addCall = async (body: IRSSFormSubmit) => {
+    try {
+      const newFeed = await ServerCaller.postFeed(body);
+      console.log({ newFeed });
+      // setFeeds([...feeds, newFeed]);
+      // setFeeds((feeds) => [...feeds, newFeed]);
+      const newFeeds = [...feeds, newFeed];
+      setFeeds(newFeeds);
+      console.log({ feeds });
+      //  await getUserFeeds(currUser.username);
     } catch (e: any) {
       return e;
     }
@@ -89,27 +99,8 @@ export function Homepage({
   ];
 
   const loadMessages = (newMessages: IUserMessage[]) => {
-    newMessages.sort();
+    // newMessages.sort();
     setCurrMessages(newMessages);
-  };
-
-  /** Submit information for a new call, and return a new feed object. */
-  const addCall = async (body: IRSSFormSubmit) => {
-    console.log({ body });
-    try {
-      const newFeed = await ServerCaller.postFeed(body);
-      console.log({ newFeed });
-      setFeeds([...feeds, newFeed]);
-      console.log({ feeds });
-
-      await getUserFeeds(currUser.username);
-    } catch (e: any) {
-      return e;
-    }
-  };
-
-  const showObjects = () => {
-    console.log({ bookmarks });
   };
 
   const updateMessage = (uMessage: IUserMessage) => {
@@ -118,8 +109,6 @@ export function Homepage({
         uMessage.id === message.id ? { ...uMessage } : message
       );
     });
-    console.log({ uMessage });
-    console.log({ messages });
   };
 
   if (!currUser.id) {
@@ -155,6 +144,7 @@ export function Homepage({
     return (
       <>
         <p>Welcome, {currUser.username}!</p>
+
         <button onClick={toggleFolderModal}>Make New Folder</button>
         <Modal isOpen={folderModal} toggle={toggleFolderModal}>
           <ModalHeader toggle={toggleFolderModal}>
@@ -164,6 +154,7 @@ export function Homepage({
             <FolderForm onSubmission={newFolder} />
           </ModalBody>
         </Modal>
+
         <button onClick={toggleFeedModal}>Create New Feed</button>
         <Modal isOpen={feedModal} toggle={toggleFeedModal}>
           <ModalHeader toggle={toggleFeedModal}>Generate New Feed</ModalHeader>
@@ -177,15 +168,17 @@ export function Homepage({
             }
           </ModalBody>
         </Modal>
+
         <button onClick={toggleBookmarkModal}>Create New Bookmark</button>
         <Modal isOpen={bookmarkModal} toggle={toggleBookmarkModal}>
           <ModalHeader toggle={toggleBookmarkModal}>
             Create New Bookmark
           </ModalHeader>
           <ModalBody>
-            <BookmarkForm onSubmission={newBookmark} />
+            <AddBookmarkForm onSubmission={newBookmark} />
           </ModalBody>
         </Modal>
+
         <FeedContext.Provider
           value={{
             folders: folders,
@@ -201,6 +194,7 @@ export function Homepage({
         >
           <Sidebar buttons={[<button></button>]} />
         </FeedContext.Provider>
+
         {currMessages.length === 0 ? (
           "No messages yet."
         ) : (
@@ -211,7 +205,6 @@ export function Homepage({
             updateMessage={updateMessage}
           />
         )}
-        <button onClick={showObjects} />
       </>
     );
   }

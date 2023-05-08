@@ -32,8 +32,6 @@ export class Call {
 
   static async callReddit(url: string, params: string) {
     const response = await axios.get<IRedditResponse>(url, { params })
-    console.log({ response })
-    console.log("response.data: ", response.data)
     return response.data.data
   }
 
@@ -111,7 +109,18 @@ export class Call {
     newMessage.content = redditMsg.selftext_html
     newMessage.description = ""
 
+    //Reddit selftext contains comments that interfere with embedding.  Removing them now.
+    if (newMessage.content) {
+      const regex = new RegExp('&lt;!-- SC_OFF --&gt;', "g")
+      newMessage.content = newMessage.content.replace(regex, "")
+      console.log("String:", newMessage.content)
+    }
+
     return newMessage
+  }
+
+  static async runCall(call: ICall, userID: number) {
+
   }
 
   /** Use info received from front-end to create calls tailored to RSS feeds. */

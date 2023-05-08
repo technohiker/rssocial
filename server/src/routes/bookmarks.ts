@@ -58,10 +58,12 @@ bookmarkRouter.patch('/:id', ensureCorrectUser, async function (req, res, next) 
 
 
 /** Delete a bookmark.*/
-bookmarkRouter.delete('/:id', ensureCorrectUser, async function (req, res, next) {
+bookmarkRouter.delete('/:id', async function (req, res, next) {
   try {
-    const { id } = res.locals.user
+    const { id } = req.params
+    console.log("Received.")
     const bookmark = await Bookmark.deleteBookmark(+id)
+    console.log({ bookmark })
     return res.json({ bookmark })
   }
   catch (e: any) {

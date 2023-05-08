@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
 import { FieldSelect } from "../../helpers/FormFields/FieldSelect";
@@ -8,17 +7,12 @@ import { ISource } from "../../types/ISource";
 import { Conditional } from "../../helpers/FormFields/FieldCondition";
 
 export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
+  console.log({ folders });
+  console.log({ sources });
   const required = (value: any) => {
     return value ? undefined : "Required";
   };
   const [error, setError] = useState("");
-  const history = useHistory();
-
-  // let folders = [];
-
-  // if (folderOptions.length === 0) {
-  //   folders.push();
-  // }
 
   const submission = async (evt: IRSSFormSubmit) => {
     console.log({ evt });
@@ -33,35 +27,44 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
     if (result) {
       setError(result[0]);
     } else {
-      history.push("/");
+      setError("New feed generated!");
     }
   };
-  return (
-    <Form
-      initialValues={{
-        folder: folders[0].id,
-        source: sources[0].name,
-        sort: "hot",
-      }}
-      onSubmit={submission}
-      render={({ handleSubmit, submitting }) => (
-        <form onSubmit={handleSubmit}>
-          <p className="text-center">{error}</p>
-          <FieldSelect
-            name="folder"
-            validation={required}
-            label={"Pick a Folder:"}
-            options={[
-              ...folders.map((folder) => {
-                return {
-                  value: folder.id,
-                  text: folder.name,
-                };
-              }),
-            ]}
-          />
+  if (folders.length === 0)
+    return <p>Please add a folder before you try adding a feed!</p>;
+  else if (sources.length === 0)
+    return (
+      <p>
+        No potential sources(RSS, Twitter) found! Please contact the developer.
+      </p>
+    );
+  else
+    return (
+      <Form
+        initialValues={{
+          folder: folders[0].id,
+          source: sources[0].name,
+          sort: "hot",
+        }}
+        onSubmit={submission}
+        render={({ handleSubmit, submitting }) => (
+          <form onSubmit={handleSubmit}>
+            <p className="text-center">{error}</p>
+            <FieldSelect
+              name="folder"
+              validation={required}
+              label={"Pick a Folder:"}
+              options={[
+                ...folders.map((folder) => {
+                  return {
+                    value: folder.id,
+                    text: folder.name,
+                  };
+                }),
+              ]}
+            />
 
-          {/* <Field name="source" validate={required}>
+            {/* <Field name="source" validate={required}>
             {(props) => (
               <div className="mb-3">
                 <label className="form-label">Feed Type: </label>
@@ -83,34 +86,34 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
             )}
           </Field> */}
 
-          <FieldSelect
-            name="source"
-            validation={required}
-            label={"Pick a Source:"}
-            options={sources.map((source) => {
-              return { value: source.name, text: source.name };
-            })}
-          />
-
-          <FieldInput
-            name="name"
-            className="mb-3"
-            validation={required}
-            label={"Feed Name:"}
-            type={"text"}
-            placeholder={""}
-          />
-          <Conditional when="source" is="rss">
-            <FieldInput
-              name="url"
-              className="mb-3"
-              label={"RSS URL:"}
-              type={"text"}
-              placeholder={"https://lifehacker.com/rss"}
+            <FieldSelect
+              name="source"
+              validation={required}
+              label={"Pick a Source:"}
+              options={sources.map((source) => {
+                return { value: source.name, text: source.name };
+              })}
             />
-          </Conditional>
 
-          {/* <Conditional when="source" is="RSS Feed">
+            <FieldInput
+              name="name"
+              className="mb-3"
+              validation={required}
+              label={"Feed Name:"}
+              type={"text"}
+              placeholder={""}
+            />
+            <Conditional when="source" is="rss">
+              <FieldInput
+                name="url"
+                className="mb-3"
+                label={"RSS URL:"}
+                type={"text"}
+                placeholder={"https://lifehacker.com/rss"}
+              />
+            </Conditional>
+
+            {/* <Conditional when="source" is="RSS Feed">
             <FieldInput
               name="frequency"
               className="mb-3"
@@ -120,7 +123,7 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
               value="auto"
             />
           </Conditional> */}
-          {/* {selectedSource === "Pick an option" && (
+            {/* {selectedSource === "Pick an option" && (
             <>
               <FieldInput
                 name="frequency"
@@ -140,41 +143,41 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
               />
             </>
           )} */}
-          <Conditional when="source" is="reddit">
-            <FieldInput
-              name="subreddit"
-              className="mb-3"
-              label="Subreddit:"
-              type="text"
-              placeholder="news,jokes,nba..."
-            />
-          </Conditional>
-          <Conditional when="source" is={"reddit"}>
-            <FieldSelect
-              name="sort"
-              label="Sort:"
-              options={[
-                { value: "hot", text: "Hot" },
-                { value: "new", text: "New" },
-                { value: "top", text: "Top" },
-                { value: "rising", text: "Rising" },
-                { value: "controversial", text: "Controversial" },
-              ]}
-            />
-          </Conditional>
-          {/* <label>
+            <Conditional when="source" is="reddit">
+              <FieldInput
+                name="subreddit"
+                className="mb-3"
+                label="Subreddit:"
+                type="text"
+                placeholder="news,jokes,nba..."
+              />
+            </Conditional>
+            <Conditional when="source" is={"reddit"}>
+              <FieldSelect
+                name="sort"
+                label="Sort:"
+                options={[
+                  { value: "hot", text: "Hot" },
+                  { value: "new", text: "New" },
+                  { value: "top", text: "Top" },
+                  { value: "rising", text: "Rising" },
+                  { value: "controversial", text: "Controversial" },
+                ]}
+              />
+            </Conditional>
+            {/* <label>
             Automatically retrieve new data, or schedule when call occurs?
           </label>
           />
 
       <FieldInput name="frequencyField" label="Frequency:" type="number" /> */}
-          <button type="submit" disabled={submitting}>
-            Submit
-          </button>
-        </form>
-      )}
-    />
-  );
+            <button type="submit" disabled={submitting}>
+              Submit
+            </button>
+          </form>
+        )}
+      />
+    );
 }
 
 export interface IRSSFormSubmit {

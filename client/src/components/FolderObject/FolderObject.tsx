@@ -11,15 +11,21 @@ export function FolderObject({
 }: IFolderObjectProps) {
   const context = useContext(FeedContext);
   const { feeds, setFeeds } = context;
-  const [folderFeeds, setFolderFeeds] = useState(
-    feeds.filter((feed) => feed.folder_id === folderID)
-  );
+  //setFeeds((feeds) => feeds.filter((feed) => feed.folder_id === folderID));
+  // const [folderFeeds, setFolderFeeds] = useState(
+  //   feeds.filter((feed) => feed.folder_id === folderID)
+  // );
 
-  // useEffect(() => {
-  //   console.log({ feeds });
-  //   setFeeds(feeds.filter((feed) => feed.folder_id === folderID));
-  //   console.log({ feeds });
-  // }, []);
+  const [folderFeeds, setFolderFeeds] = useState(feeds);
+
+  console.log({ feeds });
+  console.log({ folderFeeds });
+
+  useEffect(() => {
+    console.log({ feeds });
+    setFeeds(feeds.filter((feed) => feed.folder_id === folderID));
+    console.log({ feeds });
+  }, []);
 
   const deleteFolder = async () => {
     await removeFolder(folderID);
@@ -37,8 +43,16 @@ export function FolderObject({
 
   const removeFeed = async (feedID: number) => {
     const feed = await ServerCaller.deleteFeed(feedID);
+    console.log({ feed });
+    // console.log({ folderFeeds });
+    // if (feed) {
+    //   setFolderFeeds((folderFeeds) =>
+    //     folderFeeds.filter((feed) => !(feed.id === feedID))
+    //   );
+    //   console.log({ folderFeeds });
+    // }
     if (feed) {
-      setFolderFeeds(folderFeeds.filter((feed) => !(feed.id === feedID)));
+      setFeeds((feeds) => feeds.filter((feed) => !(feed.id === feedID)));
     }
   };
 
@@ -50,10 +64,11 @@ export function FolderObject({
           <span>{folderName}</span>
         </CardBody>
       </Card>
-      {folderFeeds.map((feed) => {
+      {feeds.map((feed) => {
         if (feed.folder_id === folderID)
           return (
             <FeedObject
+              key={feed.id}
               icon={feed.source_img}
               feedName={feed.feed_name}
               feedID={feed.id}

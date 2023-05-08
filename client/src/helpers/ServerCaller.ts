@@ -147,6 +147,7 @@ export class ServerCaller {
   /** Delete a folder. */
   static async deleteFeed(feedID: number): Promise<IFeed> {
     let res = await this.request(`feeds/${feedID}`, "delete");
+    console.log({ res })
     return res.feed;
   }
 
@@ -179,7 +180,8 @@ export class ServerCaller {
   /** Mark a message as seen */
   static async addSeen(messageID: number): Promise<IUserMessage> {
     let res = await this.request(`messages/${messageID}/seen`, "post");
-    return res.message;
+    console.log({ res })
+    return res.seen;
   }
 
   /** Add a new bookmark. */

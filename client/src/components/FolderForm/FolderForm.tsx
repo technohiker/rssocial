@@ -1,16 +1,12 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
-import { FieldSelect } from "../../helpers/FormFields/FieldSelect";
 
 export function FolderForm({ onSubmission }: IFolderFormProps) {
   const required = (value: any) => {
-    console.log({ value });
     return value ? undefined : "Required";
   };
   const [error, setError] = useState("");
-  const history = useHistory();
 
   const submission = async (evt: IFolderFormSubmit) => {
     console.log("Fired!");
@@ -18,7 +14,7 @@ export function FolderForm({ onSubmission }: IFolderFormProps) {
     if (result) {
       setError(result[0]);
     } else {
-      history.push("/");
+      setError("New folder added!");
     }
   };
   return (

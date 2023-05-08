@@ -21,6 +21,7 @@ export class Feed {
     sourceID: number,
     callID: number
   ): Promise<IFeed> {
+    //Store feed into Feeds table.
     const query: QueryResult<IFeed> = await db.query(
       `INSERT INTO feeds (user_id, folder_id, source_id, call_id, feed_name)
       VALUES($1,$2,$3,$4,$5)
@@ -28,7 +29,17 @@ export class Feed {
       [userID, folderID, sourceID, callID, feedName]
     );
 
-    return query.rows[0];
+    const feedID = query.rows[0].id;
+
+    //Use Feed info to get additional data from database.
+    const query2: QueryResult<IFeed> = await db.query(
+      `SELECT f.id, f.user_id, f.folder_id, s.name AS source_name, 
+      s.img AS source_img, feed_name
+      FROM feeds f
+      JOIN sources s ON f.source_id = s.id
+      WHERE f.id=$1`, [feedID])
+
+    return query2.rows[0];
   }
 
   static async getFeedsByFolderID(folderID: number): Promise<IFeed[]> {
@@ -56,11 +67,15 @@ export class Feed {
   }
 
   static async deleteFeed(feedID: number): Promise<IFeed> {
+    console.log({ feedID })
     const query: QueryResult<IFeed> = await db.query(
       `DELETE FROM feeds
-       WHERE id=$1`,
+       WHERE id=$1
+       RETURNING *`,
       [feedID]
     );
+
+    console.log(query.rows[0])
 
     return query.rows[0];
   }

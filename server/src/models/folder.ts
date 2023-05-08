@@ -45,12 +45,14 @@ export class Folder {
   }
 
   static async deleteFolder(folderID: number): Promise<IFolder> {
+    console.log({ folderID })
     let query: QueryResult<IFolder> = await db.query(
       `DELETE FROM folders
          WHERE id=$1
          RETURNING *`,
       [folderID]
     );
+    console.log(query.rows[0])
     return query.rows[0];
   }
   static async deleteFoldersOfUser(userID: number): Promise<IFolder[]> {

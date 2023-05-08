@@ -21,7 +21,7 @@ CREATE TABLE messages (
     source_link TEXT NOT NULL
 );
 
-ALTER TABLE messages ADD CONSTRAINT unique_title_source_name unique(title,source_name);
+ALTER TABLE messages ADD CONSTRAINT unique_title_source_name unique(title,source_name, author);
 
 CREATE TABLE folders(
   id SERIAL PRIMARY KEY,
@@ -30,6 +30,8 @@ CREATE TABLE folders(
   name TEXT NOT NULL,
   icon TEXT
 );
+
+ALTER TABLE folders ADD CONSTRAINT unique_folders unique(user_id,name);
 
 CREATE TABLE sources(   --RSS, Twitter, Reddit, etc.
   id SERIAL PRIMARY KEY,
@@ -47,7 +49,7 @@ CREATE TABLE reactions (
 CREATE TABLE calls(  --User will not make calls every time.  Call info will need to be stored.
   id SERIAL PRIMARY KEY,
   base_url TEXT NOT NULL,
-  request_body TEXT, --Hash any passwords.
+  request_body TEXT,
   request_params TEXT,
   request_headers TEXT
 );
@@ -90,19 +92,3 @@ CREATE TABLE user_messages(
 );
 
 ALTER TABLE user_messages ADD CONSTRAINT unique_user_messages unique(user_id,message_id);
-
--- Twitter Feed Options:
-  -- User/List/Hashtag/Topic(?)/Search result
-  -- Minimum number of likes
-  -- Show Retweets?
-  -- Frequency of calls.
-
--- Reddit Feed Options:
-  -- User/Subreddit
-  -- Minimum number of votes
-  -- Show crossposts?
-  -- Token
-  -- Frequency of calls.
-
--- News Feed Options:
-  -- Frequency of calls.

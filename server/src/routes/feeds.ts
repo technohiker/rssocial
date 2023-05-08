@@ -32,7 +32,9 @@ feedRouter.get('/:id', async function (req, res, next) {
 feedRouter.delete('/:id', async function (req, res, next) {
   try {
     const { id } = req.params
+    console.log({ id })
     const feed = await Feed.deleteFeed(+id)
+    console.log({ feed })
     return res.json({ feed })
   }
   catch (e: any) {

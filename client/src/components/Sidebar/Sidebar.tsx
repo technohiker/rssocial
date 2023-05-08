@@ -23,7 +23,10 @@ export function Sidebar({ buttons }: ISidebarProps) {
     const folder = await ServerCaller.deleteFolder(folderID);
 
     if (folder) {
-      setFolders(folders.filter((folder) => !(folder.id === folderID)));
+      console.log({ folder });
+      setFolders((folders) =>
+        folders.filter((folder) => !(folder.id === folderID))
+      );
     }
   };
 
@@ -31,7 +34,8 @@ export function Sidebar({ buttons }: ISidebarProps) {
     const bookmark = await ServerCaller.deleteBookmark(bookmarkID);
 
     if (bookmark) {
-      setBookmarks(
+      console.log({ bookmark });
+      setBookmarks((bookmarks) =>
         bookmarks.filter((bookmark) => !(bookmark.id === bookmarkID))
       );
     }
@@ -44,7 +48,7 @@ export function Sidebar({ buttons }: ISidebarProps) {
         <div>
           {bookmarks ? (
             bookmarks.map((bookmark) => (
-              <AccordionItem>
+              <AccordionItem key={bookmark.id}>
                 <BookmarkObject
                   bookmarkID={bookmark.id}
                   name={bookmark.name}
@@ -60,7 +64,7 @@ export function Sidebar({ buttons }: ISidebarProps) {
         <div>
           {folders ? (
             folders.map((folder) => (
-              <AccordionItem>
+              <AccordionItem key={folder.id}>
                 <FolderObject
                   folderID={folder.id}
                   folderName={folder.name}

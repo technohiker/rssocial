@@ -2,7 +2,8 @@
 \prompt 'Return for yes or control-C to cancel > ' foo
 
 DROP DATABASE capstone_2;
-CREATE DATABASE capstone_2;
+CREATE DATABASE capstone_2
+  WITH ENCODING = 'UTF8';
 \connect capstone_2
 
 \i src/sql/schema.sql
@@ -12,7 +13,8 @@ CREATE DATABASE capstone_2;
 \prompt 'Return for yes or control-C to cancel > ' foo
 
 DROP DATABASE capstone_2_test;
-CREATE DATABASE capstone_2_test;
+CREATE DATABASE capstone_2_test
+  WITH ENCODING = 'UTF8';
 \connect capstone_2_test
 
 \i src/sql/schema.sql

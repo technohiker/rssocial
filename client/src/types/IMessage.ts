@@ -34,6 +34,6 @@ export interface IUserMessage {
   title: string;
   content: string;
   description: string,
-  date_created: Date;
+  date_created: string; //ISO date string
   source_link: string;
 }
