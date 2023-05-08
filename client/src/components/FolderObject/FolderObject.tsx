@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { Button, Card, CardBody } from "reactstrap";
+import { Button, Card, CardBody, Col, Container, Row } from "reactstrap";
 import { FeedObject } from "../FeedObject/FeedObject";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { ServerCaller } from "../../helpers/ServerCaller";
@@ -22,9 +22,7 @@ export function FolderObject({
   console.log({ folderFeeds });
 
   useEffect(() => {
-    console.log({ feeds });
     setFeeds(feeds.filter((feed) => feed.folder_id === folderID));
-    console.log({ feeds });
   }, []);
 
   const deleteFolder = async () => {
@@ -43,24 +41,16 @@ export function FolderObject({
 
   const removeFeed = async (feedID: number) => {
     const feed = await ServerCaller.deleteFeed(feedID);
-    console.log({ feed });
-    // console.log({ folderFeeds });
-    // if (feed) {
-    //   setFolderFeeds((folderFeeds) =>
-    //     folderFeeds.filter((feed) => !(feed.id === feedID))
-    //   );
-    //   console.log({ folderFeeds });
-    // }
     if (feed) {
       setFeeds((feeds) => feeds.filter((feed) => !(feed.id === feedID)));
     }
   };
 
   return (
-    <>
-      <Card onClick={loadAllFolderMessages}>
+    <Container>
+      <Card className="sidebar-card" onClick={loadAllFolderMessages}>
         <CardBody>
-          <img alt="folder" src="folder.png" />
+          <img alt="folder" className="sidebar-img" src="folder.png" />
           <span>{folderName}</span>
         </CardBody>
       </Card>
@@ -77,7 +67,7 @@ export function FolderObject({
           );
       })}
       <Button onClick={deleteFolder}>Remove Folder</Button>
-    </>
+    </Container>
   );
 }
 

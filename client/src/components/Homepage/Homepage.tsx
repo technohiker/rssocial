@@ -6,7 +6,7 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { UserContext } from "../../helpers/ContextUser";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Container, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
 import { IMessage, IUserMessage } from "../../types/IMessage";
 import { IFolder } from "../../types/IFolder";
@@ -53,6 +53,11 @@ export function Homepage({
       setLoading(true);
     }
   }, [userFeeds]);
+
+  useEffect(() => {
+    console.log({ messages });
+    setCurrMessages(messages);
+  }, [messages]);
 
   const newFolder = async (name: string) => {
     try {
@@ -178,33 +183,34 @@ export function Homepage({
             <AddBookmarkForm onSubmission={newBookmark} />
           </ModalBody>
         </Modal>
+        <Container>
+          <FeedContext.Provider
+            value={{
+              folders: folders,
+              setFolders: setFolders,
+              feeds: feeds,
+              setFeeds: setFeeds,
+              messages: messages,
+              setMessages: setMessages,
+              bookmarks: bookmarks,
+              setBookmarks: setBookmarks,
+              loadMessages: loadMessages,
+            }}
+          >
+            <Sidebar buttons={formButtons} />
+          </FeedContext.Provider>
 
-        <FeedContext.Provider
-          value={{
-            folders: folders,
-            setFolders: setFolders,
-            feeds: feeds,
-            setFeeds: setFeeds,
-            messages: messages,
-            setMessages: setMessages,
-            bookmarks: bookmarks,
-            setBookmarks: setBookmarks,
-            loadMessages: loadMessages,
-          }}
-        >
-          <Sidebar buttons={[<button></button>]} />
-        </FeedContext.Provider>
-
-        {currMessages.length === 0 ? (
-          "No messages yet."
-        ) : (
-          <MessageList
-            messages={currMessages}
-            reactions={reactions}
-            bookmarks={bookmarks}
-            updateMessage={updateMessage}
-          />
-        )}
+          {currMessages.length === 0 ? (
+            "No messages yet."
+          ) : (
+            <MessageList
+              messages={currMessages}
+              reactions={reactions}
+              bookmarks={bookmarks}
+              updateMessage={updateMessage}
+            />
+          )}
+        </Container>
       </>
     );
   }

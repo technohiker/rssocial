@@ -29,9 +29,11 @@ umsgRouter.post("/:id/react", async function (req, res, next) {
     const messageID = req.params.id;
     const userID = res.locals.user.id;
 
-    let reaction = await userMessage.addReaction(reactID, +messageID, userID);
+    console.log({ reactID, messageID, userID })
 
-    return res.json({ reaction: reaction });
+    let reactionID = await userMessage.addReaction(reactID, +messageID, userID);
+
+    return res.json({ reactID: reactionID });
   } catch (e: any) {
     return next(e);
   }

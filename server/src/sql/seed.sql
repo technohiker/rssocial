@@ -22,9 +22,9 @@ VALUES ('rss', 'rss.png', FALSE),
 
 -- Insert some sample reactions
 INSERT INTO reactions (name, img) 
-VALUES ('Select Reaction','https://example.com/icon/neutral.jpg'),
-        ('Like', 'https://example.com/icons/like.jpg'),
-       ('Dislike', 'https://example.com/icons/dislike.jpg');
+VALUES ('Select Reaction','placeholder.jpg'),
+        ('Like', 'thumbs-up.jpg'),
+       ('Dislike', 'thumbs-down.jpg');
 
 -- Insert some sample calls
 INSERT INTO calls (base_url, request_body, request_params, request_headers) 

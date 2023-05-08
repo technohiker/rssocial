@@ -3,4 +3,17 @@
   left: 0;
   margin-left: 1%;
   border-style: double;
+  width: 15%;
+}
+
+.sidebar-card{
+  border-style: double;
+  padding: 0px;
+  text-overflow: ellipsis;
+  height: min-content;
+}
+
+.sidebar-img{
+  height: 32px;
+  width: 32px;
 }

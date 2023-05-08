@@ -57,6 +57,13 @@ export function Message({
 
   const addReaction = async (reactID: number) => {
     const res = await ServerCaller.postReaction(reactID, message.id);
+    console.log({ res });
+    if (res) updateMessage({ ...message, react_id: res });
+  };
+
+  const setReaction = async (reactID: number) => {
+    const res = await ServerCaller.postReaction(reactID, message.id);
+    console.log({ res });
     if (res) updateMessage({ ...message, react_id: res });
   };
 
@@ -100,7 +107,7 @@ export function Message({
         ></div>
       </CardBody>
       <CardFooter>
-        <ReactionForm
+        {/* <ReactionForm
           onSubmission={addReaction}
           reactOptions={reactions.map((react) => ({
             value: react.id,
@@ -108,7 +115,19 @@ export function Message({
           }))}
           messageID={message.id}
           defaultValue={thisReaction}
-        />
+        /> */}
+        <div className="reaction-buttons">
+          {reactions.map((react) => (
+            <Button
+              className={`${
+                react.id === thisReaction ? "react-true" : ""
+              } react-button`}
+              onClick={() => addReaction(react.id)}
+            >
+              <img src={react.img} alt={react.name} />
+            </Button>
+          ))}
+        </div>
         <SetBookmarkForm
           onSubmission={addToBookmark}
           bookmarkOptions={bookmarks.map((bookmark) => ({

@@ -17,9 +17,19 @@
   color: rgb(0, 0, 0);
 }
 
-img{
+.message-content img{
   max-width: 450px;
   max-height: 450px;
+  display: inline-block;
+}
+
+.react-true{
+  background-color: black;
+}
+
+.react-button img{
+  max-width: 32px;
+  max-height: 32px;
   display: inline-block;
 }
 

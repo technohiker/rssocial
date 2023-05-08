@@ -180,10 +180,10 @@ const unauthRoutes = [
   },
 ];
 const authRoutes = [
-  {
-    path: "/metrics",
-    text: "Metrics",
-  },
+  // {
+  //   path: "/metrics",
+  //   text: "Metrics",
+  // },
   {
     path: "/logout",
     text: "Log Out",

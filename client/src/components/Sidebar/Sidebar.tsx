@@ -2,28 +2,28 @@ import { FolderObject } from "../FolderObject/FolderObject";
 import "./Sidebar.css";
 import { useState, useContext, useEffect, ReactElement } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
-import { Accordion, AccordionItem, UncontrolledAccordion } from "reactstrap";
+import {
+  Accordion,
+  AccordionItem,
+  Col,
+  Container,
+  Row,
+  UncontrolledAccordion,
+} from "reactstrap";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { BookmarkObject } from "../BookmarkObject/BookmarkObject";
 import { HamburgerButton } from "../HamburgerButton/HamburgerButton";
 
 /** Contains all RSS info. */
 export function Sidebar({ buttons }: ISidebarProps) {
-  console.log({ FeedContext });
   const context = useContext(FeedContext);
-  console.log({ context });
   const { folders, setFolders } = context;
   const { bookmarks, setBookmarks } = context;
-
-  useEffect(() => {
-    console.log({ folders });
-  }, [folders]);
 
   const removeFolder = async (folderID: number) => {
     const folder = await ServerCaller.deleteFolder(folderID);
 
     if (folder) {
-      console.log({ folder });
       setFolders((folders) =>
         folders.filter((folder) => !(folder.id === folderID))
       );
@@ -34,7 +34,6 @@ export function Sidebar({ buttons }: ISidebarProps) {
     const bookmark = await ServerCaller.deleteBookmark(bookmarkID);
 
     if (bookmark) {
-      console.log({ bookmark });
       setBookmarks((bookmarks) =>
         bookmarks.filter((bookmark) => !(bookmark.id === bookmarkID))
       );
@@ -42,9 +41,16 @@ export function Sidebar({ buttons }: ISidebarProps) {
   };
 
   return (
-    <>
-      <HamburgerButton buttons={buttons} />
-      <UncontrolledAccordion flush className="sidebar">
+    <Container className="sidebar">
+      <Row className="mb-3">
+        <Col>
+          <h4 className="sidebar-title">Sidebar</h4>
+        </Col>
+        <Col>
+          <HamburgerButton buttons={buttons} />
+        </Col>
+      </Row>
+      <UncontrolledAccordion flush>
         <div>
           {bookmarks ? (
             bookmarks.map((bookmark) => (
@@ -77,7 +83,7 @@ export function Sidebar({ buttons }: ISidebarProps) {
           )}
         </div>
       </UncontrolledAccordion>
-    </>
+    </Container>
   );
 }
 

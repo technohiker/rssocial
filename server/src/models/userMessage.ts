@@ -131,7 +131,7 @@ export class userMessage {
       `UPDATE user_messages  
                 SET react_id=$1
                 WHERE user_id = $2 AND message_id = $3
-                RETURNING *`,
+                RETURNING react_id`,
       [reactID, userID, messageID]
     );
     return result.rows[0];

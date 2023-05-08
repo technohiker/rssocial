@@ -28,7 +28,7 @@ export function FeedObject({
 
   return (
     <>
-      <Card className={`${isClicked && "feed-clicked"}`}>
+      <Card className={`sidebar-card ${isClicked && "feed-clicked"}`}>
         <CardBody>
           <div onClick={deployMessages}>
             <img className="feed-img" src={icon} />

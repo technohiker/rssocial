@@ -30,7 +30,7 @@ export function BookmarkObject({
       <Card className={`${isClicked && "feed-clicked"}`}>
         <CardBody>
           <div onClick={deployMessages}>
-            <img className="bookmark-img" src={icon} />
+            <img className="sidebar-img" src={icon} />
             <p>{name}</p>
           </div>
         </CardBody>

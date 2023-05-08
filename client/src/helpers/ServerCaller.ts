@@ -141,7 +141,7 @@ export class ServerCaller {
     let res = await this.request(`messages/${messageID}/react`, "post", {
       reactID: reactID,
     });
-    return res.reaction.id;
+    return res.reactID;
   }
 
   /** Delete a folder. */
