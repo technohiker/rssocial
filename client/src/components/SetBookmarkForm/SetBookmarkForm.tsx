@@ -1,6 +1,7 @@
 import { Field, Form } from "react-final-form";
 import { useState } from "react";
 import { IBookmark } from "../../types/IBookmark";
+import { Button } from "reactstrap";
 
 export function SetBookmarkForm({
   onSubmission,
@@ -22,13 +23,17 @@ export function SetBookmarkForm({
       initialValues={{ bookmark: defaultValue }}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
-          <p className="text-center">{error}</p>
-          <Field name="bookmark" validate={required} component="select">
-            {bookmarkOptions.map((option) => (
-              <option value={option.value}>{option.text}</option>
-            ))}
-          </Field>
-          <button type="submit">Add Bookmark</button>
+          <div className="d-flex flex-column">
+            <p className="text-center">{error}</p>
+            <Field name="bookmark" validate={required} component="select">
+              {bookmarkOptions.map((option) => (
+                <option value={option.value}>{option.text}</option>
+              ))}
+            </Field>
+            <Button className="btn" type="submit">
+              Set Bookmark
+            </Button>
+          </div>
         </form>
       )}
     />

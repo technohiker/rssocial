@@ -4,6 +4,7 @@
   margin-left: 1%;
   border-style: double;
   width: 15%;
+  padding: 0%;
 }
 
 .sidebar-card{
@@ -11,6 +12,20 @@
   padding: 0px;
   text-overflow: ellipsis;
   height: min-content;
+}
+
+.sidebar-header{
+  background-color: rgb(7, 212, 212);
+  color: rgb(0, 0, 0);
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+}
+
+.sidebar-title{
+  text-align: left;
 }
 
 .sidebar-img{

@@ -23,6 +23,8 @@ export function Message({
   reactions,
   thisReaction,
   bookmarks,
+  prevButton,
+  nextButton,
   updateMessage,
 }: IMessageProps) {
   let DOMString = new DOMParser().parseFromString(message.content, "text/html")
@@ -58,13 +60,8 @@ export function Message({
   const addReaction = async (reactID: number) => {
     const res = await ServerCaller.postReaction(reactID, message.id);
     console.log({ res });
-    if (res) updateMessage({ ...message, react_id: res });
-  };
-
-  const setReaction = async (reactID: number) => {
-    const res = await ServerCaller.postReaction(reactID, message.id);
-    console.log({ res });
-    if (res) updateMessage({ ...message, react_id: res });
+    updateMessage({ ...message, react_id: res });
+    console.log({ message });
   };
 
   const addSeen = async () => {
@@ -74,20 +71,18 @@ export function Message({
 
     setIsSeen(true);
 
-    if (res) updateMessage({ ...message });
+    if (res) updateMessage({ ...message, seen: true });
   };
   //Have function that, when user clicks link, sends backend request to mark message as read.
   return (
-    <Card
-      className={`${isSeen ? "seen" : ""} message-card`}
-      onMouseLeave={addSeen}
-    >
+    <Card className={`message-card`} onMouseLeave={addSeen}>
       <CardHeader>
         <p>{message.source_name}</p>
       </CardHeader>
       <CardTitle>
         <h2>
           <a
+            className="message-title"
             onClick={addClick}
             href={message.source_link}
             target="_blank"
@@ -106,17 +101,8 @@ export function Message({
           dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
         ></div>
       </CardBody>
-      <CardFooter>
-        {/* <ReactionForm
-          onSubmission={addReaction}
-          reactOptions={reactions.map((react) => ({
-            value: react.id,
-            text: react.name,
-          }))}
-          messageID={message.id}
-          defaultValue={thisReaction}
-        /> */}
-        <div className="reaction-buttons">
+      <CardFooter className="d-flex justify-content-evenly">
+        <div className="reaction-buttons d-flex flex-row align-items-center ">
           {reactions.map((react) => (
             <Button
               className={`${
@@ -128,17 +114,25 @@ export function Message({
             </Button>
           ))}
         </div>
-        <SetBookmarkForm
-          onSubmission={addToBookmark}
-          bookmarkOptions={bookmarks.map((bookmark) => ({
-            value: bookmark.id,
-            text: bookmark.name,
-          }))}
-          messageID={message.id}
-          defaultValue={message.bookmark_id}
-        />
-        <NotesForm onSubmission={addNotes} defaultNote={message.notes} />
+        <div className="d-flex align-items-center">
+          <NotesForm onSubmission={addNotes} defaultNote={message.notes} />
+        </div>
+        <div className="d-flex align-items-center">
+          <SetBookmarkForm
+            onSubmission={addToBookmark}
+            bookmarkOptions={bookmarks.map((bookmark) => ({
+              value: bookmark.id,
+              text: bookmark.name,
+            }))}
+            messageID={message.id}
+            defaultValue={message.bookmark_id}
+          />
+        </div>
       </CardFooter>
+      <div className="message-buttons d-flex flex-row justify-content-center">
+        {prevButton}
+        {nextButton}
+      </div>
     </Card>
   );
 }
@@ -146,7 +140,9 @@ export function Message({
 interface IMessageProps {
   message: IUserMessage;
   reactions: IReaction[];
-  thisReaction: number;
+  thisReaction: number | null;
   bookmarks: IBookmark[];
   updateMessage: (message: IUserMessage) => void;
+  nextButton: JSX.Element;
+  prevButton: JSX.Element;
 }

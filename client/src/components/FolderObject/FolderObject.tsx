@@ -18,11 +18,13 @@ export function FolderObject({
 
   const [folderFeeds, setFolderFeeds] = useState(feeds);
 
-  console.log({ feeds });
+  //console.log({ feeds });
   console.log({ folderFeeds });
 
   useEffect(() => {
-    setFeeds(feeds.filter((feed) => feed.folder_id === folderID));
+    console.log({ feeds });
+    //  setFeeds(feeds.filter((feed) => feed.folder_id === folderID));
+    console.log({ feeds });
   }, []);
 
   const deleteFolder = async () => {
@@ -31,7 +33,7 @@ export function FolderObject({
 
   const loadAllFolderMessages = () => {
     const folderMessages: IUserMessage[] = [];
-    for (let feed of folderFeeds) {
+    for (let feed of feeds) {
       folderMessages.push(
         ...context["messages"].filter((message) => message.feed_id === feed.id)
       );
@@ -47,11 +49,18 @@ export function FolderObject({
   };
 
   return (
-    <Container>
+    <>
       <Card className="sidebar-card" onClick={loadAllFolderMessages}>
-        <CardBody>
-          <img alt="folder" className="sidebar-img" src="folder.png" />
-          <span>{folderName}</span>
+        <CardBody className="d-flex flex-row align-items-center">
+          <Col xs={1}>
+            <img alt="folder" className="sidebar-img" src="folder.png" />
+          </Col>
+          <Col xs={10}>
+            <span>{folderName}</span>
+          </Col>
+          <Col xs={1}>
+            <Button onClick={deleteFolder}>X</Button>
+          </Col>
         </CardBody>
       </Card>
       {feeds.map((feed) => {
@@ -66,8 +75,7 @@ export function FolderObject({
             />
           );
       })}
-      <Button onClick={deleteFolder}>Remove Folder</Button>
-    </Container>
+    </>
   );
 }
 

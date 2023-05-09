@@ -6,7 +6,7 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { UserContext } from "../../helpers/ContextUser";
-import { Container, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Col, Container, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
 import { IMessage, IUserMessage } from "../../types/IMessage";
 import { IFolder } from "../../types/IFolder";
@@ -56,7 +56,6 @@ export function Homepage({
 
   useEffect(() => {
     console.log({ messages });
-    setCurrMessages(messages);
   }, [messages]);
 
   const newFolder = async (name: string) => {
@@ -184,32 +183,35 @@ export function Homepage({
           </ModalBody>
         </Modal>
         <Container>
-          <FeedContext.Provider
-            value={{
-              folders: folders,
-              setFolders: setFolders,
-              feeds: feeds,
-              setFeeds: setFeeds,
-              messages: messages,
-              setMessages: setMessages,
-              bookmarks: bookmarks,
-              setBookmarks: setBookmarks,
-              loadMessages: loadMessages,
-            }}
-          >
-            <Sidebar buttons={formButtons} />
-          </FeedContext.Provider>
-
-          {currMessages.length === 0 ? (
-            "No messages yet."
-          ) : (
-            <MessageList
-              messages={currMessages}
-              reactions={reactions}
-              bookmarks={bookmarks}
-              updateMessage={updateMessage}
-            />
-          )}
+          <Col xs={"2"} className="flex-container">
+            <FeedContext.Provider
+              value={{
+                folders: folders,
+                setFolders: setFolders,
+                feeds: feeds,
+                setFeeds: setFeeds,
+                messages: messages,
+                setMessages: setMessages,
+                bookmarks: bookmarks,
+                setBookmarks: setBookmarks,
+                loadMessages: loadMessages,
+              }}
+            >
+              <Sidebar buttons={formButtons} />
+            </FeedContext.Provider>
+          </Col>
+          <Col xs={"auto"} className="flex-container">
+            {currMessages.length === 0 ? (
+              "No messages yet."
+            ) : (
+              <MessageList
+                messages={currMessages}
+                reactions={reactions}
+                bookmarks={bookmarks}
+                updateMessage={updateMessage}
+              />
+            )}
+          </Col>
         </Container>
       </>
     );

@@ -10,9 +10,9 @@ VALUES ('rss', 'Jane Smith', 'New article on web development', 'Check out this g
 
 -- Insert some sample folders
 INSERT INTO folders (user_id, name, icon) 
-VALUES (1, 'Development', 'https://example.com/icons/folder1.jpg'),
-       (1, 'Design', 'https://example.com/icons/folder2.jpg'),
-       (2, 'Personal', 'https://example.com/icons/folder3.jpg');
+VALUES (1, 'Development', 'folder.png'),
+       (1, 'Design', 'folder.png'),
+       (2, 'Personal', 'folder.png');
 
 -- Insert some sample sources
 INSERT INTO sources (name, img, token) 
@@ -22,9 +22,8 @@ VALUES ('rss', 'rss.png', FALSE),
 
 -- Insert some sample reactions
 INSERT INTO reactions (name, img) 
-VALUES ('Select Reaction','placeholder.jpg'),
-        ('Like', 'thumbs-up.jpg'),
-       ('Dislike', 'thumbs-down.jpg');
+VALUES ('Like', 'thumbs-up.png'),
+       ('Dislike', 'thumbs-down.png');
 
 -- Insert some sample calls
 INSERT INTO calls (base_url, request_body, request_params, request_headers) 

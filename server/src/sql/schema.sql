@@ -86,7 +86,7 @@ CREATE TABLE user_messages(
     REFERENCES bookmarks ON DELETE SET NULL,
   notes TEXT,
   clicks INTEGER DEFAULT 0,
-  react_id INTEGER DEFAULT 1
+  react_id INTEGER DEFAULT NULL
     REFERENCES reactions ON DELETE SET NULL,
   seen BOOLEAN DEFAULT FALSE
 );

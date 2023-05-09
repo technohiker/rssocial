@@ -126,15 +126,15 @@ export class userMessage {
     WHERE message_id`);
   }
 
-  static async addReaction(reactID: number, messageID: number, userID: number): Promise<IReaction> {
-    const result: QueryResult<IReaction> = await db.query(
+  static async addReaction(reactID: number, messageID: number, userID: number): Promise<number | null> {
+    const result: QueryResult<{ id: number }> = await db.query(
       `UPDATE user_messages  
-                SET react_id=$1
+                SET react_id=(CASE WHEN react_id = $1 THEN NULL ELSE $1 END)
                 WHERE user_id = $2 AND message_id = $3
-                RETURNING react_id`,
+                RETURNING CASE WHEN react_id IS NULL THEN NULL ELSE react_id END AS id`,
       [reactID, userID, messageID]
     );
-    return result.rows[0];
+    return result.rows[0].id;
   }
 
   /** Change unread to false. */

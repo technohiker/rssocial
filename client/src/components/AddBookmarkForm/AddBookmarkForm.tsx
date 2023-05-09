@@ -23,18 +23,20 @@ export function AddBookmarkForm({ onSubmission }: IBookmarkFormProps) {
       onSubmit={submission}
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
-          <p className="text-center">{error}</p>
-          <FieldInput
-            name="name"
-            className="mb-3"
-            validation={required}
-            label={"Bookmark Name:"}
-            type={"text"}
-            placeholder={""}
-          />
-          <Button type="submit" disabled={submitting}>
-            Submit
-          </Button>
+          <div className="d-flex flex-column">
+            <p className="text-center">{error}</p>
+            <FieldInput
+              name="name"
+              className="mb-3"
+              validation={required}
+              label={"Bookmark Name:"}
+              type={"text"}
+              placeholder={""}
+            />
+            <Button type="submit" disabled={submitting}>
+              Submit
+            </Button>
+          </div>
         </form>
       )}
     />

@@ -3,7 +3,7 @@ import { IRSSItem } from "../../types/IRSS";
 import { useState, useContext } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
 import "./FeedObject.css";
-import { Button, Card, CardBody } from "reactstrap";
+import { Button, Card, CardBody, Col } from "reactstrap";
 
 /** Displays render of clickable feed object.  Clicking on this opens up view of feed messages. */
 export function FeedObject({
@@ -28,15 +28,22 @@ export function FeedObject({
 
   return (
     <>
-      <Card className={`sidebar-card ${isClicked && "feed-clicked"}`}>
-        <CardBody>
-          <div onClick={deployMessages}>
+      <Card
+        className={`sidebar-card ${isClicked && "feed-clicked"}`}
+        onClick={deployMessages}
+      >
+        <CardBody className="d-flex flex-row align-items-center">
+          <Col xs={1}>
             <img className="feed-img" src={icon} />
+          </Col>
+          <Col xs={10}>
             <p>{feedName}</p>
-          </div>
+          </Col>
+          <Col xs={1}>
+            <Button onClick={deleteFeed}>X</Button>
+          </Col>
         </CardBody>
       </Card>
-      <Button onClick={deleteFeed}>Remove Feed</Button>
     </>
   );
 }

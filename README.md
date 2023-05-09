@@ -10,23 +10,24 @@ If you wish to use this project for yourself, clone the repository, then use `np
 
 ### Sidebar:
 - [ ] Each Card should be of much smaller height and width.
-  - [ ] Icon, then title.  Deletion at far right.
+  - [x] Icon, then title.  Deletion at far right.
 - [ ] Get rid of empty space between cards.
-- [ ] Stylize buttons to be much smaller, and appear next to relevant objects.
-  - [ ] Use Flexbox to keep button and object together?
+- [x] Stylize buttons to be much smaller, and appear next to relevant objects.
+  - [x] Use Flexbox to keep button and object together?
 - [ ] Hamburger button for containing Make Folder/Feed/Bookmark buttons.
 - [ ] Set up scrollbar on sidebar if necessary.
 - [ ] Make Feeds below and to the side of any Bookmarks/Folders.
+- [ ] Why is Sidebar so separate from Messagelist, despite being in the same div?
 ### Forms:
-- [ ] Stylize any InputSelects.  How to stylize dropdowns?
+- [x] Stylize any InputSelects.  How to stylize dropdowns?
 - [ ] Larger/Bolder title.
 ### Messages:
-- [ ] MessageContainer should take up entire pane.
+- [x] MessageContainer should take up entire pane.
 - [x] How about have only one message show up at a time?  Would solve a lot of problems.
   - [x] Buttons for moving from newest to oldest.
-- [ ] Make Like/Dislike reactions buttons instead of a dropdown.
-- [ ] Stylize Bookmark dropdown to make it more clear.
-- [ ] Place Add Notes button below text box.
+- [x] Make Like/Dislike reactions buttons instead of a dropdown.
+- [x] Stylize Bookmark dropdown to make it more clear.
+- [x] Place Add Notes button below text box.
 
 ### Background & Text:
 - [ ]

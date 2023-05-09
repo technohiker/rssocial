@@ -19,6 +19,7 @@ export function Sidebar({ buttons }: ISidebarProps) {
   const context = useContext(FeedContext);
   const { folders, setFolders } = context;
   const { bookmarks, setBookmarks } = context;
+  console.log({ context });
 
   const removeFolder = async (folderID: number) => {
     const folder = await ServerCaller.deleteFolder(folderID);
@@ -41,12 +42,12 @@ export function Sidebar({ buttons }: ISidebarProps) {
   };
 
   return (
-    <Container className="sidebar">
-      <Row className="mb-3">
-        <Col>
+    <div className="sidebar">
+      <Row className="sidebar-header">
+        <Col xs={9}>
           <h4 className="sidebar-title">Sidebar</h4>
         </Col>
-        <Col>
+        <Col xs={1}>
           <HamburgerButton buttons={buttons} />
         </Col>
       </Row>
@@ -83,7 +84,7 @@ export function Sidebar({ buttons }: ISidebarProps) {
           )}
         </div>
       </UncontrolledAccordion>
-    </Container>
+    </div>
   );
 }
 

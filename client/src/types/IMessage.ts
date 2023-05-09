@@ -25,7 +25,7 @@ export interface IUserMessage {
   id: number;
   notes: string;
   clicks: number;
-  react_id: number;
+  react_id: number | null;
   feed_id: number;
   bookmark_id: number;
   source_name: string,

@@ -141,6 +141,7 @@ export class ServerCaller {
     let res = await this.request(`messages/${messageID}/react`, "post", {
       reactID: reactID,
     });
+    console.log({ res })
     return res.reactID;
   }
 

@@ -27,34 +27,43 @@ export function MessageList({
     }
   };
 
+  // Declaring buttons here since they depend on MessageList state,
+  //but they will be passed down to Message.
+  const prevButton = (
+    <Button
+      className="btn-info"
+      disabled={msgIndex === 0}
+      onClick={prevMessage}
+    >
+      Previous
+    </Button>
+  );
+
+  const nextButton = (
+    <Button
+      className="btn-info"
+      disabled={msgIndex === messages.length - 1}
+      onClick={nextMessage}
+    >
+      Next
+    </Button>
+  );
+
   return (
-    <div className="message-list">
-      {/* {messages.map((message) => (
+    <Container className="message-list d-flex flex-column">
+      <div className="d-flex justify-content-center">
         <Message
-          key={message.id}
-          message={message}
+          key={messages[msgIndex].id}
+          message={messages[msgIndex]}
           reactions={reactions}
-          thisReaction={message.react_id}
+          thisReaction={messages[msgIndex].react_id}
           bookmarks={bookmarks}
           updateMessage={updateMessage}
+          prevButton={prevButton}
+          nextButton={nextButton}
         />
-      ))} */}
-      <Container></Container>
-      <Message
-        key={messages[msgIndex].id}
-        message={messages[msgIndex]}
-        reactions={reactions}
-        thisReaction={messages[msgIndex].react_id}
-        bookmarks={bookmarks}
-        updateMessage={updateMessage}
-      />
-      <Button disabled={msgIndex === 0} onClick={prevMessage}>
-        Previous
-      </Button>
-      <Button disabled={msgIndex === messages.length - 1} onClick={nextMessage}>
-        Next
-      </Button>
-    </div>
+      </div>
+    </Container>
   );
 }
 

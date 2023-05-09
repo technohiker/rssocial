@@ -16,7 +16,6 @@ main {
 }
 
 form {
-  background-color: white;
   color: black;
   font-size: larger;
   font-weight: bold;
@@ -38,6 +37,39 @@ form {
   font-size: x-large;
   font-weight: bolder;
   text-shadow: black;
+}
+
+select {
+  background-color: transparent;
+  padding: 0.5em 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #555;
+  cursor: pointer;
+}
+
+select:hover {
+  border-color: #aaa;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.4);
+}
+
+select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 50%;
+  right: 1em;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 * { box-sizing: border-box; }
