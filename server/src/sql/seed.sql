@@ -6,7 +6,7 @@ VALUES ('john_doe', '$2a$04$cp7OVoLD4bZ.o2XVzFF5XeVQZ7yYvXxLQ2bYmSaTmZe/xVREq/mn
 -- Insert some sample messages
 INSERT INTO messages (source_name, author, title, content, date_created, source_link) 
 VALUES ('rss', 'Jane Smith', 'New article on web development', 'Check out this great article on web development', '2022-01-01', 'https://example.com/article1'),
-       ('twitter', 'John Doe', 'Just published a new blog post', 'Check out my latest blog post on software development', '2022-01-02', 'https://example.com/blogpost1');
+       ('reddit', 'John Doe', 'Just published a new blog post', 'Check out my latest blog post on software development', '2022-01-02', 'https://example.com/blogpost1');
 
 -- Insert some sample folders
 INSERT INTO folders (user_id, name, icon) 
@@ -17,7 +17,6 @@ VALUES (1, 'Development', 'folder.png'),
 -- Insert some sample sources
 INSERT INTO sources (name, img, token) 
 VALUES ('rss', 'rss.png', FALSE),
-       ('twitter', 'twitter.png',TRUE),
        ('reddit', 'reddit.png', TRUE);
 
 -- Insert some sample reactions

@@ -86,7 +86,7 @@ export class userMessage {
   /** Get all messages from a certain user. */
   static async getMessagesByUser(userID: number): Promise<IUserMessage[]> {
     let query: QueryResult<IUserMessage> = await db.query(`
-      SELECT  m.id, feed_id, notes, clicks, react_id, feed_id, bookmark_id,
+      SELECT  m.id, feed_id, notes, clicks, react_id, bookmark_id,
             seen, source_name, author, title, content, date_created, source_link
       FROM user_messages um 
       JOIN messages m ON um.message_id = m.id

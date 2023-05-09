@@ -105,44 +105,6 @@ callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
 
       return umsgRes
     }
-
-    //Run each call.
-    // for (let call of calls) {
-    //   console.log({ call })
-    //   let title;
-    //   let messages: IMessage[] = [];
-
-    //   if (call.source_name === "rss") {
-    //     const response = await Call.callRSS(call.base_url)
-    //     title = response.title
-
-    //     messages = response.items.map((item: Parser.Item) => Call.makeMessage(item))
-    //   }
-
-    //   else if (call.source_name === "reddit") {
-
-    //     if (!call.request_params) call.request_params = ""
-
-    //     const response = await Call.callReddit(call.base_url, call.request_params)
-    //     console.log({ response })
-    //     title = response.children[0].data.subreddit
-    //     messages = response.children.map((item) => Call.redditToMessage(item.data))
-    //   }
-
-    //   if (!call.feed_id) {
-    //     console.log("No feed ID found.  Please update the call in the database.")
-    //     continue
-    //   }
-    //   if (!title) {
-    //     console.log("No title found.  Please update the call in the database.")
-    //     continue
-    //   }
-
-    //   const msgRes = await userMessage.addMessages(messages, title)
-    //   const umsgRes = await userMessage.addUserMessages(msgRes, id, call.feed_id)
-
-    //   allMessages.push(...umsgRes)
-    // }
     return res.json({ "messages": allMessages })
   }
   catch (e: any) {

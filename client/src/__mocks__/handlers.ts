@@ -1,22 +1,15 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+import { mockBookmarks, mockFeeds, mockFolders, mockMessages, mockReactions, mockSources, mockUser } from './mockData';
+
+const baseURL = 'http://localhost:3001'
 
 export const server = setupServer(
-  //Get company
-
-  //Get companies
-
-  //Get job
-
-  //Get jobs
-  rest.get('http://localhost:3001/jobs/', async (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ jobs: mockJobs }))
-  }),
 
   //Register User
 
   //Authenticate User(login)
-  rest.post('http://localhost:3001/auth/token', async (req, res, ctx) => {
+  rest.post(`${baseURL}/auth/token`, async (req, res, ctx) => {
     const { username, password } = await req.json()
     //Simulate successful login
     if (username === mockUser.username && password === mockUser.password) {
@@ -26,11 +19,10 @@ export const server = setupServer(
     else {
       return (res(ctx.status(401), ctx.json({ error: { message: "Invalid username/password", status: 401 } })))
     }
-    //Simulate failed login
   }),
 
   //Get User
-  rest.get('http://localhost:3001/users/:username', (req, res, ctx) => {
+  rest.get(`${baseURL}/users/:username`, (req, res, ctx) => {
     const { username } = req.params
     if (username === mockUser['username']) {
       return res(ctx.status(200), ctx.json({ user: mockUser }))
@@ -38,18 +30,38 @@ export const server = setupServer(
     return (res(ctx.status(403), ctx.json({ error: "This username is not on the server." })))
   }),
 
-  //Patch User
-
-  //Post Application
-  rest.post('http://localhost:3001/users/:username/jobs/:job_id', (req, res, ctx) => {
-    const { username, job_id } = req.params
-    if (mockUser.applications.find(app => app === job_id)) {
-      return (res(ctx.status(400), ctx.json({ error: "You already applied to this job." })))
+  //Get News Object
+  rest.get(`${baseURL}/calls/fetch`, async (req, res, ctx) => {
+    const mockNews = {
+      folders: mockFolders,
+      feeds: mockFeeds,
+      messages: mockMessages,
+      reactions: mockReactions,
+      sources: mockSources,
+      bookmarks: mockBookmarks
     }
-    mockUser.applications.push(job_id.toString())
-    return res(ctx.status(200), ctx.json({ applied: job_id }))
-  })
-)
+    return res(ctx.status(200), ctx.json({ news: mockNews}))
+  }
+
+  //Add Reaction
+
+  //Set Bookmark
+
+  //Add Notes
+
+  
+  //Add Bookmark
+
+  //Add Folder
+
+  //Add Feed
+
+  //Delete Bookmark
+
+  //Delete Folder
+  
+  //Delete Feed
+))
 
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTUxNjIzOTAyMn0.NDKFLXEYmoc3yRNPFxvBS1wMmHy_cndjLGUPsAj_pI0'
 
@@ -58,15 +70,6 @@ const mockLoginResponse = {
   expiresIn: 3600,
   tokenType: 'Bearer',
 };
-
-const mockUser = {
-  username: "testuser",
-  password: "testpassword",
-  firstName: "test",
-  lastName: "user",
-  email: "test@test.com",
-  applications: ["2"],
-}
 
 const mockJobs = [{
   id: "testjob1",
