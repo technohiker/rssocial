@@ -4,6 +4,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 import { server } from './__mocks__/handlers'
+require('jest-localstorage-mock');
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());

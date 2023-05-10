@@ -10,7 +10,7 @@ export const userRouter = Router();
 
 
 /** Return all user messages, folders, feeds, and reactions. */
-userRouter.get("/:username/feeds2", ensureCorrectUser, async function (req, res, next) {
+userRouter.get("/:username/news", ensureCorrectUser, async function (req, res, next) {
   try {
     const userID = res.locals.user.id;
 

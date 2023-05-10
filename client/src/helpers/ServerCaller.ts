@@ -103,7 +103,7 @@ export class ServerCaller {
 
   static async getNews(username: string): Promise<INews> {
     //Use token with ID instead of userID?
-    let res = await this.request(`users/${username}/feeds2`);
+    let res = await this.request(`users/${username}/news`);
     console.log({ res })
     return res.news;
   }

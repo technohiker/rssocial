@@ -5,7 +5,8 @@
   "jest": {
     "moduleNameMapper": {
       "axios": "axios/dist/node/axios.cjs"
-    }
+    },
+    "resetMocks": false
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -37,6 +38,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^9.0.0",
     "identity-obj-proxy": "^3.0.0",
+    "jest-localstorage-mock": "^2.4.26",
     "ts-jest": "^29.0.5",
     "typescript": "^4.9.4"
   },

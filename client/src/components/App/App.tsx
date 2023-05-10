@@ -113,6 +113,7 @@ export function App() {
   /** Check if token is authentic. */
   const authToken = async () => {
     try {
+      console.log({ token });
       //Decode current token.
       let decoded = jwt_decode<ITokenDecoded>(token);
 

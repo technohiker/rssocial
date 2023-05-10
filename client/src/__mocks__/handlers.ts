@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { mockBookmarks, mockFeeds, mockFolders, mockMessages, mockReactions, mockSources, mockUser } from './mockData';
+import { mockBookmarks, mockFeeds, mockFolders, mockMessages, mockReactions, mockSources, mockUser, mockToken } from './mockData';
 
 const baseURL = 'http://localhost:3001'
 
@@ -11,6 +11,7 @@ export const server = setupServer(
   //Authenticate User(login)
   rest.post(`${baseURL}/auth/token`, async (req, res, ctx) => {
     const { username, password } = await req.json()
+    console.log({ username, password })
     //Simulate successful login
     if (username === mockUser.username && password === mockUser.password) {
       console.log
@@ -32,6 +33,28 @@ export const server = setupServer(
 
   //Get News Object
   rest.get(`${baseURL}/calls/fetch`, async (req, res, ctx) => {
+
+  }),
+
+  //Add Reaction
+  rest.post(`${baseURL}/messages/:id/react`, async (req, res, ctx) => {
+    const userID = mockUser.id
+    const message_id = req.params.id
+    const reactID = await req.json()
+    const mockReaction = {
+      id: 1,
+      userID,
+      message_id,
+      reactID
+    }
+    return res(ctx.status(200), ctx.json({ reaction: mockReaction }))
+  }),
+
+  rest.get(`${baseURL}/calls/fetch`, async (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ messages: mockMessages }))
+  }),
+
+  rest.get(`${baseURL}/users/:username/news`, async (req, res, ctx) => {
     const mockNews = {
       folders: mockFolders,
       feeds: mockFeeds,
@@ -40,16 +63,16 @@ export const server = setupServer(
       sources: mockSources,
       bookmarks: mockBookmarks
     }
-    return res(ctx.status(200), ctx.json({ news: mockNews}))
-  }
+    return res(ctx.status(200), ctx.json({ news: mockNews }))
+  })
 
-  //Add Reaction
 
   //Set Bookmark
 
+
   //Add Notes
 
-  
+
   //Add Bookmark
 
   //Add Folder
@@ -59,14 +82,12 @@ export const server = setupServer(
   //Delete Bookmark
 
   //Delete Folder
-  
-  //Delete Feed
-))
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTUxNjIzOTAyMn0.NDKFLXEYmoc3yRNPFxvBS1wMmHy_cndjLGUPsAj_pI0'
+  //Delete Feed
+)
 
 const mockLoginResponse = {
-  accessToken: token,
+  accessToken: mockToken,
   expiresIn: 3600,
   tokenType: 'Bearer',
 };
@@ -83,4 +104,5 @@ const mockJobs = [{
   salary: 240000,
   equity: 0.4
 }
+
 ]

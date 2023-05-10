@@ -14,4 +14,5 @@ module.exports = {
     "\\.(css|less)$": "identity-obj-proxy",
     axios: "axios/dist/node/axios.cjs",
   },
+  setupFiles: ["jest-localstorage-mock"],
 };

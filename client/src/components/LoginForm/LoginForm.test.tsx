@@ -5,12 +5,10 @@ import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import { LoginForm } from "./LoginForm";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import userEvent from "@testing-library/user-event";
+import { mockUser } from "../../__mocks__/mockData";
+import { Homepage } from "../Homepage/Homepage";
 
 test("renders properly", () => {
-  render(<LoginForm onSubmission={loginMock} />);
-});
-
-test("logs user in", async () => {
   render(
     <MemoryRouter initialEntries={["/login"]}>
       <Route exact path="/login">
@@ -18,17 +16,35 @@ test("logs user in", async () => {
       </Route>
     </MemoryRouter>
   );
+});
+
+test("logs user in", async () => {
+  render(
+    <MemoryRouter initialEntries={["/login"]}>
+      <Route exact path="/">
+        <p>Successful login!</p>
+      </Route>
+      <Route exact path="/login">
+        <LoginForm onSubmission={loginMock} />
+      </Route>
+    </MemoryRouter>
+  );
   const userInput = screen.getByLabelText(/Username/i);
   const passwordInput = screen.getByLabelText(/Password/i);
-  const submitButton = screen.getByRole("button");
+  const submitButton = screen.getByText("Submit");
 
-  userEvent.type(userInput, "testuser");
-  userEvent.type(passwordInput, "testpassword");
+  console.log({ mockUser });
 
-  submitButton.click();
+  act(() => {
+    userEvent.type(userInput, mockUser.username);
+    userEvent.type(passwordInput, mockUser.password);
+  });
 
+  await act(async () => {
+    submitButton.click();
+  });
   await waitFor(() => {
-    expect(screen.getByText(/Welcome/i)).toBeInTheDocument();
+    expect(screen.getByText(/Successful login!/i)).toBeInTheDocument();
   });
 });
 
@@ -42,10 +58,12 @@ test("does not log in false user", async () => {
   );
   const userInput = screen.getByLabelText(/Username/i);
   const passwordInput = screen.getByLabelText(/Password/i);
-  const submitButton = screen.getByRole("button");
+  const submitButton = screen.getByText("Submit");
 
-  userEvent.type(userInput, "ioug");
-  userEvent.type(passwordInput, "utsxrhuio;");
+  act(() => {
+    userEvent.type(userInput, "ioug");
+    userEvent.type(passwordInput, "utsxrhuio;");
+  });
 
   await act(async () => {
     submitButton.click();

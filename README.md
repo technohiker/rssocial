@@ -1,6 +1,6 @@
-# RSS Feed Concatenator(title needs work)
+# RSSocial
 
-This program is my take on combining RSS Feeds with social media feeds.  Instead of going onto a source's website and being given information in accordance to what the site owner wants, the user will be able to input what data they want to see, and it will be fetched through either the site's RSS feed, or their API.  Written with React and Express in TypeScript, this project will specifically allow connections to any RSS feeds, and the social media websites Reddit and Twitter via API calls.
+This program is my take on combining RSS Feeds with social media feeds.  Instead of going onto a source's website and being given information in accordance to what the site owner wants, the user will be able to input what data they want to see, and it will be fetched through either the site's RSS feed, or their API.  Written with React and Express in TypeScript, this project will specifically allow connections to any RSS feeds, and the social media website Reddit via API calls.
 
 Project can be found at (insert host here once project is done).
 
