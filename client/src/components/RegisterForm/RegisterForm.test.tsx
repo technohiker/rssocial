@@ -18,7 +18,7 @@ test("renders properly", () => {
   );
 });
 
-test("logs user in", async () => {
+test("registers", async () => {
   render(
     <MemoryRouter initialEntries={["/register"]}>
       <Route exact path="/">
@@ -31,26 +31,36 @@ test("logs user in", async () => {
   );
   const userInput = screen.getByLabelText(/Username/i);
   const passwordInput = screen.getByLabelText(/Password/i);
+  const emailInput = screen.getByLabelText(/Email Address/i);
   const submitButton = screen.getByText("Submit");
 
   console.log({ mockUser });
 
   act(() => {
-    userEvent.type(userInput, mockUser.username);
-    userEvent.type(passwordInput, mockUser.password);
+    userEvent.type(userInput, "user2");
+    userEvent.type(passwordInput, "password2");
+    userEvent.type(emailInput, "email@mail.com");
   });
 
   await act(async () => {
-    submitButton.click();
+    try{
+      submitButton.click();
+    }
+    catch(e: any){
+      console.log(e)
+    }
   });
   await waitFor(() => {
-    expect(screen.getByText(/Successful login!/i)).toBeInTheDocument();
+    expect(screen.getByText(/Successful registration!/i)).toBeInTheDocument();
   });
 });
 
-test("does not log in false user", async () => {
+test("does not register false user", async () => {
   render(
     <MemoryRouter initialEntries={["/register"]}>
+      <Route exact path="/">
+        <p>Invalid.</p>
+      </Route>
       <Route exact path="/register">
         <RegisterForm onSubmission={registerMock} />
       </Route>
@@ -58,11 +68,13 @@ test("does not log in false user", async () => {
   );
   const userInput = screen.getByLabelText(/Username/i);
   const passwordInput = screen.getByLabelText(/Password/i);
+  const emailInput = screen.getByLabelText(/Email Address/i);
   const submitButton = screen.getByText("Submit");
 
   act(() => {
     userEvent.type(userInput, "ioug");
     userEvent.type(passwordInput, "utsxrhuio;");
+    userEvent.type(emailInput, "test@email.com");
   });
 
   await act(async () => {
@@ -73,9 +85,9 @@ test("does not log in false user", async () => {
   });
 });
 
-async function registerMock(username: string, password: string) {
+async function registerMock(username: string, password: string, email: string) {
   try {
-    await ServerCaller.registerUser(username, password);
+    await ServerCaller.registerUser({username, password, email});
   } catch (e: any) {
     return e;
   }

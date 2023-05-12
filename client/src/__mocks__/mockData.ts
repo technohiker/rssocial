@@ -1,11 +1,15 @@
+import { IBookmark } from "../types/IBookmark";
+import { IUserMessage } from "../types/IMessage";
+
 export const mockUser = {
   id: 1,
   username: "john_doe",
   password: "password",
+  email: "john_doe@example.com",
   verified: true
 };
 
-export const mockMessages = [{
+export const mockMessages: IUserMessage[] = [{
   id: 1,
   feed_id: 1,
   notes: "This is a note",
@@ -17,7 +21,9 @@ export const mockMessages = [{
   title: "Test Title",
   content: "Test Content",
   date_created: "2020-01-01",
-  source_link: "https://www.google.com"
+  source_link: "https://www.google.com",
+  source_name: "rss",
+  description: "Test Description"
 }, {
   id: 2,
   feed_id: 1,
@@ -30,7 +36,9 @@ export const mockMessages = [{
   title: "Test Title",
   content: "Test Content",
   date_created: "2020-01-03",
-  source_link: "https://www.google.com"
+  source_link: "https://www.google.com",
+  source_name: "rss",
+  description: "Test Description"
 }];
 
 export const mockFeeds = [{
@@ -80,10 +88,11 @@ export const mockFolders = [
   },
 ];
 
-export const mockBookmarks = [{
+export const mockBookmarks: IBookmark[] = [{
   id: 1,
   user_id: 1,
   name: "Bookmark 1",
+  icon: "bookmark.png"
 }]
 
 export const mockReactions = [{

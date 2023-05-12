@@ -196,5 +196,6 @@ export class ServerCaller {
 
 interface INewUser {
   username: string,
-  password: string
+  password: string,
+  email: string
 }

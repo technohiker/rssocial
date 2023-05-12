@@ -14,23 +14,10 @@ import { mockToken } from "../../__mocks__/mockData";
 
 // test("creates new call and feed.")
 
-// test("renders message.")
-
-// test("add reaction to message.")
-
-// test("add new message to bookmark/folder")
-
-// test("edit profile")
-
-// const token =
-//   '"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJqb2huX2RvZSIsInBhc3N3b3JkIjoiIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwicHJvZmlsZV9pbWciOiJodHRwczovL2V4YW1wbGUuY29tL3Byb2ZpbGUuanBnIiwiYmlvIjoiSSBhbSBhIHNvZnR3YXJlIGRldmVsb3BlciIsInZlcmlmaWVkIjp0cnVlLCJpYXQiOjE2ODMwNTExODEsImV4cCI6MTY4MzY1NTk4MX0.4azmOrY4pwMRfv3I_LJ5HZzgv8X5CjCYbEViJ3deMrU"';
-
-// const token =
-//   '"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJqb2huX2RvZSIsInBhc3N3b3JkIjoiIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwicHJvZmlsZV9pbWciOiJodHRwczovL2V4YW1wbGUuY29tL3Byb2ZpbGUuanBnIiwiYmlvIjoiSSBhbSBhIHNvZnR3YXJlIGRldmVsb3BlciIsInZlcmlmaWVkIjp0cnVlLCJpYXQiOjE2ODMwNTExODEsImV4cCI6MTY4MzY1NTk4MX0.4azmOrY4pwMRfv3I_LJ5HZzgv8X5CjCYbEViJ3deMrU"';
+// test("create new bookmark.")
 
 test("renders learn react link", () => {
   localStorage.setItem("token", mockToken);
-  console.log({ localStorage });
   render(<App />);
   const linkElement = screen.getByText(/Welcome/i);
   expect(linkElement).toBeInTheDocument();

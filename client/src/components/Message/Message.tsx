@@ -105,6 +105,7 @@ export function Message({
         <div className="reaction-buttons d-flex flex-row align-items-center ">
           {reactions.map((react) => (
             <Button
+              name="react-button"
               className={`${
                 react.id === thisReaction ? "react-true" : ""
               } react-button`}
@@ -125,7 +126,7 @@ export function Message({
               text: bookmark.name,
             }))}
             messageID={message.id}
-            defaultValue={message.bookmark_id}
+            defaultValue={message.bookmark_id ?? 1}
           />
         </div>
       </CardFooter>

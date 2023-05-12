@@ -27,7 +27,7 @@ export interface IUserMessage {
   clicks: number;
   react_id: number | null;
   feed_id: number;
-  bookmark_id: number;
+  bookmark_id: number | null;
   source_name: string,
   author: string;
   seen: boolean;

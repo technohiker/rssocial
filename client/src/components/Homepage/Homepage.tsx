@@ -39,9 +39,9 @@ export function Homepage({
 
   /** Toggle spinning logo when a user's feeds is loading. */
   useEffect(() => {
-    console.log({ userFeeds });
+    //console.log({ userFeeds });
     if (Object.keys(userFeeds).length !== 0) {
-      console.log("Setting state.");
+      //console.log("Setting state.");
       setFolders(userFeeds.folders);
       setFeeds(userFeeds.feeds);
       setMessages(userFeeds.messages);
@@ -55,7 +55,7 @@ export function Homepage({
   }, [userFeeds]);
 
   useEffect(() => {
-    console.log({ messages });
+    //console.log({ messages });
   }, [messages]);
 
   const newFolder = async (name: string) => {
@@ -80,12 +80,12 @@ export function Homepage({
   const addCall = async (body: IRSSFormSubmit) => {
     try {
       const newFeed = await ServerCaller.postFeed(body);
-      console.log({ newFeed });
+      //console.log({ newFeed });
       // setFeeds([...feeds, newFeed]);
       // setFeeds((feeds) => [...feeds, newFeed]);
       const newFeeds = [...feeds, newFeed];
       setFeeds(newFeeds);
-      console.log({ feeds });
+      //console.log({ feeds });
       //  await getUserFeeds(currUser.username);
     } catch (e: any) {
       return e;
