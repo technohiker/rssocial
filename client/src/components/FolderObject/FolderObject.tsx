@@ -1,9 +1,12 @@
+import "./FolderObject.css";
 import { useState, useContext, useEffect } from "react";
 import { Button, Card, CardBody, Col, Container, Row } from "reactstrap";
 import { FeedObject } from "../FeedObject/FeedObject";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { IMessage, IUserMessage } from "../../types/IMessage";
+import { SidebarCard } from "../SidebarCard/SidebarCard";
+import { CollapseButton } from "../CollapseButton/CollapseButton";
 export function FolderObject({
   folderName,
   folderID,
@@ -17,6 +20,11 @@ export function FolderObject({
   // );
 
   const [folderFeeds, setFolderFeeds] = useState(feeds);
+  const [feedsHidden, toggleFeedsHidden] = useState(false);
+
+  const changeFeedsHidden = () => {
+    toggleFeedsHidden(!feedsHidden);
+  };
 
   //console.log({ feeds });
   console.log({ folderFeeds });
@@ -28,7 +36,10 @@ export function FolderObject({
   }, []);
 
   const deleteFolder = async () => {
-    await removeFolder(folderID);
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this folder?"
+    );
+    if (confirmed) await removeFolder(folderID);
   };
 
   const loadAllFolderMessages = () => {
@@ -50,31 +61,45 @@ export function FolderObject({
 
   return (
     <>
-      <Card className="sidebar-card" onClick={loadAllFolderMessages}>
+      <SidebarCard
+        collapseButton={
+          <CollapseButton
+            active={feedsHidden}
+            changeActive={changeFeedsHidden}
+          />
+        }
+        image="folder.png"
+        cardName={folderName}
+        cardDelete={deleteFolder}
+        onCardClick={loadAllFolderMessages}
+      />
+      {/* <Card className="sidebar-card" onClick={loadAllFolderMessages}>
         <CardBody className="d-flex flex-row align-items-center">
+          <Col xs={1}></Col>
           <Col xs={1}>
             <img alt="folder" className="sidebar-img" src="folder.png" />
           </Col>
-          <Col xs={10}>
+          <Col xs={9}>
             <span>{folderName}</span>
           </Col>
           <Col xs={1}>
             <Button onClick={deleteFolder}>X</Button>
           </Col>
         </CardBody>
-      </Card>
-      {feeds.map((feed) => {
-        if (feed.folder_id === folderID)
-          return (
-            <FeedObject
-              key={feed.id}
-              icon={feed.source_img}
-              feedName={feed.feed_name}
-              feedID={feed.id}
-              removeFeed={removeFeed}
-            />
-          );
-      })}
+      </Card> */}
+      {feedsHidden &&
+        feeds.map((feed) => {
+          if (feed.folder_id === folderID)
+            return (
+              <FeedObject
+                key={feed.id}
+                icon={feed.source_img}
+                feedName={feed.feed_name}
+                feedID={feed.id}
+                removeFeed={removeFeed}
+              />
+            );
+        })}
     </>
   );
 }

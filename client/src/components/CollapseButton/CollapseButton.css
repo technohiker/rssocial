@@ -1,0 +1,44 @@
+.collapsable-button{
+  background-color: transparent;
+  border: none;
+  font-size: 0;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border-bottom: 10px solid;
+  border-left: 10px solid #333;
+  border-top: 10px solid;
+}
+
+.rotate-arrow{
+  transform: rotate(90deg);
+  transition: transform 0.5s;
+}
+
+/* .collapsable-button-south{
+  background-color: transparent;
+  border: none;
+  font-size: 0;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border-top: 10px solid;
+  border-bottom: 10px solid;
+  border-left: 10px solid #333;
+} */
+
+.collapsable-button:hover {
+  border-color: unset;
+  border-left-color: rgb(156, 156, 156);
+  transition: border-left-color 0.3s;
+  background: unset !important;
+}
+
+.collapsable-button:active{
+  border-color: unset;
+  border-left-color: rgb(156, 156, 156);
+  transition: border-left-color 0.3s;
+  background: unset !important;
+}

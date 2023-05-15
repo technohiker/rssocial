@@ -1,0 +1,41 @@
+.hamburger-button{
+  position: relative;
+}
+
+.hamburger-lines {
+    position: relative;
+    height: 26px;
+    width: 32px;
+    top: 6px;
+    left: 4px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+.hamburger-lines:hover{
+  cursor: pointer;
+}
+
+.hamburger-line{
+  display: block;
+  height: 4px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: black;
+}
+
+.hamburger-options button{
+  text-align: left;
+  margin-top: 1px;
+  font-weight: bold !important;
+}
+
+.hamburger-options{
+  position: absolute;
+  z-index: 999;
+  overflow: visible;
+  border-style: double;
+  background-color: white;
+}

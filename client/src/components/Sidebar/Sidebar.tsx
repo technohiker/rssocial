@@ -51,18 +51,16 @@ export function Sidebar({ buttons }: ISidebarProps) {
           <HamburgerButton buttons={buttons} />
         </Col>
       </Row>
-      <UncontrolledAccordion flush>
+      <div className="sidebar-content">
         <div>
           {bookmarks ? (
             bookmarks.map((bookmark) => (
-              <AccordionItem key={bookmark.id}>
-                <BookmarkObject
-                  bookmarkID={bookmark.id}
-                  name={bookmark.name}
-                  icon={bookmark.icon}
-                  removeBookmark={removeBookmark}
-                />
-              </AccordionItem>
+              <BookmarkObject
+                bookmarkID={bookmark.id}
+                name={bookmark.name}
+                icon={bookmark.icon}
+                removeBookmark={removeBookmark}
+              />
             ))
           ) : (
             <></>
@@ -71,19 +69,17 @@ export function Sidebar({ buttons }: ISidebarProps) {
         <div>
           {folders ? (
             folders.map((folder) => (
-              <AccordionItem key={folder.id}>
-                <FolderObject
-                  folderID={folder.id}
-                  folderName={folder.name}
-                  removeFolder={removeFolder}
-                />
-              </AccordionItem>
+              <FolderObject
+                folderID={folder.id}
+                folderName={folder.name}
+                removeFolder={removeFolder}
+              />
             ))
           ) : (
             <></>
           )}
         </div>
-      </UncontrolledAccordion>
+      </div>
     </div>
   );
 }

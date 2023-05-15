@@ -6,7 +6,7 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { UserContext } from "../../helpers/ContextUser";
-import { Col, Container, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Button, Col, Container, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
 import { IMessage, IUserMessage } from "../../types/IMessage";
 import { IFolder } from "../../types/IFolder";
@@ -97,9 +97,9 @@ export function Homepage({
   const toggleBookmarkModal = () => setBookmarkModal(!bookmarkModal);
 
   const formButtons = [
-    <button onClick={toggleFeedModal}>Make New Feed</button>,
-    <button onClick={toggleFolderModal}>Make New Folder</button>,
-    <button onClick={toggleBookmarkModal}>Make New Bookmark</button>,
+    <Button onClick={toggleFeedModal}>Make New Feed</Button>,
+    <Button onClick={toggleFolderModal}>Make New Folder</Button>,
+    <Button onClick={toggleBookmarkModal}>Make New Bookmark</Button>,
   ];
 
   const loadMessages = (newMessages: IUserMessage[]) => {
@@ -149,7 +149,6 @@ export function Homepage({
       <>
         <p>Welcome, {currUser.username}!</p>
 
-        <button onClick={toggleFolderModal}>Make New Folder</button>
         <Modal isOpen={folderModal} toggle={toggleFolderModal}>
           <ModalHeader toggle={toggleFolderModal}>
             Create New Folder
@@ -159,7 +158,7 @@ export function Homepage({
           </ModalBody>
         </Modal>
 
-        <button onClick={toggleFeedModal}>Create New Feed</button>
+        {/* <button onClick={toggleFeedModal}>Create New Feed</button> */}
         <Modal isOpen={feedModal} toggle={toggleFeedModal}>
           <ModalHeader toggle={toggleFeedModal}>Generate New Feed</ModalHeader>
           <ModalBody>
@@ -173,7 +172,7 @@ export function Homepage({
           </ModalBody>
         </Modal>
 
-        <button onClick={toggleBookmarkModal}>Create New Bookmark</button>
+        {/* <button onClick={toggleBookmarkModal}>Create New Bookmark</button> */}
         <Modal isOpen={bookmarkModal} toggle={toggleBookmarkModal}>
           <ModalHeader toggle={toggleBookmarkModal}>
             Create New Bookmark
@@ -182,7 +181,7 @@ export function Homepage({
             <AddBookmarkForm onSubmission={newBookmark} />
           </ModalBody>
         </Modal>
-        <Container>
+        <div className="d-flex flex-row">
           <Col xs={"2"} className="flex-container">
             <FeedContext.Provider
               value={{
@@ -212,7 +211,7 @@ export function Homepage({
               />
             )}
           </Col>
-        </Container>
+        </div>
       </>
     );
   }

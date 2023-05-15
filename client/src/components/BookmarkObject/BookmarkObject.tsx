@@ -2,6 +2,7 @@ import "./BookmarkObject.css";
 import { useContext, useState } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { Button, Card, CardBody } from "reactstrap";
+import { SidebarCard } from "../SidebarCard/SidebarCard";
 
 export function BookmarkObject({
   bookmarkID,
@@ -22,12 +23,21 @@ export function BookmarkObject({
   };
 
   const deleteBookmark = async () => {
-    await removeBookmark(bookmarkID);
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this folder?"
+    );
+    if (confirmed) await removeBookmark(bookmarkID);
   };
 
   return (
     <>
-      <Card className={`${isClicked && "feed-clicked"}`}>
+      <SidebarCard
+        image="bookmark.png"
+        cardName={name}
+        cardDelete={deleteBookmark}
+        onCardClick={deployMessages}
+      />
+      {/* <Card className={`${isClicked && "feed-clicked"}`}>
         <CardBody>
           <div onClick={deployMessages}>
             <img className="sidebar-img" src={icon} />
@@ -35,7 +45,7 @@ export function BookmarkObject({
           </div>
         </CardBody>
       </Card>
-      <Button onClick={deleteBookmark}>Delete Bookmark</Button>
+      <Button onClick={deleteBookmark}>Delete Bookmark</Button> */}
     </>
   );
 }

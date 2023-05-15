@@ -8,15 +8,15 @@ export const server = setupServer(
 
   //Register User
   rest.post(`${baseURL}/auth/register`, async (req, res, ctx) => {
-    const {username, password, email} = await req.json()
-    console.log({mockUser})
-    console.log({username, password, email})
+    const { username, password, email } = await req.json()
+    console.log({ mockUser })
+    console.log({ username, password, email })
     //If username/email are already taken, return error
-    if(username === mockUser.username || email === mockUser.email){
-      return res(ctx.status(403), ctx.json({error: {message: "Username/Email already taken", status: 403}}))
+    if (username === mockUser.username || email === mockUser.email) {
+      return res(ctx.status(403), ctx.json({ error: { message: "Username/Email already taken", status: 403 } }))
     }
-    else{
-      return res(ctx.status(200), ctx.json({token: mockToken}))
+    else {
+      return res(ctx.status(200), ctx.json({ token: mockToken }))
     }
   }),
 
@@ -54,10 +54,11 @@ export const server = setupServer(
     const message_id = req.params.id
     const reactID = await req.json()
     const thisReaction = mockMessages.find(message => message.id === +message_id)
-    if(thisReaction?.react_id === reactID){
-      thisReaction?.react_id = null
+    if (!thisReaction) return res(ctx.status(404), ctx.json({ error: { message: "Message not found", status: 404 } }))
+    if (thisReaction.react_id === reactID) {
+      thisReaction.react_id = null
     }
-    //return res(ctx.status(200), ctx.json({ reaction: mockReaction }))
+    return res(ctx.status(200), ctx.json({ reaction: thisReaction }))
   }),
 
   rest.get(`${baseURL}/calls/fetch`, async (req, res, ctx) => {

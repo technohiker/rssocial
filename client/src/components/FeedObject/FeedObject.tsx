@@ -4,6 +4,8 @@ import { useState, useContext } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
 import "./FeedObject.css";
 import { Button, Card, CardBody, Col } from "reactstrap";
+import { SidebarCard } from "../SidebarCard/SidebarCard";
+import { CollapseButton } from "../CollapseButton/CollapseButton";
 
 /** Displays render of clickable feed object.  Clicking on this opens up view of feed messages. */
 export function FeedObject({
@@ -23,12 +25,21 @@ export function FeedObject({
   };
 
   const deleteFeed = async () => {
-    await removeFeed(feedID);
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this folder?"
+    );
+    if (confirmed) await removeFeed(feedID);
   };
 
   return (
     <>
-      <Card
+      <SidebarCard
+        image={icon}
+        cardName={feedName}
+        cardDelete={deleteFeed}
+        onCardClick={deployMessages}
+      />
+      {/* <Card
         className={`sidebar-card ${isClicked && "feed-clicked"}`}
         onClick={deployMessages}
       >
@@ -43,7 +54,7 @@ export function FeedObject({
             <Button onClick={deleteFeed}>X</Button>
           </Col>
         </CardBody>
-      </Card>
+      </Card> */}
     </>
   );
 }
