@@ -4,6 +4,8 @@ import Router, { RequestHandler } from "express";
 import { userMessage } from "../models/userMessage";
 import { Reaction } from "../models/reaction";
 import { ensureCorrectUser } from "../middleware/auth";
+import { BadRequestError } from "../helpers/ExpressError";
+import { Bookmark } from "../models/bookmark";
 
 export const umsgRouter = Router();
 
@@ -79,3 +81,19 @@ umsgRouter.post("/:id/notes", async function (req, res, next) {
     return next(e);
   }
 } as RequestHandler);
+
+/** Set bookmark to message. */
+umsgRouter.post('/:id', async function (req, res, next) {
+    try {
+      const userID = res.locals.user.id
+      const { id } = req.params
+      const {bookmarkID} = req.body
+  
+      const newBookmarkID = await Bookmark.addMessageToBookmark(+bookmarkID, +id, +userID)
+  
+      return res.json({ bookmarkID: newBookmarkID })
+    }
+    catch (e: any) {
+      return next(e)
+    }
+  } as RequestHandler);

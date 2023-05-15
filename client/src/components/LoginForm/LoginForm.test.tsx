@@ -33,7 +33,7 @@ test("logs user in", async () => {
   const passwordInput = screen.getByLabelText(/Password/i);
   const submitButton = screen.getByText("Submit");
 
-  console.log({ mockUser });
+  // console.log({ mockUser });
 
   act(() => {
     userEvent.type(userInput, mockUser.username);

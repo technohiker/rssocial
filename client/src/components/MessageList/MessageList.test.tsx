@@ -9,12 +9,14 @@ import {
 } from "../../__mocks__/mockData";
 import { IUserMessage } from "../../types/IMessage";
 
-let testMessages = mockMessages;
+let testMessages = [...mockMessages];
+let testReactions = [...mockReactions];
+let testBookmarks = [...mockBookmarks];
 
 const messageList =     <MessageList
-messages={mockMessages}
-reactions={mockReactions}
-bookmarks={mockBookmarks}
+messages={testMessages}
+reactions={testReactions}
+bookmarks={testBookmarks}
 updateMessage={updateMessage}
 />
 
@@ -26,30 +28,46 @@ test("renders message.", () => {
   expect(linkElement).toBeInTheDocument();
 });
 
- test("add reaction to message.", () => {
+ test("add reaction to message.", async () => {
     render(
         messageList
     )
 
-    const msgReaction = mockMessages[0].react_id
+    const msgReaction = testMessages[0].react_id
+    console.log({messageList})
 
     const reactButtons = screen.getAllByRole("button", {name: /Like/i})
+    console.log({msgReaction})
+    console.log(reactButtons[0])
     //Click on Reaction button.
-    act(() => {
+    await act(async () => {
       reactButtons[0].click()
     });
+    console.log({msgReaction})
+    console.log(testMessages[0])
 
     //Message's reaction should be changed.
     expect(testMessages[0].react_id).not.toBe(msgReaction)
     
  })
 
-// test("add new message to bookmark/folder")
+test("add new message to bookmark/folder", async () => {
+  render( messageList )
+
+  const bookmarkButton = screen.getByRole("button", {name: /Bookmark/i})
+
+  await act(async () => {
+    bookmarkButton.click()
+  })
+  expect(mockMessages[0].bookmark_id).toBe(1)
+})
 
 // test("add bookmark to message.")
 
 // test("move back and forth between messages in list.")
 
-async function updateMessage(message: IUserMessage) {
-  testMessages = [...testMessages, message];
+async function updateMessage(uMessage: IUserMessage) {
+  console.log({testMessages})
+  testMessages = testMessages.map((message) => message.id === uMessage.id ? {...uMessage} : message);
+  console.log({testMessages})
 }

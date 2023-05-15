@@ -15,7 +15,7 @@ export const mockMessages: IUserMessage[] = [{
   notes: "This is a note",
   clicks: 0,
   react_id: null,
-  bookmark_id: 1,
+  bookmark_id: null,
   seen: false,
   author: "Test Author",
   title: "Test Title",

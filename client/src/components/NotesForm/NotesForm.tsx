@@ -20,7 +20,7 @@ export function NotesForm({ onSubmission, defaultNote }: INotesForm) {
           <div className="d-flex flex-column">
             <p className="text-center">{error}</p>
             <Field name="notes" validate={required} component="textarea" />
-            <Button type="submit">Add Notes</Button>
+            <Button type="submit">Set Note</Button>
           </div>
         </form>
       )}

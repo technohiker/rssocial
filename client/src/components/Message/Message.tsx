@@ -58,6 +58,7 @@ export function Message({
   };
 
   const addReaction = async (reactID: number) => {
+    console.log("Clicked!")
     const res = await ServerCaller.postReaction(reactID, message.id);
     console.log({ res });
     updateMessage({ ...message, react_id: res });

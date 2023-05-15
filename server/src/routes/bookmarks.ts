@@ -85,18 +85,18 @@ bookmarkRouter.get('/', ensureCorrectUser, async function (req, res, next) {
 } as RequestHandler);
 
 /** Add message to a bookmark. */
-bookmarkRouter.post('/:id', async function (req, res, next) {
-  try {
-    const userID = res.locals.user.id
-    const { id } = req.params
-    const { msgID } = req.query
+// bookmarkRouter.post('/:id', async function (req, res, next) {
+//   try {
+//     const userID = res.locals.user.id
+//     const { id } = req.params
+//     const { msgID } = req.query
 
-    if (!msgID) throw new BadRequestError('Message ID is required')
-    const bookmarkID = await Bookmark.addMessageToBookmark(+id, +msgID, +userID)
+//     if (!msgID) throw new BadRequestError('Message ID is required')
+//     const bookmarkID = await Bookmark.addMessageToBookmark(+id, +msgID, +userID)
 
-    return res.json({ bookmarkID })
-  }
-  catch (e: any) {
-    return next(e)
-  }
-} as RequestHandler);
+//     return res.json({ bookmarkID })
+//   }
+//   catch (e: any) {
+//     return next(e)
+//   }
+// } as RequestHandler);

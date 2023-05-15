@@ -50,15 +50,18 @@ export const server = setupServer(
 
   //Add Reaction
   rest.post(`${baseURL}/messages/:id/react`, async (req, res, ctx) => {
-    const userID = mockUser.id
     const message_id = req.params.id
-    const reactID = await req.json()
+    const {reactID} = await req.json()
     const thisReaction = mockMessages.find(message => message.id === +message_id)
     if (!thisReaction) return res(ctx.status(404), ctx.json({ error: { message: "Message not found", status: 404 } }))
     if (thisReaction.react_id === reactID) {
       thisReaction.react_id = null
     }
-    return res(ctx.status(200), ctx.json({ reaction: thisReaction }))
+    else {
+      thisReaction.react_id = reactID
+    }
+    console.log({thisReaction})
+    return res(ctx.status(200), ctx.json({ reactID: thisReaction.react_id }))
   }),
 
   rest.get(`${baseURL}/calls/fetch`, async (req, res, ctx) => {
@@ -75,13 +78,23 @@ export const server = setupServer(
       bookmarks: mockBookmarks
     }
     return res(ctx.status(200), ctx.json({ news: mockNews }))
-  })
+  }),
 
 
   //Set Bookmark
+  rest.post(`${baseURL}/messages/:id/bookmark`, async (req, res, ctx) => {
+    const message_id = req.params.id
+    const {bookmarkID} = await req.json()
 
+    const thisMessage = mockMessages.find(message => message.id === +message_id)
+    if (!thisMessage) return res(ctx.status(404), ctx.json({ error: { message: "Message not found", status: 404 } }))
 
-  //Add Notes
+    thisMessage.bookmark_id = bookmarkID
+
+    return res(ctx.status(200), ctx.json({ bookmarkID: thisMessage.bookmark_id }))
+  }),
+
+  //Set Note
 
 
   //Add Bookmark
