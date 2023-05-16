@@ -25,15 +25,15 @@ VALUES ('Like', 'thumbs-up.png'),
        ('Dislike', 'thumbs-down.png');
 
 -- Insert some sample calls
-INSERT INTO calls (base_url, request_body, request_params, request_headers) 
-VALUES ('https://api.twitter.com/1.1/statuses/user_timeline.json', '', 'user_id=12345', '"Authorization": Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+INSERT INTO calls (base_url, feed_id, request_body, request_params, request_headers) 
+VALUES ('https://api.twitter.com/1.1/statuses/user_timeline.json',2, '', 'user_id=12345', '"Authorization": Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 
 -- Insert some sample feeds
-INSERT INTO feeds (user_id, folder_id, source_id, feed_name, call_id) 
-VALUES (1, 1, 1, 'Web Development', NULL),
-       (1, 2, 2, 'Software Development', 1),
-       (1, 2, 2, 'Gaming', 1),
-       (2, 3, 1, 'Personal Blog', NULL);
+INSERT INTO feeds (user_id, folder_id, source_id, feed_name) 
+VALUES (1, 1, 1, 'Web Development'),
+       (1, 2, 2, 'Software Development'),
+       (1, 2, 2, 'Gaming'),
+       (2, 3, 1, 'Personal Blog');
 
 INSERT INTO bookmarks(user_id, name)
 VALUES(1,'Bookmark 1'),

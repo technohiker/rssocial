@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRss } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "reactstrap";
 import { IconProp, icon, library } from "@fortawesome/fontawesome-svg-core";
 import { faReddit } from "@fortawesome/free-brands-svg-icons";
 
@@ -16,10 +15,10 @@ export function ReactButton({
 
   switch (sourceName) {
     case "reddit":
-      setIconName(icon(faReddit));
+      setIconName(faReddit as IconProp);
       break;
     case "rss":
-      setIconName(icon(faRss));
+      setIconName(faRss as IconProp);
   }
 
   return (

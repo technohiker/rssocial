@@ -119,10 +119,6 @@ export class Call {
     return newMessage
   }
 
-  static async runCall(call: ICall, userID: number) {
-
-  }
-
   /** Use info received from front-end to create calls tailored to RSS feeds. */
   static makeRSSCall(url: string) {
     //Test if URL is a valid RSS URL.
@@ -151,7 +147,7 @@ export class Call {
   static async getByUserID(userID: number) {
     //Also returns info to help later on.
     const query: QueryResult<ICall> = await db.query(
-      `SELECT c.id, f.id AS feed_id, s.name AS source_name, base_url, request_body, request_params, request_headers
+      `SELECT c.id, feed_id, s.name AS source_name, base_url, request_body, request_params, request_headers
       FROM calls c
       JOIN feeds f ON f.call_id = c.id
       JOIN sources s ON s.id = f.source_id

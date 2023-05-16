@@ -48,6 +48,8 @@ CREATE TABLE reactions (
 
 CREATE TABLE calls(  --User will not make calls every time.  Call info will need to be stored.
   id SERIAL PRIMARY KEY,
+  feed_id INTEGER NOT NULL
+    REFERENCES feeds ON DELETE CASCADE,
   base_url TEXT NOT NULL,
   request_body TEXT,
   request_params TEXT,
@@ -62,9 +64,7 @@ CREATE TABLE feeds(
     REFERENCES folders ON DELETE SET NULL,
   source_id INTEGER
     REFERENCES sources ON DELETE SET NULL,
-  feed_name TEXT NOT NULL,
-  call_id INTEGER
-    REFERENCES calls ON DELETE SET NULL
+  feed_name TEXT NOT NULL
 );
 
 CREATE TABLE bookmarks(
