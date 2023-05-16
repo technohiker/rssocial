@@ -6,7 +6,14 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { UserContext } from "../../helpers/ContextUser";
-import { Button, Col, Container, Modal, ModalBody, ModalHeader } from "reactstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalHeader,
+} from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
 import { IMessage, IUserMessage } from "../../types/IMessage";
 import { IFolder } from "../../types/IFolder";
@@ -147,7 +154,7 @@ export function Homepage({
   } else {
     return (
       <>
-        <p>Welcome, {currUser.username}!</p>
+        <p className="welcome-text">Welcome, {currUser.username}!</p>
 
         <Modal isOpen={folderModal} toggle={toggleFolderModal}>
           <ModalHeader toggle={toggleFolderModal}>
@@ -181,8 +188,8 @@ export function Homepage({
             <AddBookmarkForm onSubmission={newBookmark} />
           </ModalBody>
         </Modal>
-        <div className="d-flex flex-row">
-          <Col xs={"2"} className="flex-container">
+        <div className="d-flex flex-row main-container">
+          <Col xs={"2"}>
             <FeedContext.Provider
               value={{
                 folders: folders,
@@ -199,9 +206,12 @@ export function Homepage({
               <Sidebar buttons={formButtons} />
             </FeedContext.Provider>
           </Col>
-          <Col xs={"auto"} className="flex-container">
+          <Col xs={"9"}>
             {currMessages.length === 0 ? (
-              "No messages yet."
+              <p className="message-list-empty">
+                "No messages yet. Please select a feed or folder, or add one if
+                there is none.
+              </p>
             ) : (
               <MessageList
                 messages={currMessages}

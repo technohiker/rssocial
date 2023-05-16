@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IBookmark } from "../../types/IBookmark";
 import { IUserMessage } from "../../types/IMessage";
 import { IReaction } from "../../types/IReaction";
@@ -14,6 +14,12 @@ export function MessageList({
   updateMessage,
 }: IMessageListProps) {
   const [msgIndex, setIndex] = useState(0);
+  useEffect(() => {
+    console.log({ msgIndex });
+  }, [msgIndex]);
+  useEffect(() => {
+    setIndex(0);
+  }, [messages]);
 
   const nextMessage = () => {
     if (msgIndex < messages.length - 1) {
@@ -31,7 +37,7 @@ export function MessageList({
   //but they will be passed down to Message.
   const prevButton = (
     <Button
-      className="btn-info"
+      className="message-button btn-info"
       disabled={msgIndex === 0}
       onClick={prevMessage}
     >
@@ -41,7 +47,7 @@ export function MessageList({
 
   const nextButton = (
     <Button
-      className="btn-info"
+      className="message-button btn-info"
       disabled={msgIndex === messages.length - 1}
       onClick={nextMessage}
     >

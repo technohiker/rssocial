@@ -17,6 +17,7 @@ import { ServerCaller } from "../../helpers/ServerCaller";
 import { SetBookmarkForm } from "../SetBookmarkForm/SetBookmarkForm";
 import { NotesForm } from "../NotesForm/NotesForm";
 import { IBookmark } from "../../types/IBookmark";
+import { ReactButton } from "../ReactButton/ReactButton";
 
 export function Message({
   message,
@@ -27,11 +28,11 @@ export function Message({
   nextButton,
   updateMessage,
 }: IMessageProps) {
+  //Parse the message content as HTML, then sanitize it.
   let DOMString = new DOMParser().parseFromString(message.content, "text/html")
     .documentElement.textContent;
 
   if (DOMString === "null" || !DOMString) {
-    //DOMString is returning a string of 'null' instead of null.
     DOMString = "";
   }
 
@@ -58,7 +59,7 @@ export function Message({
   };
 
   const addReaction = async (reactID: number) => {
-    console.log("Clicked!")
+    console.log("Clicked!");
     const res = await ServerCaller.postReaction(reactID, message.id);
     console.log({ res });
     updateMessage({ ...message, react_id: res });
@@ -128,6 +129,11 @@ export function Message({
             }))}
             messageID={message.id}
             defaultValue={message.bookmark_id ?? 1}
+          />
+          <ReactButton
+            sourceName={message.source_name}
+            reactID={message.react_id}
+            thisReaction={thisReaction}
           />
         </div>
       </CardFooter>

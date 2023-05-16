@@ -6,28 +6,15 @@
   width: 0;
   height: 0;
   padding: 0;
-  border-bottom: 10px solid;
-  border-left: 10px solid #333;
-  border-top: 10px solid;
+  border-bottom: 8px solid;
+  border-left: 8px solid #333;
+  border-top: 8px solid;
 }
 
 .rotate-arrow{
   transform: rotate(90deg);
   transition: transform 0.5s;
 }
-
-/* .collapsable-button-south{
-  background-color: transparent;
-  border: none;
-  font-size: 0;
-  cursor: pointer;
-  width: 0;
-  height: 0;
-  padding: 0;
-  border-top: 10px solid;
-  border-bottom: 10px solid;
-  border-left: 10px solid #333;
-} */
 
 .collapsable-button:hover {
   border-color: unset;

@@ -1,8 +1,26 @@
-.flex-container{
-  display: flex;
+.main-container{
+  width: 100%;
+}
+
+.welcome-text{
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.message-list-empty{
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 
+
+    /* From loading.io/css  */
 
 .lds-ring {
   display: inline-block;

@@ -7,11 +7,11 @@
     height: 26px;
     width: 32px;
     top: 6px;
-    left: 4px;
+    left: 10px;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
   }
 
 .hamburger-lines:hover{
@@ -20,9 +20,9 @@
 
 .hamburger-line{
   display: block;
-  height: 4px;
-  width: 100%;
-  border-radius: 10px;
+  height: 2px;
+  width: 80%;
+  border-radius: 5px;
   background-color: black;
 }
 
