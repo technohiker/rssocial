@@ -1,3 +1,4 @@
+import { Icon } from "../Icon/Icon";
 import "./HamburgerButton.css";
 import { ReactElement, useState, useRef, useEffect } from "react";
 
@@ -33,16 +34,13 @@ export function HamburgerButton({ buttons }: IHamburgerButtonProps) {
 
   return (
     <>
-      {/* <button onClick={toggleButtons} className="hamburger-button"></button> */}
       <div
         ref={buttonRef}
         tabIndex={0}
         className="hamburger-lines"
         onClick={handleButtonClick}
       >
-        <span className="hamburger-line"></span>
-        <span className="hamburger-line"></span>
-        <span className="hamburger-line"></span>
+        <Icon name="hamburger" />
       </div>
       <div
         ref={menuRef}

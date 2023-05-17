@@ -19,9 +19,6 @@ import { VerifyRedirect } from "../VerifyRedirect/VerifyRedirect";
 import { useLocalStorageState } from "../../helpers/useLocalStorageState";
 import { Metrics } from "../Metrics/Metrics";
 
-//Update piece of state: https://stackoverflow.com/questions/28121272/whats-the-best-way-to-update-an-object-in-an-array-in-reactjs
-//  https://stackoverflow.com/questions/37662708/updating-react-state-when-state-is-an-array-of-objects
-
 export function App() {
   const [userFeeds, setUserFeeds] = useState({} as INews);
   const [token, setToken] = useLocalStorageState("token", "");
@@ -150,12 +147,12 @@ export function App() {
           <AuthorizedRoute exact path="/login" token={token}>
             <LoginForm onSubmission={loginUser} />
           </AuthorizedRoute>
-          <ProtectedRoute exact path="/metrics" auth={authToken}>
+          {/* <ProtectedRoute exact path="/metrics" auth={authToken}>
             <Metrics
               currUser={currUser}
               totalMessages={userFeeds.messages ? userFeeds.messages.length : 0}
             />
-          </ProtectedRoute>
+          </ProtectedRoute> */}
           <Route exact path="/logout">
             <Logout logout={logoutUser} />
           </Route>

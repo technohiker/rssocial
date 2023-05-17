@@ -21,8 +21,8 @@ callRouter.post('/new/rss', ensureLoggedIn, async function (req, res, next) {
     const { source } = req.query
     const { id } = res.locals.user
 
-    const newCall = await Call.makeRSSCall(req.body.url)
-    const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, 1, newCall.id)
+    const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, 1)
+    const newCall = await Call.makeRSSCall(req.body.url, newFeed.id)
     console.log({ newFeed })
 
     return (res.json({ feed: newFeed }))
@@ -39,8 +39,8 @@ callRouter.post('/new/reddit', ensureLoggedIn, async function (req, res, next) {
     const sourceID = await Source.getSourceID("reddit")
     const { id } = res.locals.user
 
-    const newCall = await Call.makeRedditCall(subreddit, params, sort)
-    const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, sourceID.id, newCall.id)
+    const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, sourceID.id)
+    const newCall = await Call.makeRedditCall(subreddit, newFeed.id, params, sort)
     console.log({ newFeed })
 
     return res.json({ feed: newFeed })
@@ -58,15 +58,14 @@ callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
     console.log({ calls })
 
     const allMessages: IUserMessage[] = []
-    const promises = []
+    const promises: Promise<IUserMessage[]>[] = []
 
     for (let call of calls) {
-      promises.push(await runCall(call, id))
+      promises.push(runCall(call, id))
     }
+    const results = await Promise.all(promises)
 
-    await Promise.all(promises)
-
-    for (let result of promises) {
+    for (let result of results) {
       allMessages.push(...result)
     }
 
@@ -74,9 +73,12 @@ callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
       let title;
       let messages: IMessage[] = [];
 
+
       if (call.source_name === "rss") {
         const response = await Call.callRSS(call.base_url)
         title = response.title
+
+        console.log({ response })
 
         messages = response.items.map((item: Parser.Item) => Call.makeMessage(item))
       }
@@ -125,24 +127,24 @@ callRouter.post("/rss", async function (req, res, next) {
 } as RequestHandler);
 
 //Making Reddit Call.
-callRouter.get("/reddit", async function (req, res, next) {
-  try {
-    const { subreddit, params, sort } = req.body;
-    console.log({ sort })
-    const redditFeed = await Call.makeRedditCall(subreddit, params, sort);
-    return res.status(201).json({ feed: redditFeed });
-    // console.log("Route reached.")
-    // // const { subreddit } = req.body;
-    // const redditFeed = await Call.callReddit(subreddit);
-    // let redditMessages = []
-    // for (let message of redditFeed) {
-    //   redditMessages.push(Call.redditToMessage(message))
-    // }
+// callRouter.get("/reddit", async function (req, res, next) {
+//   try {
+//     const { subreddit, params, sort } = req.body;
+//     console.log({ sort })
+//     const redditFeed = await Call.makeRedditCall(subreddit, params, sort);
+//     return res.status(201).json({ feed: redditFeed });
+//     // console.log("Route reached.")
+//     // // const { subreddit } = req.body;
+//     // const redditFeed = await Call.callReddit(subreddit);
+//     // let redditMessages = []
+//     // for (let message of redditFeed) {
+//     //   redditMessages.push(Call.redditToMessage(message))
+//     // }
 
-    // return res.status(201).json({ feed: redditFeed });
-  } catch (err) {
-    return next(err);
-  }
-} as RequestHandler)
+//     // return res.status(201).json({ feed: redditFeed });
+//   } catch (err) {
+//     return next(err);
+//   }
+// } as RequestHandler)
 
 //Making Twitter Call.

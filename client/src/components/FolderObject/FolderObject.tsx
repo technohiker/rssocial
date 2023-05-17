@@ -68,7 +68,7 @@ export function FolderObject({
             changeActive={changeFeedsHidden}
           />
         }
-        image="folder.png"
+        image="folder"
         cardName={folderName}
         cardDelete={deleteFolder}
         onCardClick={loadAllFolderMessages}
@@ -93,7 +93,7 @@ export function FolderObject({
             return (
               <FeedObject
                 key={feed.id}
-                icon={feed.source_img}
+                icon={feed.source_name}
                 feedName={feed.feed_name}
                 feedID={feed.id}
                 removeFeed={removeFeed}

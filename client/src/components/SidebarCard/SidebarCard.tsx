@@ -1,6 +1,7 @@
 import "./SidebarCard.css";
 import { ReactElement } from "react";
 import { Button, Card, CardBody, Col } from "reactstrap";
+import { Icon } from "../Icon/Icon";
 
 export function SidebarCard({
   image,
@@ -14,7 +15,8 @@ export function SidebarCard({
       <CardBody className="d-flex flex-row align-items-center">
         <Col xs={1}>{collapseButton}</Col>
         <Col xs={2}>
-          <img alt={image} className="sidebar-img" src={image} />
+          {/* <img alt={image} className="sidebar-img" src={image} /> */}
+          <Icon name={image} />
         </Col>
         <Col xs={8}>
           <span className="sidebar-card-name">{cardName}</span>

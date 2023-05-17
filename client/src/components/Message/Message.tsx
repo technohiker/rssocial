@@ -10,14 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from "reactstrap";
-import { ReactionForm } from "../ReactionForm/ReactionForm";
-import { FeedContext } from "../../helpers/ContextFeed";
 import { IReaction } from "../../types/IReaction";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { SetBookmarkForm } from "../SetBookmarkForm/SetBookmarkForm";
 import { NotesForm } from "../NotesForm/NotesForm";
 import { IBookmark } from "../../types/IBookmark";
-import { ReactButton } from "../ReactButton/ReactButton";
+import { Icon } from "../Icon/Icon";
 
 export function Message({
   message,
@@ -104,43 +102,33 @@ export function Message({
         ></div>
       </CardBody>
       <CardFooter className="d-flex justify-content-evenly">
-        <div className="d-flex flex-column">
-          <div className="d-flex flex-row align-items-center">
-            <div className="reaction-buttons d-flex flex-row align-items-center ">
-              {reactions.map((react) => (
-                <Button
-                  name="react-button"
-                  className={`${
-                    react.id === thisReaction ? "react-true" : ""
-                  } react-button`}
-                  onClick={() => addReaction(react.id)}
-                >
-                  <img src={react.img} alt={react.name} />
-                </Button>
-              ))}
-            </div>
-            <div className="d-flex align-items-center">
-              <SetBookmarkForm
-                onSubmission={addToBookmark}
-                bookmarkOptions={bookmarks.map((bookmark) => ({
-                  value: bookmark.id,
-                  text: bookmark.name,
-                }))}
-                messageID={message.id}
-                defaultValue={message.bookmark_id ?? 1}
-              />
-              <ReactButton
-                sourceName={message.source_name}
-                reactID={message.react_id}
-                thisReaction={thisReaction}
-              />
-            </div>
-          </div>
-          <div className="d-flex flex-row align-items-center">
-            <div className="d-flex align-items-center">
-              <NotesForm onSubmission={addNotes} defaultNote={message.notes} />
-            </div>
-          </div>
+        <div className="reaction-buttons d-flex flex-row align-items-center">
+          {reactions.map((react) => (
+            <Button
+              name="react-button"
+              className={`${
+                react.id === thisReaction ? "react-true" : ""
+              } react-button`}
+              onClick={() => addReaction(react.id)}
+            >
+              <Icon name={react.name} />
+            </Button>
+          ))}
+        </div>
+
+        <div className="d-flex align-items-center">
+          <NotesForm onSubmission={addNotes} defaultNote={message.notes} />
+        </div>
+        <div className="d-flex align-items-center">
+          <SetBookmarkForm
+            onSubmission={addToBookmark}
+            bookmarkOptions={bookmarks.map((bookmark) => ({
+              value: bookmark.id,
+              text: bookmark.name,
+            }))}
+            messageID={message.id}
+            defaultValue={message.bookmark_id ?? 1}
+          />
         </div>
       </CardFooter>
       <div className="message-buttons d-flex flex-row justify-content-center">

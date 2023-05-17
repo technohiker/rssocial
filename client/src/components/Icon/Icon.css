@@ -1,0 +1,27 @@
+.fontawesome-icon{
+  height: 32px;
+  width: 32px;
+}
+
+.icon-reddit{
+  color: #FF4500;
+}
+
+.icon-rss{
+  color: white;
+  background-color: #ee9c03;
+  border-radius: 20%;
+}
+
+.icon-hamburger{
+  height: 100%;
+}
+
+.icon-folder{
+  color: #e7e412;
+}
+
+.icon-bookmark{
+  height: 26px;
+  color: #070700;
+}

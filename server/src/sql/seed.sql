@@ -24,10 +24,6 @@ INSERT INTO reactions (name, img)
 VALUES ('Like', 'thumbs-up.png'),
        ('Dislike', 'thumbs-down.png');
 
--- Insert some sample calls
-INSERT INTO calls (base_url, feed_id, request_body, request_params, request_headers) 
-VALUES ('https://api.twitter.com/1.1/statuses/user_timeline.json',2, '', 'user_id=12345', '"Authorization": Bearer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-
 -- Insert some sample feeds
 INSERT INTO feeds (user_id, folder_id, source_id, feed_name) 
 VALUES (1, 1, 1, 'Web Development'),
@@ -35,11 +31,14 @@ VALUES (1, 1, 1, 'Web Development'),
        (1, 2, 2, 'Gaming'),
        (2, 3, 1, 'Personal Blog');
 
+-- Insert some sample calls
+INSERT INTO calls (base_url, feed_id, request_body, request_params, request_headers) 
+VALUES ('https://reddit.com/r/worldnews/hot.json',2,'', '', '');
+
 INSERT INTO bookmarks(user_id, name)
 VALUES(1,'Bookmark 1'),
       (1,'Bookmark 2'),
       (2,'Bookmark 3');
-
 
 -- Insert some sample user messages
 INSERT INTO user_messages (user_id, message_id, feed_id, bookmark_id, notes, clicks, react_id, seen) 

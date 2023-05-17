@@ -46,16 +46,6 @@ CREATE TABLE reactions (
     img TEXT NOT NULL
 );
 
-CREATE TABLE calls(  --User will not make calls every time.  Call info will need to be stored.
-  id SERIAL PRIMARY KEY,
-  feed_id INTEGER NOT NULL
-    REFERENCES feeds ON DELETE CASCADE,
-  base_url TEXT NOT NULL,
-  request_body TEXT,
-  request_params TEXT,
-  request_headers TEXT
-);
-
 CREATE TABLE feeds(
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL 
@@ -65,6 +55,16 @@ CREATE TABLE feeds(
   source_id INTEGER
     REFERENCES sources ON DELETE SET NULL,
   feed_name TEXT NOT NULL
+);
+
+CREATE TABLE calls(  --User will not make calls every time.  Call info will need to be stored.
+  id SERIAL PRIMARY KEY,
+  feed_id INTEGER NOT NULL
+    REFERENCES feeds ON DELETE CASCADE,
+  base_url TEXT NOT NULL,
+  request_body TEXT,
+  request_params TEXT,
+  request_headers TEXT
 );
 
 CREATE TABLE bookmarks(

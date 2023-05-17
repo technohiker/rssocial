@@ -32,7 +32,7 @@ export function BookmarkObject({
   return (
     <>
       <SidebarCard
-        image="bookmark.png"
+        image="bookmark"
         cardName={name}
         cardDelete={deleteBookmark}
         onCardClick={deployMessages}

@@ -209,8 +209,9 @@ export function Homepage({
           <Col xs={"9"}>
             {currMessages.length === 0 ? (
               <p className="message-list-empty">
-                "No messages yet. Please select a feed or folder, or add one if
-                there is none.
+                No messages yet. Please click on a feed to show messages. If you
+                don't have a Feed, click on the Sidebar's top-right icon to add
+                one.
               </p>
             ) : (
               <MessageList

@@ -120,7 +120,7 @@ export class Call {
   }
 
   /** Use info received from front-end to create calls tailored to RSS feeds. */
-  static makeRSSCall(url: string) {
+  static makeRSSCall(url: string, feedID: number) {
     //Test if URL is a valid RSS URL.
     try {
       const parser = new Parser()
@@ -130,15 +130,15 @@ export class Call {
       throw new BadRequestError(e)
     }
 
-    return this.newCall(url)
+    return this.newCall(url, feedID)
   }
 
-  static async newCall(url: string, body: string | null = null, params: string | null = null, headers: string | null = null) {
+  static async newCall(url: string, feedID: number, body: string | null = null, params: string | null = null, headers: string | null = null) {
     console.log({ url })
     const query: QueryResult<ICall> = await db.query(
-      `INSERT INTO calls (base_url, request_body, request_params, request_headers)
-        VALUES($1,$2,$3,$4)
-        RETURNING *`, [url, body, params, headers]
+      `INSERT INTO calls (base_url, feed_id, request_body, request_params, request_headers)
+        VALUES($1,$2,$3,$4,$5)
+        RETURNING *`, [url, feedID, body, params, headers]
     )
 
     return query.rows[0]
@@ -149,7 +149,7 @@ export class Call {
     const query: QueryResult<ICall> = await db.query(
       `SELECT c.id, feed_id, s.name AS source_name, base_url, request_body, request_params, request_headers
       FROM calls c
-      JOIN feeds f ON f.call_id = c.id
+      JOIN feeds f ON f.id = c.feed_id
       JOIN sources s ON s.id = f.source_id
       WHERE f.user_id=$1`, [userID]
     )
@@ -166,7 +166,7 @@ export class Call {
     return hot
   }
 
-  static async makeRedditCall(subreddit: string, paramBody: IParams = {} as IParams, sort: string) {
+  static async makeRedditCall(subreddit: string, feedID: number, paramBody: IParams = {} as IParams, sort: string) {
     const url = `https://www.reddit.com/r/${subreddit}/${sort}.json`
 
     if (!process.env.reddit_token || !process.env.reddit_useragent) throw new BadRequestError("Reddit environment variables not set.")
@@ -184,7 +184,7 @@ export class Call {
     }
 
 
-    return this.newCall(url, null, params, null)
+    return this.newCall(url, feedID, null, params, null)
   }
 
 }

@@ -19,14 +19,13 @@ export class Feed {
     userID: number,
     folderID: number,
     sourceID: number,
-    callID: number
   ): Promise<IFeed> {
     //Store feed into Feeds table.
     const query: QueryResult<IFeed> = await db.query(
-      `INSERT INTO feeds (user_id, folder_id, source_id, call_id, feed_name)
-      VALUES($1,$2,$3,$4,$5)
+      `INSERT INTO feeds (user_id, folder_id, source_id, feed_name)
+      VALUES($1,$2,$3,$4)
       RETURNING *`,
-      [userID, folderID, sourceID, callID, feedName]
+      [userID, folderID, sourceID, feedName]
     );
 
     const feedID = query.rows[0].id;
@@ -45,9 +44,10 @@ export class Feed {
   static async getFeedsByFolderID(folderID: number): Promise<IFeed[]> {
     const query: QueryResult<IFeed> = await db.query(
       `SELECT f.id, f.user_id, f.folder_id, s.name AS source_name, 
-      s.img AS source_img, feed_name, call_id 
+      s.img AS source_img, feed_name, c.id AS call_id
       FROM feeds f
       JOIN sources s ON f.source_id = s.id
+      JOIN calls c ON f.id = c.feed_id
       WHERE folder_id=$1`,
       [folderID]
     );
