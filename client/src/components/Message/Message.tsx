@@ -105,7 +105,7 @@ export function Message({
         <div className="reaction-buttons d-flex flex-row align-items-center">
           {reactions.map((react) => (
             <Button
-              name="react-button"
+              name={`react-button-${react.name}`}
               className={`${
                 react.id === thisReaction ? "react-true" : ""
               } react-button`}

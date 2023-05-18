@@ -15,6 +15,7 @@ dotenv.config();
 colors.enabled = true;
 
 export const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
+const { DATABASE_URL } = process.env
 export const { pg_user } = process.env;
 export const { pg_password } = process.env;
 export const { pg_host } = process.env;
@@ -37,21 +38,11 @@ export const PORT = +(process.env.PORT ?? 3001);
 
 /** Generate Postgres database URL.  Values will be dependent on .env.  Changes if you want to use a testing database. */
 export function getDatabaseUri() {
+  if (DATABASE_URL) return DATABASE_URL;
   return process.env.NODE_ENV === "test"
     ? `postgresql://${pg_user}:${pg_password}@${pg_host}:${pg_port}/${pg_database}_test`
     : `postgresql://${pg_user}:${pg_password}@${pg_host}:${pg_port}/${pg_database}`;
 }
-
-// /** Reddit's access token expires after enough time passes.  Check to see if it's still good.(how do I make this persist between sessions?) */
-// async function validateRedditToken(refreshToken: string) {
-//   //Define parameters.
-//   const params = {
-//     grant_type: "authorization_code",
-//   }
-//   const newToken = await axios.get("https://www.reddit.com/api/v1/access_token", {})
-//   //https://www.reddit.com/api/v1/access_token
-//   return "access_token"
-// }
 
 // Speed up bcrypt during tests, since the algorithm safety doesn't need to be tested.
 export const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 14;

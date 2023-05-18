@@ -5,7 +5,6 @@ import Parser from "rss-parser";
 import { db } from "../db";
 import { QueryResult } from "pg";
 import { ICall } from "../types/ICall";
-import { redditCall } from "./reddit";
 import { IRedditPost, IRedditResponse } from "../types/IReddit";
 import { IParams, convertParamsToString } from "../helpers/params";
 import axios, { AxiosRequestHeaders } from "axios";
@@ -154,16 +153,6 @@ export class Call {
       WHERE f.user_id=$1`, [userID]
     )
     return query.rows
-  }
-
-  static async callRedditSnoowrap(subreddit: string) {
-    console.log({ subreddit })
-    console.log({ redditCall })
-    const result = redditCall.getSubreddit(subreddit)
-    //console.log({ result })
-    const hot = await result.getHot()
-    // console.log({ hot })
-    return hot
   }
 
   static async makeRedditCall(subreddit: string, feedID: number, paramBody: IParams = {} as IParams, sort: string) {
