@@ -49,7 +49,6 @@ export const mockFeeds = [{
   folder_id: 1,
   source_name: "rss",
   source_img: "rss.png",
-
 }];
 
 export const mockCalls = [

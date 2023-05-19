@@ -20,12 +20,21 @@ import { Icon } from "../Icon/Icon";
 export function Message({
   message,
   reactions,
-  thisReaction,
   bookmarks,
   prevButton,
   nextButton,
   updateMessage,
 }: IMessageProps) {
+  const [isSeen, setIsSeen] = useState(message.seen);
+
+  useEffect(() => {
+    console.log({ message });
+  }, [message]);
+
+  //Clean Author data.
+  let author = "";
+  if (message.author) author = `by ${message.author}`;
+
   //Parse the message content as HTML, then sanitize it.
   let DOMString = new DOMParser().parseFromString(message.content, "text/html")
     .documentElement.textContent;
@@ -34,45 +43,36 @@ export function Message({
     DOMString = "";
   }
 
-  useEffect(() => {
-    console.log({ message });
-  }, [message]);
-
   const sanitizedHTML = DOMPurify.sanitize(DOMString);
 
-  let author = "";
-  if (message.author) author = `by ${message.author}`;
-
-  const [isSeen, setIsSeen] = useState(message.seen);
-
+  /** Increment the number of clicks to the external source a message has received. */
   const addClick = async () => {
     const res = await ServerCaller.addClick(message.id);
     if (res) updateMessage({ ...message, clicks: res });
   };
 
+  /** Set a message to appear on a particular bookmark. */
   const addToBookmark = async (bookmarkID: number) => {
     const bkID = await ServerCaller.setBookmark(message.id, bookmarkID);
     if (bkID) updateMessage({ ...message, bookmark_id: bkID });
-    // console.log({ message });
   };
 
+  /** Store any notes a user may add. */
   const addNotes = async (notes: string) => {
     const res = await ServerCaller.addNotes(message.id, notes);
     if (res) updateMessage({ ...message, notes: res });
-    // console.log({ message });
   };
 
+  /** Add a reaction(thumbs up/thumbs down) to the message. */
   const addReaction = async (reactID: number) => {
     const res = await ServerCaller.postReaction(reactID, message.id);
-   // console.log({ res });
     updateMessage({ ...message, react_id: res });
-    // console.log({ message });
   };
 
+  /** Sets a message as seen. */
   const addSeen = async () => {
     if (isSeen) return; //Do not need to run if already seen.
     const res = await ServerCaller.addSeen(message.id);
-   // console.log({ res });
 
     setIsSeen(true);
 
@@ -113,7 +113,7 @@ export function Message({
               key={react.id}
               name={`react-button-${react.name}`}
               className={`${
-                react.id === thisReaction ? "react-true" : ""
+                react.id === message.react_id ? "react-true" : ""
               } react-button`}
               onClick={() => addReaction(react.id)}
             >
@@ -148,7 +148,6 @@ export function Message({
 interface IMessageProps {
   message: IUserMessage;
   reactions: IReaction[];
-  thisReaction: number | null;
   bookmarks: IBookmark[];
   updateMessage: (message: IUserMessage) => void;
   nextButton: JSX.Element;

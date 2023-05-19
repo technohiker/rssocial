@@ -2,6 +2,8 @@ import { Icon } from "../Icon/Icon";
 import "./HamburgerButton.css";
 import { ReactElement, useState, useRef, useEffect } from "react";
 
+/** Component that holds a group of options.
+ * These options are revealed when the button is clicked on. */
 export function HamburgerButton({ buttons }: IHamburgerButtonProps) {
   const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);

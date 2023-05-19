@@ -2,7 +2,7 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { mockBookmarks, mockFeeds, mockFolders, mockMessages, mockReactions, mockSources, mockUser, mockToken } from './mockData';
 
-const baseURL = 'http://localhost:3001'
+const baseURL = process.env.REACT_APP_BASE_URL || 'http://localhost:3001'
 
 export const server = setupServer(
 
@@ -43,7 +43,7 @@ export const server = setupServer(
     return (res(ctx.status(403), ctx.json({ error: "This username is not on the server." })))
   }),
 
-  //Get News Object
+  //Get News Content From RSS/Reddit.
   rest.get(`${baseURL}/calls/fetch`, async (req, res, ctx) => {
 
   }),
@@ -51,7 +51,7 @@ export const server = setupServer(
   //Add Reaction
   rest.post(`${baseURL}/messages/:id/react`, async (req, res, ctx) => {
     const message_id = req.params.id
-    const {reactID} = await req.json()
+    const { reactID } = await req.json()
     const thisReaction = mockMessages.find(message => message.id === +message_id)
     if (!thisReaction) return res(ctx.status(404), ctx.json({ error: { message: "Message not found", status: 404 } }))
     if (thisReaction.react_id === reactID) {
@@ -60,14 +60,11 @@ export const server = setupServer(
     else {
       thisReaction.react_id = reactID
     }
-    console.log({thisReaction})
+    console.log({ thisReaction })
     return res(ctx.status(200), ctx.json({ reactID: thisReaction.react_id }))
   }),
 
-  rest.get(`${baseURL}/calls/fetch`, async (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ messages: mockMessages }))
-  }),
-
+  //Get News Content For Specific User
   rest.get(`${baseURL}/users/:username/news`, async (req, res, ctx) => {
     const mockNews = {
       folders: mockFolders,
@@ -84,7 +81,7 @@ export const server = setupServer(
   //Set Bookmark
   rest.post(`${baseURL}/messages/:id/bookmark`, async (req, res, ctx) => {
     const message_id = req.params.id
-    const {bookmarkID} = await req.json()
+    const { bookmarkID } = await req.json()
 
     const thisMessage = mockMessages.find(message => message.id === +message_id)
     if (!thisMessage) return res(ctx.status(404), ctx.json({ error: { message: "Message not found", status: 404 } }))
@@ -97,7 +94,7 @@ export const server = setupServer(
   //Set Note
   rest.post(`${baseURL}/messages/:id/notes`, async (req, res, ctx) => {
     const message_id = req.params.id
-    const {notes} = await req.json()
+    const { notes } = await req.json()
 
     const thisMessage = mockMessages.find(message => message.id === +message_id)
     if (!thisMessage) return res(ctx.status(404), ctx.json({ error: { message: "Message not found", status: 404 } }))
@@ -126,18 +123,3 @@ const mockLoginResponse = {
   expiresIn: 3600,
   tokenType: 'Bearer',
 };
-
-const mockJobs = [{
-  id: "testjob1",
-  title: "Test Job 1",
-  salary: 120000,
-  equity: 0.7
-},
-{
-  id: "testjob2",
-  title: "Test Job 2",
-  salary: 240000,
-  equity: 0.4
-}
-
-]

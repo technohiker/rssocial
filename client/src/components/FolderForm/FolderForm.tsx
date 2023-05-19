@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { Field, Form } from "react-final-form";
+import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
 
 export function FolderForm({ onSubmission }: IFolderFormProps) {
   const required = (value: any) => {
     return value ? undefined : "Required";
   };
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const submission = async (evt: IFolderFormSubmit) => {
-    console.log("Fired!");
     let result = await onSubmission(evt.name);
     if (result) {
-      setError(result[0]);
+      setMessage(result[0]);
     } else {
-      setError("New folder added!");
+      setMessage("New folder added!");
     }
   };
   return (
@@ -22,7 +21,7 @@ export function FolderForm({ onSubmission }: IFolderFormProps) {
       onSubmit={submission}
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
-          <p className="text-center">{error}</p>
+          <p className="text-center">{message}</p>
           <FieldInput
             name="name"
             className="mb-3"

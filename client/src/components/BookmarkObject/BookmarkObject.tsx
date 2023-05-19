@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
 import { SidebarCard } from "../SidebarCard/SidebarCard";
 
+/** Sidebar card that disiplays all messages that have been set to this particular bookmark. */
 export function BookmarkObject({
   bookmarkID,
   name,

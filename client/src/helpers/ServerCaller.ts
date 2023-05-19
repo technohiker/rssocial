@@ -1,18 +1,17 @@
 import axios from "axios";
 import { IUser } from "../types/IUser";
-import { Redirect } from "react-router-dom";
 import { IRSSFormSubmit } from "../components/FeedForm/FeedForm";
 import { IBookmark } from "../types/IBookmark";
 import { IUserMessage } from "../types/IMessage";
 import { IMetrics } from "../types/IMetrics";
 import { IFeed } from "../types/IFeed";
-import { IReaction } from "../types/IReaction";
 import { IFolder } from "../types/IFolder";
 import { INews } from "../types/INews";
-/** Call server endpoints that trigger RSS/API fetches. */
+
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
+/** Call server endpoints that trigger RSS/API fetches. */
 export class ServerCaller {
   static token: string;
 
@@ -35,22 +34,18 @@ export class ServerCaller {
   /** Send RSS info and retrieve RSS response. */
   static async callRSS(url: string) {
     const response = await this.request("calls/rss", "post", { rssURL: url });
-    console.log(response);
     return response.feed;
   }
 
   /** Send info for new call and feed. */
   static async postFeed(body: IRSSFormSubmit): Promise<IFeed> {
     const response = await this.request(`calls/new/${body.source}`, "post", { ...body })
-    console.log({ response })
     return response.feed
   }
 
   /** Create new user and receive token. */
   static async registerUser(user: INewUser): Promise<string> {
-    console.log("Setting up register call.");
     let res = await this.request(`auth/register/`, "post", user);
-    console.log(res);
     return res.token;
   }
 
@@ -67,14 +62,12 @@ export class ServerCaller {
   static async fetchMessages(): Promise<IUserMessage[]> {
     //TODO: Does this even need to return anything?
     let res = await this.request(`calls/fetch`)
-    console.log({ res })
     return res
   }
 
   /** Retrieve user info by username. */
   static async getUser(username: string): Promise<IUser> {
     let res = await this.request(`users/${username}`);
-    console.log({ res })
     return res.user;
   }
 
@@ -84,21 +77,12 @@ export class ServerCaller {
     let res = await this.request(`auth/verify`, 'post', {
       verToken: token
     })
-    console.log({ res })
 
     return {
       verified: res.verified,
       token: res.token
     }
     //Need to give message if verification failed.
-  }
-
-  static async getFeeds(username: string): Promise<IFolder[]> {
-    //TODO: Why is this returning folders?  Function's not being used, though.
-    //Use token with ID instead of userID?
-    let res = await this.request(`users/${username}/feeds`);
-    console.log({ res })
-    return res.folders;
   }
 
   static async getNews(username: string): Promise<INews> {
@@ -108,6 +92,7 @@ export class ServerCaller {
     return res.news;
   }
 
+  /** Increment number of clicks for going to a message's external source. */
   static async addClick(messageID: number): Promise<number> {
     let res = await this.request(`messages/${messageID}/click`, "post")
 
@@ -157,13 +142,6 @@ export class ServerCaller {
     let res = await this.request(`bookmarks/${bookmarkID}`, "delete");
     return res.bookmark;
   }
-
-  /** Add a message to a bookmark. */
-  // static async setBookmark(messageID: number, bookmarkID: number): Promise<number> {
-  //   let res = await this.request(`bookmarks/${bookmarkID}?msgID=${messageID}`, "post");
-  //   return res.bookmarkID;
-
-  // }
 
   /** Add a message to a bookmark. */
   static async setBookmark(messageID: number, bookmarkID: number): Promise<number> {

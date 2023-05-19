@@ -5,15 +5,15 @@ export const useLocalStorageState = (key: string, defaultValue: string) => {
   const [state, setState] = useState(() => {
     let value;
     if (window.localStorage.getItem(key) !== '""') {
-      console.log(window.localStorage.getItem(key));
+      // console.log(window.localStorage.getItem(key));
       try {
         value = JSON.parse(
           window.localStorage.getItem(key) || JSON.stringify(defaultValue)
         );
-      } catch (e) {
+      } catch (e: any) {
         value = defaultValue;
       }
-      console.log({ value })
+      // console.log({ value })
       return value;
     }
     return defaultValue

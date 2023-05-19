@@ -1,15 +1,8 @@
 import { FolderObject } from "../FolderObject/FolderObject";
 import "./Sidebar.css";
-import { useState, useContext, useEffect, ReactElement } from "react";
+import { useContext, ReactElement } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
-import {
-  Accordion,
-  AccordionItem,
-  Col,
-  Container,
-  Row,
-  UncontrolledAccordion,
-} from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { BookmarkObject } from "../BookmarkObject/BookmarkObject";
 import { HamburgerButton } from "../HamburgerButton/HamburgerButton";

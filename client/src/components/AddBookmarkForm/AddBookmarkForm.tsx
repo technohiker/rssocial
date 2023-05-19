@@ -1,21 +1,21 @@
 import { useState } from "react";
-import { Field, Form } from "react-final-form";
+import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
 import { Button } from "reactstrap";
 
+/** Creates a new Bookmark object for the user. */
 export function AddBookmarkForm({ onSubmission }: IBookmarkFormProps) {
   const required = (value: any) => {
     return value ? undefined : "Required";
   };
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const submission = async (evt: IBookmarkFormSubmit) => {
-    console.log("Fired!");
     let result = await onSubmission(evt.name);
     if (result) {
-      setError(result[0]);
+      setMessage(result[0]);
     } else {
-      setError("New bookmark added!");
+      setMessage("New bookmark added!");
     }
   };
   return (
@@ -24,7 +24,7 @@ export function AddBookmarkForm({ onSubmission }: IBookmarkFormProps) {
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <div className="d-flex flex-column">
-            <p className="text-center">{error}</p>
+            <p className="text-center">{message}</p>
             <FieldInput
               name="name"
               className="mb-3"

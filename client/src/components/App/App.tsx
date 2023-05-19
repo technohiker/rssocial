@@ -18,6 +18,7 @@ import { VerifyRedirect } from "../VerifyRedirect/VerifyRedirect";
 import { useLocalStorageState } from "../../helpers/useLocalStorageState";
 import { Metrics } from "../Metrics/Metrics";
 
+/** Handles user login data and routing.  Also retrieves main news information from backend. */
 export function App() {
   const [userFeeds, setUserFeeds] = useState({} as INews);
   const [token, setToken] = useLocalStorageState("token", "");

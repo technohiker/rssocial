@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { Redirect } from "react-router-dom";
-import { IUser } from "../../types/IUser";
 
 /** Component for sending request to back-end for verifying new user's email.
  * Should only be reached by a link sent to the user's email.
@@ -18,6 +17,7 @@ export function VerifyRedirect({ setToken }: IVerifyRedirectProps) {
     startVerify();
   }, []);
 
+  // Send request to back-end to verify user with token from params.
   const startVerify = async () => {
     const res = await ServerCaller.verifyUser(verToken);
     setVerify(res.verified);

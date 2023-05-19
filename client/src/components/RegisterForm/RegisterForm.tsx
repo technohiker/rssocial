@@ -5,6 +5,7 @@ import { FieldInput } from "../../helpers/FormFields/FieldInput";
 import { LinkButton } from "../LinkButton/LinkButton";
 import { Card, CardBody, CardTitle, Button } from "reactstrap";
 
+/** Form that lets user register an account. */
 export function RegisterForm({ onSubmission }: IRegisterFormProps) {
   const required = (value: any) => (value ? undefined : "Required");
   const [error, setError] = useState("");

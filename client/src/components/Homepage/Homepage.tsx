@@ -1,21 +1,11 @@
 import "./Homepage.css";
 import { useState, useEffect, useContext } from "react";
 import { IRSSFormSubmit, FeedForm } from "../FeedForm/FeedForm";
-import { Message } from "../Message/Message";
 import { ServerCaller } from "../../helpers/ServerCaller";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { FeedContext } from "../../helpers/ContextFeed";
-import { UserContext } from "../../helpers/ContextUser";
-import {
-  Button,
-  Col,
-  Container,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
 import { FolderForm } from "../FolderForm/FolderForm";
-import { IMessage, IUserMessage } from "../../types/IMessage";
+import { IUserMessage } from "../../types/IMessage";
 import { IFolder } from "../../types/IFolder";
 import { IFeed } from "../../types/IFeed";
 import { IUser } from "../../types/IUser";
@@ -26,6 +16,7 @@ import { MessageList } from "../MessageList/MessageList";
 import { IBookmark } from "../../types/IBookmark";
 import { AddBookmarkForm } from "../AddBookmarkForm/AddBookmarkForm";
 import { ICondition } from "../../types/ICondition";
+import { Button, Col, Modal, ModalBody, ModalHeader } from "reactstrap";
 
 export function Homepage({
   currUser,
@@ -43,15 +34,12 @@ export function Homepage({
   const [folderModal, setFolderModal] = useState(false);
   const [bookmarkModal, setBookmarkModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const [currMessages, setCurrMessages] = useState<Array<IUserMessage>>([]);
   const [displayMessages, setDisplayMessages] = useState(false);
-  const [resetIndex, setResetIndex] = useState(false);
 
   const [filterMSG, setFilterMSG] = useState<ICondition>({} as ICondition);
 
   /** Toggle spinning logo when a user's feeds is loading. */
   useEffect(() => {
-    //console.log({ userFeeds });
     if (Object.keys(userFeeds).length !== 0) {
       //console.log("Setting state.");
       setFolders(userFeeds.folders);
@@ -60,6 +48,7 @@ export function Homepage({
       setReactions(userFeeds.reactions);
       setSources(userFeeds.sources);
       setBookmarks(userFeeds.bookmarks);
+
       setLoading(false);
     } else {
       setLoading(true);
@@ -95,6 +84,9 @@ export function Homepage({
     }
   };
 
+  /** Modals will allow forms to pop up over the page.
+   * These buttons will toggle the modals when clicked.
+   */
   const toggleFeedModal = () => setFeedModal(!feedModal);
   const toggleFolderModal = () => setFolderModal(!folderModal);
   const toggleBookmarkModal = () => setBookmarkModal(!bookmarkModal);
@@ -105,12 +97,16 @@ export function Homepage({
     <Button onClick={toggleBookmarkModal}>Make New Bookmark</Button>,
   ];
 
+  /** Return a condition type for loading a subset of the messages object.
+   *  Should we filter by Feed or by Bookmark?  The Condition object will determine that.
+   */
   const loadMessages = (condition: ICondition) => {
     setDisplayMessages(true);
     setFilterMSG({ ...condition });
     console.log({ filterMSG });
   };
 
+  /** Update Message state when a change is made. */
   const updateMessage = (uMessage: IUserMessage) => {
     setDisplayMessages(false);
     setMessages((messages) => {
@@ -121,6 +117,7 @@ export function Homepage({
     setDisplayMessages(true);
   };
 
+  //Show specific messages if user is not logged in or verified.
   if (!currUser.id) {
     return (
       <p>
@@ -164,7 +161,6 @@ export function Homepage({
           </ModalBody>
         </Modal>
 
-        {/* <button onClick={toggleFeedModal}>Create New Feed</button> */}
         <Modal isOpen={feedModal} toggle={toggleFeedModal}>
           <ModalHeader toggle={toggleFeedModal}>Generate New Feed</ModalHeader>
           <ModalBody>
@@ -178,7 +174,6 @@ export function Homepage({
           </ModalBody>
         </Modal>
 
-        {/* <button onClick={toggleBookmarkModal}>Create New Bookmark</button> */}
         <Modal isOpen={bookmarkModal} toggle={toggleBookmarkModal}>
           <ModalHeader toggle={toggleBookmarkModal}>
             Create New Bookmark
@@ -187,6 +182,7 @@ export function Homepage({
             <AddBookmarkForm onSubmission={newBookmark} />
           </ModalBody>
         </Modal>
+
         <div className="d-flex flex-row main-container">
           <Col xs={"2"}>
             <FeedContext.Provider

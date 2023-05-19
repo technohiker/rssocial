@@ -1,29 +1,12 @@
 import { createContext } from "react";
 import { IFeed } from "../types/IFeed";
 import { IFolder } from "../types/IFolder";
-import { IMessage, IUserMessage } from "../types/IMessage";
-import { IReaction } from "../types/IReaction";
+import { IUserMessage } from "../types/IMessage";
 import { IBookmark } from "../types/IBookmark";
 import { ICondition } from "../types/ICondition";
 
-const defaultFolders: IFolder[] = [
-];
 
-const defaultFeeds: IFeed[] = [];
-
-const defaultMessages: IUserMessage[] = [];
-
-const defaultReactions: IReaction[] = [];
-
-const defaultFunction = async (): Promise<void> => { };
-
-// export const FeedContext = createContext<IContextFeed>({
-//   folders: defaultFolders,
-//   feeds: defaultFeeds,
-//   messages: defaultMessages,
-//   loadMessages: function () { },
-//});
-
+/** Context that passes down all news information and their containers. */
 export const FeedContext = createContext({} as IContextFeed);
 
 interface IContextFeed {

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Route, Redirect, RouteProps } from "react-router";
 
-/** Route that only renders if authentication is passed. */
+/** Route that redirects if verification is passed.
+ * Stops users from returning to register/login, if they're already logged in.
+ */
 export function AuthorizedRoute({
   children,
   token,
@@ -20,7 +22,7 @@ export function AuthorizedRoute({
     <Route
       {...rest}
       render={() => {
-        return hasToken ? <Redirect to="/" /> : children;
+        return hasToken ? <Redirect to="/" /> : children; //Redirects to home page if user is already logged in.
       }}
     ></Route>
   );

@@ -6,7 +6,7 @@ import { Message } from "../Message/Message";
 import "./MessageList.css";
 import { Button, Container } from "reactstrap";
 
-/** List of messages.(what's the best way to present these?  avoid infinite scroll) */
+/** List of messages.  Displays one at a time, and can page through them. */
 export function MessageList({
   messages,
   reactions,
@@ -14,7 +14,6 @@ export function MessageList({
   updateMessage,
 }: IMessageListProps) {
   const [msgIndex, setIndex] = useState(0);
-
   const [listMessages, setListMessages] = useState(messages);
 
   const updateListMessage = (uMessage: IUserMessage) => {
@@ -25,30 +24,26 @@ export function MessageList({
     });
   };
 
-  useEffect(() => {
-   // console.log({msgIndex});
-    console.log({prevButton, nextButton});
-  }, [msgIndex]);
-
+  /** Reset index when a new set of messages comes in. */
   useEffect(() => {
     setIndex(0);
     setListMessages(messages);
   }, [messages]);
 
   const nextMessage = () => {
-    console.log("Next Message Fired!")
+    console.log("Next Message Fired!");
     if (msgIndex < messages.length - 1) {
       setIndex(msgIndex + 1);
     }
   };
 
   const prevMessage = () => {
-    console.log("Previous Message Fired!")
-    console.log({msgIndex});
+    console.log("Previous Message Fired!");
+    console.log({ msgIndex });
     if (msgIndex > 0) {
       setIndex(msgIndex - 1);
     }
-    console.log({msgIndex});
+    console.log({ msgIndex });
   };
 
   // Declaring buttons here since they depend on MessageList state,
@@ -80,7 +75,6 @@ export function MessageList({
           key={listMessages[msgIndex].id}
           message={listMessages[msgIndex]}
           reactions={reactions}
-          thisReaction={listMessages[msgIndex].react_id}
           bookmarks={bookmarks}
           updateMessage={updateListMessage}
           prevButton={prevButton}

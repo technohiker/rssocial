@@ -1,6 +1,4 @@
-import { Field, FieldProps } from "react-final-form";
-import { Card, CardBody } from "reactstrap";
-
+import { Field } from "react-final-form";
 /** Premade field for Input type in React Final Form. */
 export function FieldInput({
   name,

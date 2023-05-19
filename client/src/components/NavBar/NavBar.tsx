@@ -3,8 +3,6 @@ import { NavLink } from "react-router-dom";
 import { Navbar, Nav } from "reactstrap";
 import { NavBarStrap, INavBar } from "../../helpers/NavBarStrap";
 
-//Declare routes in here, or receive them from App?
-
 /** Display NavBar to let user navigate to different pages. */
 export function NavBar({ text, routes }: INavProps) {
   return (

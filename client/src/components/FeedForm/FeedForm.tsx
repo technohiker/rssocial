@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { Field, Form } from "react-final-form";
+import { Form } from "react-final-form";
 import { FieldInput } from "../../helpers/FormFields/FieldInput";
 import { FieldSelect } from "../../helpers/FormFields/FieldSelect";
 import { IFolder } from "../../types/IFolder";
 import { ISource } from "../../types/ISource";
 import { Conditional } from "../../helpers/FormFields/FieldCondition";
 
+/** Create a news feed for the user. */
 export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
   console.log({ folders });
   console.log({ sources });
   const required = (value: any) => {
     return value ? undefined : "Required";
   };
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const submission = async (evt: IRSSFormSubmit) => {
     console.log({ evt });
@@ -20,14 +21,14 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
       (evt.source === "rss" && !evt.url) ||
       (evt.source === "reddit" && !evt.subreddit)
     ) {
-      setError("Please fill out the whole form.");
+      setMessage("Please fill out the whole form.");
       return;
     }
     let result = await onSubmission(evt);
     if (result) {
-      setError(result[0]);
+      setMessage(result[0]);
     } else {
-      setError("New feed generated!");
+      setMessage("New feed generated!");
     }
   };
   if (folders.length === 0)
@@ -49,7 +50,7 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
         onSubmit={submission}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>
-            <p className="text-center">{error}</p>
+            <p className="text-center">{message}</p>
             <FieldSelect
               name="folder"
               validation={required}
@@ -81,6 +82,7 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
               type={"text"}
               placeholder={""}
             />
+
             <Conditional when="source" is="rss">
               <FieldInput
                 name="url"
@@ -91,36 +93,6 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
               />
             </Conditional>
 
-            {/* <Conditional when="source" is="RSS Feed">
-            <FieldInput
-              name="frequency"
-              className="mb-3"
-              validation={required}
-              label={"Auto:"}
-              type={"text"}
-              value="auto"
-            />
-          </Conditional> */}
-            {/* {selectedSource === "Pick an option" && (
-            <>
-              <FieldInput
-                name="frequency"
-                className="mb-3"
-                validation={required}
-                label={"Auto:"}
-                type={"radio"}
-                value="auto"
-              />
-              <FieldInput
-                name="frequency"
-                className="mb-3"
-                validation={required}
-                label={"Schedule:"}
-                type={"radio"}
-                value="schedule"
-              />
-            </>
-          )} */}
             <Conditional when="source" is="reddit">
               <FieldInput
                 name="subreddit"
@@ -130,6 +102,7 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
                 placeholder="news,jokes,nba..."
               />
             </Conditional>
+
             <Conditional when="source" is={"reddit"}>
               <FieldSelect
                 name="sort"

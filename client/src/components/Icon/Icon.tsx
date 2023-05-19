@@ -22,6 +22,7 @@ library.add(
   faBars
 );
 
+/** User inputs a string for a certain Icon name, and the proper icon will be returned. */
 export function Icon({ name }: IIconProps) {
   const [iconName, setIconName] = useState<IconProp>(() => {
     switch (name) {
