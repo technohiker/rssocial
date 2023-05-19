@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "node ./dist/server.js",
+    "postinstall": "tsc",
     "dev": "nodemon src/server.ts",
     "test": "jest -i"
   },

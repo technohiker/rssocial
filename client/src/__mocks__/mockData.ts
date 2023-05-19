@@ -1,4 +1,5 @@
 import { IBookmark } from "../types/IBookmark";
+import { IFolder } from "../types/IFolder";
 import { IUserMessage } from "../types/IMessage";
 
 export const mockUser = {
@@ -82,9 +83,12 @@ export const mockCalls = [
   }
 ];
 
-export const mockFolders = [
+export const mockFolders: IFolder[] = [
   {
     id: 1,
+    name: "Test Folder",
+    user_id: 1,
+    icon: "folder.png"
   },
 ];
 

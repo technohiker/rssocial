@@ -14,10 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": true,
-    "outDir": "dist",
-    "noEmit": true,
+    "outDir": "./dist/"
   },
-  "include": ["src", "../shared"],
+  "include": ["./src", "../shared"],
   "exclude": ["node_modules"],
   "ts-node": {
     "files": true

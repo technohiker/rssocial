@@ -95,6 +95,17 @@ export const server = setupServer(
   }),
 
   //Set Note
+  rest.post(`${baseURL}/messages/:id/notes`, async (req, res, ctx) => {
+    const message_id = req.params.id
+    const {notes} = await req.json()
+
+    const thisMessage = mockMessages.find(message => message.id === +message_id)
+    if (!thisMessage) return res(ctx.status(404), ctx.json({ error: { message: "Message not found", status: 404 } }))
+
+    thisMessage.notes = notes
+
+    return res(ctx.status(200), ctx.json({ note: thisMessage.notes }))
+  }),
 
 
   //Add Bookmark

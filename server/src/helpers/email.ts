@@ -5,8 +5,12 @@ import { email_address, email_port, sendinblue_key } from "../config";
 
 const transporter = baseTransporter()
 
+//TODO: Right now running the server requires a SendinBlue account.  
+//Any way to work around this in case of testing?
+
+/** Create transporter object that will be used for sending emails later. */
 function baseTransporter() {
-  let num_email_port
+  let num_email_port;
   if (email_port) num_email_port = +email_port
   if (!sendinblue_key) throw new ExpressError(500, "Sendinblue API key not found.")
 

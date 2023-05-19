@@ -1,0 +1,4 @@
+- I wasn't able to properly prioritize what I wanted to add.  Certain features such as email verification and randomized test data had much more time implemented into them than what I should have done.  Should list out every single feature I want, along with it's importance, and how much time it will take to implement.
+  - Am afraid about refactoring costs if I decide to implement something later.  What are best practices to make my code refactorable?
+- Sketching out an idea of what I wanted my application to appear as would've made things easier.
+- CSS has always been an afterthought, and it probably shows here.

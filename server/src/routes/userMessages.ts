@@ -83,7 +83,7 @@ umsgRouter.post("/:id/notes", async function (req, res, next) {
 } as RequestHandler);
 
 /** Set bookmark to message. */
-umsgRouter.post('/:id', async function (req, res, next) {
+umsgRouter.post('/:id/bookmark', async function (req, res, next) {
     try {
       const userID = res.locals.user.id
       const { id } = req.params

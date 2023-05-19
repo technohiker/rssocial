@@ -64,28 +64,6 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
               ]}
             />
 
-            {/* <Field name="source" validate={required}>
-            {(props) => (
-              <div className="mb-3">
-                <label className="form-label">Feed Type: </label>
-                <select
-                  {...props.input}
-                  className="form-control"
-                  onChange={(e) => {
-                    setSelectedSource(e.currentTarget.value);
-                    return props.input.onChange;
-                  }}
-                >
-                  {sources.map((source) => (
-                    <option {...props.input} key={source.id} value={source.id}>
-                      {source.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </Field> */}
-
             <FieldSelect
               name="source"
               validation={required}

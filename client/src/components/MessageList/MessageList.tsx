@@ -26,25 +26,34 @@ export function MessageList({
   };
 
   useEffect(() => {
+   // console.log({msgIndex});
+    console.log({prevButton, nextButton});
+  }, [msgIndex]);
+
+  useEffect(() => {
     setIndex(0);
     setListMessages(messages);
   }, [messages]);
 
   const nextMessage = () => {
+    console.log("Next Message Fired!")
     if (msgIndex < messages.length - 1) {
       setIndex(msgIndex + 1);
     }
   };
 
   const prevMessage = () => {
+    console.log("Previous Message Fired!")
+    console.log({msgIndex});
     if (msgIndex > 0) {
       setIndex(msgIndex - 1);
     }
+    console.log({msgIndex});
   };
 
   // Declaring buttons here since they depend on MessageList state,
   //but they will be passed down to Message.
-  const prevButton = (
+  const prevButton: JSX.Element = (
     <Button
       className="message-button btn-info"
       disabled={msgIndex === 0}

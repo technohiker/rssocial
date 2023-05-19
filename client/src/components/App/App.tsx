@@ -5,7 +5,6 @@ import jwt_decode from "jwt-decode";
 
 import { NavBar } from "../NavBar/NavBar";
 import { Homepage } from "../Homepage/Homepage";
-import { UserPage } from "../UserPage/UserPage";
 import { LoginForm } from "../LoginForm/LoginForm";
 import { IUser } from "../../types/IUser";
 import { INews } from "../../types/INews";

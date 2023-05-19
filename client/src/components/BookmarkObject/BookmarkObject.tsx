@@ -10,11 +10,11 @@ export function BookmarkObject({
   removeBookmark,
 }: IBookmarkObjectProps) {
   const { messages, loadMessages } = useContext(FeedContext);
+  const [isClicked, toggleClicked] = useState(false);
+
   const feedMessages = messages.filter(
     (message) => message.bookmark_id === bookmarkID
   );
-
-  const [isClicked, toggleClicked] = useState(false);
 
   const deployMessages = () => {
     toggleClicked(!isClicked); //Needs to listen for any other clicks to occur.  Must be done in Sidebar.
@@ -37,15 +37,6 @@ export function BookmarkObject({
         cardDelete={deleteBookmark}
         onCardClick={deployMessages}
       />
-      {/* <Card className={`${isClicked && "feed-clicked"}`}>
-        <CardBody>
-          <div onClick={deployMessages}>
-            <img className="sidebar-img" src={icon} />
-            <p>{name}</p>
-          </div>
-        </CardBody>
-      </Card>
-      <Button onClick={deleteBookmark}>Delete Bookmark</Button> */}
     </>
   );
 }

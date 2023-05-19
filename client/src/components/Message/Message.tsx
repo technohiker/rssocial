@@ -63,9 +63,8 @@ export function Message({
   };
 
   const addReaction = async (reactID: number) => {
-    console.log("Clicked!");
     const res = await ServerCaller.postReaction(reactID, message.id);
-    console.log({ res });
+   // console.log({ res });
     updateMessage({ ...message, react_id: res });
     // console.log({ message });
   };
@@ -73,7 +72,7 @@ export function Message({
   const addSeen = async () => {
     if (isSeen) return; //Do not need to run if already seen.
     const res = await ServerCaller.addSeen(message.id);
-    console.log({ res });
+   // console.log({ res });
 
     setIsSeen(true);
 
@@ -111,6 +110,7 @@ export function Message({
         <div className="reaction-buttons d-flex flex-row align-items-center">
           {reactions.map((react) => (
             <Button
+              key={react.id}
               name={`react-button-${react.name}`}
               className={`${
                 react.id === thisReaction ? "react-true" : ""

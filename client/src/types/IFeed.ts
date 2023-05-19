@@ -7,6 +7,5 @@ export interface IFeed {
   source_name: string;
   source_img: string;
   feed_name: string;
-  call_id: number | null;
   messages?: IUserMessage[];
 }
