@@ -11,16 +11,11 @@ export function MessageList({
   messages,
   reactions,
   bookmarks,
-  resetIndex,
-  setResetIndex,
   updateMessage,
 }: IMessageListProps) {
   const [msgIndex, setIndex] = useState(0);
-  const [msgID, setMsgID] = useState(messages[0].id);
-  // const [isLoading, setIsLoading] = useState(true);
 
   const [listMessages, setListMessages] = useState(messages);
-  console.log(msgID, messages[0].id);
 
   const updateListMessage = (uMessage: IUserMessage) => {
     setListMessages((messages) => {
@@ -34,31 +29,6 @@ export function MessageList({
     setIndex(0);
     setListMessages(messages);
   }, [messages]);
-
-  // useEffect(() => {
-  //   // if (resetIndex) {
-  //   //   setIndex(0);
-  //   //   setResetIndex(false);
-  //   // }
-  //   if (msgID !== messages[0].id) {
-  //     setIndex(0);
-  //     setMsgID(messages[0].id);
-  //   }
-  // }, [messages]);
-
-  // useEffect(() => {
-  //   console.log({ isLoading });
-  // }, [isLoading]);
-
-  // useEffect(() => {
-  //   console.log("Fired.");
-  //   setIsLoading(true);
-  //   if (msgID !== messages[0].id) {
-  //     setIndex(0);
-  //     setMsgID(messages[0].id);
-  //   }
-  //   setIsLoading(false);
-  // }, [messages]);
 
   const nextMessage = () => {
     if (msgIndex < messages.length - 1) {
@@ -116,7 +86,5 @@ interface IMessageListProps {
   messages: IUserMessage[];
   reactions: IReaction[];
   bookmarks: IBookmark[];
-  resetIndex: boolean;
-  setResetIndex: React.Dispatch<React.SetStateAction<boolean>>;
   updateMessage: (message: IUserMessage) => void;
 }

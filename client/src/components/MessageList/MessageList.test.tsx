@@ -18,8 +18,6 @@ const messageList = (
     messages={testMessages}
     reactions={testReactions}
     bookmarks={testBookmarks}
-    resetIndex={false}
-    setResetIndex={() => {}}
     updateMessage={updateMessage}
   />
 );

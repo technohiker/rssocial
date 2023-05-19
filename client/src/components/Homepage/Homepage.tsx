@@ -66,15 +66,6 @@ export function Homepage({
     }
   }, [userFeeds]);
 
-  /** Update Current Messages when Messages object is updated. */
-  useEffect(() => {
-    //setCurrMessages(messages);
-  }, [messages]);
-
-  useEffect(() => {
-    //console.log({ messages });
-  }, [messages]);
-
   const newFolder = async (name: string) => {
     try {
       const newFolder = await ServerCaller.postFolder(name);
@@ -97,13 +88,8 @@ export function Homepage({
   const addCall = async (body: IRSSFormSubmit) => {
     try {
       const newFeed = await ServerCaller.postFeed(body);
-      //console.log({ newFeed });
-      // setFeeds([...feeds, newFeed]);
-      // setFeeds((feeds) => [...feeds, newFeed]);
       const newFeeds = [...feeds, newFeed];
       setFeeds(newFeeds);
-      //console.log({ feeds });
-      //  await getUserFeeds(currUser.username);
     } catch (e: any) {
       return e;
     }
@@ -118,12 +104,6 @@ export function Homepage({
     <Button onClick={toggleFolderModal}>Make New Folder</Button>,
     <Button onClick={toggleBookmarkModal}>Make New Bookmark</Button>,
   ];
-
-  // const loadMessages = (newMessages: IUserMessage[]) => {
-  //   setDisplayMessages(true);
-  //   setCurrMessages(newMessages);
-  //   setFilterMSG({condition: "", value: ""});
-  // };
 
   const loadMessages = (condition: ICondition) => {
     setDisplayMessages(true);
@@ -227,22 +207,12 @@ export function Homepage({
           </Col>
           <Col xs={"9"}>
             {displayMessages ? (
-              // <MessageList
-              //   messages={currMessages}
-              //   reactions={reactions}
-              //   bookmarks={bookmarks}
-              //   resetIndex={resetIndex}
-              //   setResetIndex={setResetIndex}
-              //   updateMessage={updateMessage}
-              // />
               <MessageList
                 messages={messages.filter(
                   (message) => message[filterMSG.condition] === filterMSG.value
                 )}
                 reactions={reactions}
                 bookmarks={bookmarks}
-                resetIndex={resetIndex}
-                setResetIndex={setResetIndex}
                 updateMessage={updateMessage}
               />
             ) : (
