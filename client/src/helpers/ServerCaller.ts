@@ -167,7 +167,7 @@ export class ServerCaller {
 
   /** Add a message to a bookmark. */
   static async setBookmark(messageID: number, bookmarkID: number): Promise<number> {
-    let res = await this.request(`messages/${messageID}/bookmark`, "post", {
+    let res = await this.request(`messages/${messageID}`, "post", {
       bookmarkID: bookmarkID,
     });
     return res.bookmarkID;

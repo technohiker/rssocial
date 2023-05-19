@@ -1,7 +1,6 @@
 import "./BookmarkObject.css";
 import { useContext, useState } from "react";
 import { FeedContext } from "../../helpers/ContextFeed";
-import { Button, Card, CardBody } from "reactstrap";
 import { SidebarCard } from "../SidebarCard/SidebarCard";
 
 export function BookmarkObject({
@@ -19,7 +18,8 @@ export function BookmarkObject({
 
   const deployMessages = () => {
     toggleClicked(!isClicked); //Needs to listen for any other clicks to occur.  Must be done in Sidebar.
-    loadMessages(feedMessages);
+    //loadMessages(feedMessages);
+    loadMessages({ condition: "bookmark_id", value: bookmarkID });
   };
 
   const deleteBookmark = async () => {

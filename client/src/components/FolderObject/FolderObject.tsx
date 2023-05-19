@@ -49,7 +49,7 @@ export function FolderObject({
         ...context["messages"].filter((message) => message.feed_id === feed.id)
       );
     }
-    context["loadMessages"](folderMessages);
+    // context["loadMessages"]({ condition: "folder_id", value: folderID });
   };
 
   const removeFeed = async (feedID: number) => {

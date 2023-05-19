@@ -4,7 +4,7 @@
 -- DROP DATABASE deqbl8450smu2e;
 -- CREATE DATABASE deqbl8450smu2e
  -- WITH ENCODING = 'UTF8';
-\connect deqbl8450smu2e
+\connect dd9nsc3cvi6v7
 
 \i src/sql/schema.sql
 \i src/sql/seed.sql

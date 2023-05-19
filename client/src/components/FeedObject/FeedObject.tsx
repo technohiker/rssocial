@@ -21,7 +21,8 @@ export function FeedObject({
 
   const deployMessages = () => {
     toggleClicked(!isClicked); //Needs to listen for any other clicks to occur.  Must be done in Sidebar.
-    loadMessages(feedMessages);
+    //loadMessages(feedMessages);
+    loadMessages({ condition: "feed_id", value: feedID });
   };
 
   const deleteFeed = async () => {

@@ -25,6 +25,7 @@ import { ISource } from "../../types/ISource";
 import { MessageList } from "../MessageList/MessageList";
 import { IBookmark } from "../../types/IBookmark";
 import { AddBookmarkForm } from "../AddBookmarkForm/AddBookmarkForm";
+import { ICondition } from "../../types/ICondition";
 
 export function Homepage({
   currUser,
@@ -43,6 +44,10 @@ export function Homepage({
   const [bookmarkModal, setBookmarkModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [currMessages, setCurrMessages] = useState<Array<IUserMessage>>([]);
+  const [displayMessages, setDisplayMessages] = useState(false);
+  const [resetIndex, setResetIndex] = useState(false);
+
+  const [filterMSG, setFilterMSG] = useState<ICondition>({} as ICondition);
 
   /** Toggle spinning logo when a user's feeds is loading. */
   useEffect(() => {
@@ -60,6 +65,11 @@ export function Homepage({
       setLoading(true);
     }
   }, [userFeeds]);
+
+  /** Update Current Messages when Messages object is updated. */
+  useEffect(() => {
+    //setCurrMessages(messages);
+  }, [messages]);
 
   useEffect(() => {
     //console.log({ messages });
@@ -109,17 +119,26 @@ export function Homepage({
     <Button onClick={toggleBookmarkModal}>Make New Bookmark</Button>,
   ];
 
-  const loadMessages = (newMessages: IUserMessage[]) => {
-    // newMessages.sort();
-    setCurrMessages(newMessages);
+  // const loadMessages = (newMessages: IUserMessage[]) => {
+  //   setDisplayMessages(true);
+  //   setCurrMessages(newMessages);
+  //   setFilterMSG({condition: "", value: ""});
+  // };
+
+  const loadMessages = (condition: ICondition) => {
+    setDisplayMessages(true);
+    setFilterMSG({ ...condition });
+    console.log({ filterMSG });
   };
 
   const updateMessage = (uMessage: IUserMessage) => {
+    setDisplayMessages(false);
     setMessages((messages) => {
       return messages.map((message) =>
         uMessage.id === message.id ? { ...uMessage } : message
       );
     });
+    setDisplayMessages(true);
   };
 
   if (!currUser.id) {
@@ -207,19 +226,31 @@ export function Homepage({
             </FeedContext.Provider>
           </Col>
           <Col xs={"9"}>
-            {currMessages.length === 0 ? (
+            {displayMessages ? (
+              // <MessageList
+              //   messages={currMessages}
+              //   reactions={reactions}
+              //   bookmarks={bookmarks}
+              //   resetIndex={resetIndex}
+              //   setResetIndex={setResetIndex}
+              //   updateMessage={updateMessage}
+              // />
+              <MessageList
+                messages={messages.filter(
+                  (message) => message[filterMSG.condition] === filterMSG.value
+                )}
+                reactions={reactions}
+                bookmarks={bookmarks}
+                resetIndex={resetIndex}
+                setResetIndex={setResetIndex}
+                updateMessage={updateMessage}
+              />
+            ) : (
               <p className="message-list-empty">
                 No messages yet. Please click on a feed to show messages. If you
                 don't have a Feed, click on the Sidebar's top-right icon to add
                 one.
               </p>
-            ) : (
-              <MessageList
-                messages={currMessages}
-                reactions={reactions}
-                bookmarks={bookmarks}
-                updateMessage={updateMessage}
-              />
             )}
           </Col>
         </div>

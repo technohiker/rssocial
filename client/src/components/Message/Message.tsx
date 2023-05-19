@@ -1,5 +1,5 @@
 import { IMessage, IUserMessage } from "../../types/IMessage";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Message.css";
 import DOMPurify from "dompurify";
 import {
@@ -34,6 +34,10 @@ export function Message({
     DOMString = "";
   }
 
+  useEffect(() => {
+    console.log({ message });
+  }, [message]);
+
   const sanitizedHTML = DOMPurify.sanitize(DOMString);
 
   let author = "";
@@ -49,11 +53,13 @@ export function Message({
   const addToBookmark = async (bookmarkID: number) => {
     const bkID = await ServerCaller.setBookmark(message.id, bookmarkID);
     if (bkID) updateMessage({ ...message, bookmark_id: bkID });
+    // console.log({ message });
   };
 
   const addNotes = async (notes: string) => {
     const res = await ServerCaller.addNotes(message.id, notes);
     if (res) updateMessage({ ...message, notes: res });
+    // console.log({ message });
   };
 
   const addReaction = async (reactID: number) => {
@@ -61,7 +67,7 @@ export function Message({
     const res = await ServerCaller.postReaction(reactID, message.id);
     console.log({ res });
     updateMessage({ ...message, react_id: res });
-    console.log({ message });
+    // console.log({ message });
   };
 
   const addSeen = async () => {

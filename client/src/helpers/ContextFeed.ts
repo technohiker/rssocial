@@ -4,6 +4,7 @@ import { IFolder } from "../types/IFolder";
 import { IMessage, IUserMessage } from "../types/IMessage";
 import { IReaction } from "../types/IReaction";
 import { IBookmark } from "../types/IBookmark";
+import { ICondition } from "../types/ICondition";
 
 const defaultFolders: IFolder[] = [
 ];
@@ -34,5 +35,5 @@ interface IContextFeed {
   setMessages: React.Dispatch<React.SetStateAction<IUserMessage[]>>
   bookmarks: IBookmark[];
   setBookmarks: React.Dispatch<React.SetStateAction<IBookmark[]>>
-  loadMessages: (message: IUserMessage[]) => void;
+  loadMessages: (condition: ICondition) => void;
 }

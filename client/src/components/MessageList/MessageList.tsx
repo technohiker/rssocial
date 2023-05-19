@@ -11,15 +11,54 @@ export function MessageList({
   messages,
   reactions,
   bookmarks,
+  resetIndex,
+  setResetIndex,
   updateMessage,
 }: IMessageListProps) {
   const [msgIndex, setIndex] = useState(0);
-  useEffect(() => {
-    console.log({ msgIndex });
-  }, [msgIndex]);
+  const [msgID, setMsgID] = useState(messages[0].id);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  const [listMessages, setListMessages] = useState(messages);
+  console.log(msgID, messages[0].id);
+
+  const updateListMessage = (uMessage: IUserMessage) => {
+    setListMessages((messages) => {
+      return messages.map((message) =>
+        uMessage.id === message.id ? { ...uMessage } : message
+      );
+    });
+  };
+
   useEffect(() => {
     setIndex(0);
+    setListMessages(messages);
   }, [messages]);
+
+  // useEffect(() => {
+  //   // if (resetIndex) {
+  //   //   setIndex(0);
+  //   //   setResetIndex(false);
+  //   // }
+  //   if (msgID !== messages[0].id) {
+  //     setIndex(0);
+  //     setMsgID(messages[0].id);
+  //   }
+  // }, [messages]);
+
+  // useEffect(() => {
+  //   console.log({ isLoading });
+  // }, [isLoading]);
+
+  // useEffect(() => {
+  //   console.log("Fired.");
+  //   setIsLoading(true);
+  //   if (msgID !== messages[0].id) {
+  //     setIndex(0);
+  //     setMsgID(messages[0].id);
+  //   }
+  //   setIsLoading(false);
+  // }, [messages]);
 
   const nextMessage = () => {
     if (msgIndex < messages.length - 1) {
@@ -59,12 +98,12 @@ export function MessageList({
     <Container className="message-list d-flex flex-column">
       <div className="d-flex justify-content-center">
         <Message
-          key={messages[msgIndex].id}
-          message={messages[msgIndex]}
+          key={listMessages[msgIndex].id}
+          message={listMessages[msgIndex]}
           reactions={reactions}
-          thisReaction={messages[msgIndex].react_id}
+          thisReaction={listMessages[msgIndex].react_id}
           bookmarks={bookmarks}
-          updateMessage={updateMessage}
+          updateMessage={updateListMessage}
           prevButton={prevButton}
           nextButton={nextButton}
         />
@@ -77,5 +116,7 @@ interface IMessageListProps {
   messages: IUserMessage[];
   reactions: IReaction[];
   bookmarks: IBookmark[];
+  resetIndex: boolean;
+  setResetIndex: React.Dispatch<React.SetStateAction<boolean>>;
   updateMessage: (message: IUserMessage) => void;
 }
