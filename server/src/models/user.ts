@@ -1,14 +1,13 @@
 /** Class pertaining to user objects. */
 import bcrypt from "bcrypt";
-import { BCRYPT_WORK_FACTOR } from "../config";
+import { BCRYPT_WORK_FACTOR, backend_url } from "../config";
 import { db } from "../db";
 import { UnauthorizedError } from "../helpers/ExpressError";
 import { BadRequestError } from "../helpers/ExpressError";
-import { createToken } from "../helpers/tokens";
 
 import { IUser } from "../types/IUser";
 import { IReaction } from "../types/IReaction";
-import { sendEmail } from "../helpers/email";
+import { sendVerifyEmail } from "../helpers/email";
 import { QueryResult } from "pg";
 import { Folder } from "./folder";
 import { Feed } from "./feed";
@@ -70,18 +69,8 @@ export class User {
 
     const user: IUser = result.rows[0];
 
-    //Generate code for verification, then email it to user.
-    const hashValue = await bcrypt.hash(username + email, BCRYPT_WORK_FACTOR)
-
-    const verifyToken = createToken({
-      id: user.id,
-      hash: hashValue
-    }, { expiresIn: '1w' })
-    console.log({ verifyToken })
-
-    const verifyHTML = `<p>Click this link to verify your email: http://localhost:3000/verify?verToken=${verifyToken}</p>`
-
-    sendEmail(user.email, "Verify Account", verifyHTML)
+    //Create a token for verification, then email it to user.
+    await sendVerifyEmail(user.username, user.email, user.id)
 
     return user;
   }

@@ -1,7 +1,9 @@
 import SendinBlueTransport from 'nodemailer-sendinblue-transport';
 import { createTransport } from 'nodemailer'
 import { ExpressError } from "./ExpressError";
-import { email_address, email_port, sendinblue_key } from "../config";
+import { BCRYPT_WORK_FACTOR, backend_url, email_address, email_port, sendinblue_key } from "../config";
+import bcrypt from 'bcrypt';
+import { createToken } from './tokens';
 
 const transporter = baseTransporter()
 
@@ -17,6 +19,22 @@ function baseTransporter() {
   return createTransport(new SendinBlueTransport({
     apiKey: sendinblue_key,
   }));
+}
+
+export async function sendVerifyEmail(username: string, email: string, id: number) {
+
+  //Generate code for verification, then email it to user.
+  const hashValue = await bcrypt.hash(username + email, BCRYPT_WORK_FACTOR)
+
+  const verifyToken = createToken({
+    id: id,
+    hash: hashValue
+  }, { expiresIn: '1w' })
+  console.log({ verifyToken })
+
+  const verifyHTML = `<p>Click this link to verify your email: ${backend_url}/verify?verToken=${verifyToken}</p>`
+
+  sendEmail(email, "Verify Account", verifyHTML)
 }
 
 export async function sendEmail(receiver: string, subject: string, message: string) {

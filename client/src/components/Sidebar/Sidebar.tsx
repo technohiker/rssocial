@@ -37,10 +37,10 @@ export function Sidebar({ buttons }: ISidebarProps) {
   return (
     <div className="sidebar">
       <Row className="sidebar-header">
-        <Col xs={9}>
+        <Col xs={10}>
           <h4 className="sidebar-title">Sidebar</h4>
         </Col>
-        <Col xs={1}>
+        <Col xs={2}>
           <HamburgerButton buttons={buttons} />
         </Col>
       </Row>

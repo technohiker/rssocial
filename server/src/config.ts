@@ -1,11 +1,5 @@
 /** Config values to be used across the project. */
 
-import { iTestInterface } from "../../shared/EXAMPLE";
-
-const test: iTestInterface = { test: "string" }
-
-console.log({ test })
-
 import dotenv from "dotenv";
 import colors from "colors";
 import axios from "axios";
@@ -32,6 +26,9 @@ export const { reddit_secret } = process.env;
 export const { reddit_token } = process.env;
 export const { reddit_useragent } = process.env;
 export const { reddit_refreshtoken } = process.env;
+export const { backend_url } = process.env;
+
+console.log({ backend_url })
 
 
 export const PORT = +(process.env.PORT ?? 3001);

@@ -79,6 +79,8 @@ export function Homepage({
       const newFeed = await ServerCaller.postFeed(body);
       const newFeeds = [...feeds, newFeed];
       setFeeds(newFeeds);
+
+      await getUserFeeds(currUser.username);
     } catch (e: any) {
       return e;
     }
@@ -203,14 +205,23 @@ export function Homepage({
           </Col>
           <Col xs={"9"}>
             {displayMessages ? (
-              <MessageList
-                messages={messages.filter(
-                  (message) => message[filterMSG.condition] === filterMSG.value
-                )}
-                reactions={reactions}
-                bookmarks={bookmarks}
-                updateMessage={updateMessage}
-              />
+              messages.filter(
+                (message) => message[filterMSG.condition] === filterMSG.value
+              ).length === 0 ? (
+                <p className="message-list-empty">
+                  This object does not contain any messages.
+                </p>
+              ) : (
+                <MessageList
+                  messages={messages.filter(
+                    (message) =>
+                      message[filterMSG.condition] === filterMSG.value
+                  )}
+                  reactions={reactions}
+                  bookmarks={bookmarks}
+                  updateMessage={updateMessage}
+                />
+              )
             ) : (
               <p className="message-list-empty">
                 No messages yet. Please click on a feed to show messages. If you

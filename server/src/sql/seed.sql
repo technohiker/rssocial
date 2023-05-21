@@ -27,8 +27,7 @@ VALUES ('Like', 'thumbs-up.png'),
 -- Insert some sample feeds
 INSERT INTO feeds (user_id, folder_id, source_id, feed_name) 
 VALUES (1, 1, 1, 'Web Development'),
-       (1, 2, 2, 'Software Development'),
-       (1, 2, 2, 'Gaming'),
+       (1, 2, 2, 'World News'),
        (2, 3, 1, 'Personal Blog');
 
 -- Insert some sample calls

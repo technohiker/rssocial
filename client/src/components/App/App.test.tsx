@@ -6,16 +6,6 @@ import { ProtectedRoute } from "../../helpers/ProtectedRoute";
 import { MemoryRouter } from "react-router-dom";
 import { mockToken } from "../../__mocks__/mockData";
 
-//Create test objects.  Use example objects from previous commit.
-
-// test("Sidebar properly displays folders and feeds.")
-
-// test("Can create new folder.")
-
-// test("creates new call and feed.")
-
-// test("create new bookmark.")
-
 test("renders learn react link", () => {
   localStorage.setItem("token", mockToken);
   render(<App />);
