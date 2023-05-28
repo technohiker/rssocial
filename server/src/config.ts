@@ -26,9 +26,7 @@ export const { reddit_secret } = process.env;
 export const { reddit_token } = process.env;
 export const { reddit_useragent } = process.env;
 export const { reddit_refreshtoken } = process.env;
-export const { backend_url } = process.env;
-
-console.log({ backend_url })
+export const { frontend_url } = process.env;
 
 
 export const PORT = +(process.env.PORT ?? 3001);

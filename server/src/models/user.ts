@@ -1,6 +1,6 @@
 /** Class pertaining to user objects. */
 import bcrypt from "bcrypt";
-import { BCRYPT_WORK_FACTOR, backend_url } from "../config";
+import { BCRYPT_WORK_FACTOR } from "../config";
 import { db } from "../db";
 import { UnauthorizedError } from "../helpers/ExpressError";
 import { BadRequestError } from "../helpers/ExpressError";

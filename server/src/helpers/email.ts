@@ -1,7 +1,7 @@
 import SendinBlueTransport from 'nodemailer-sendinblue-transport';
 import { createTransport } from 'nodemailer'
 import { ExpressError } from "./ExpressError";
-import { BCRYPT_WORK_FACTOR, backend_url, email_address, email_port, sendinblue_key } from "../config";
+import { BCRYPT_WORK_FACTOR, frontend_url, email_address, email_port, sendinblue_key } from "../config";
 import bcrypt from 'bcrypt';
 import { createToken } from './tokens';
 
@@ -32,7 +32,7 @@ export async function sendVerifyEmail(username: string, email: string, id: numbe
   }, { expiresIn: '1w' })
   console.log({ verifyToken })
 
-  const verifyHTML = `<p>Click this link to verify your email: ${backend_url}/verify?verToken=${verifyToken}</p>`
+  const verifyHTML = `<p>Click this link to verify your email: ${frontend_url}/verify?verToken=${verifyToken}</p>`
 
   sendEmail(email, "Verify Account", verifyHTML)
 }
