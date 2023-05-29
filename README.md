@@ -2,7 +2,9 @@
 
 This program is my take on combining RSS Feeds with social media feeds.  Instead of going onto a source's website and being given information in accordance to what the site owner wants, the user will be able to input what data they want to see, and it will be fetched through either the site's RSS feed, or their API.  Written with React and Express in TypeScript, this project will specifically allow connections to any RSS feeds, and the social media website Reddit via API calls.
 
-Project can be found at (insert host here once project is done).
+The project can be found [here](https://abandoned-whip.surge.sh/).  A personal account can be made by clicking on Register and using your email.  If you do not wish to do so, you may login with the username `john_doe`, and a password of `password`.
+
+![Demo](rssocial-demo.mp4)
 
 ## Cloning:
 

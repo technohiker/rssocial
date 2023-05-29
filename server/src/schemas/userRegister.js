@@ -1,4 +1,4 @@
-import userDef from "./userDef";
+import userDef from "./userDef.json";
 
 export default {
   $schema: "http://json-schema.org/draft-07/schema#",

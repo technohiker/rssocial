@@ -29,6 +29,12 @@ app.use("/feeds", feedRouter);
 app.use('/bookmarks', bookmarkRouter)
 app.use('/sources', sourceRouter)
 
+
+/** Nothing to return when user reaches '/' route, but this is needed for Heroku. */
+app.get("/", (req, res, next) => {
+  return res.send("Welcome to RSSocial!");
+});
+
 /** Returns 404 when invalid URL is called. */
 app.use(((req, res, next) => {
   return next(new NotFoundError());
