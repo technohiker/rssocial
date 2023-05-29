@@ -4,9 +4,13 @@ This program is my take on combining RSS Feeds with social media feeds.  Instead
 
 The project can be found [here](https://abandoned-whip.surge.sh/).  A personal account can be made by clicking on Register and using your email.  If you do not wish to do so, you may login with the username `john_doe`, and a password of `password`.
 
-![Demo](rssocial-demo.mp4)
+## Demo:
+
+ https://github.com/fez-github/rssocial/assets/75589254/6217ae57-00e5-45f0-9c59-9393d2579abe
 
 ## Cloning:
+
+
 
 If you wish to use this project for yourself, clone the repository, then use `npm install` on the root, server, and client directories.  
 
