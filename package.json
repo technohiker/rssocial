@@ -1,6 +1,6 @@
 {
-  "name": "capstone-2",
-  "version": "0.1.0",
+  "name": "rssocial",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "concurrently": "^7.6.0",
