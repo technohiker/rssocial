@@ -6,11 +6,12 @@ The project can be found [here](https://abandoned-whip.surge.sh/).  A personal a
 
 ## Demo:
 
- https://github.com/fez-github/rssocial/assets/75589254/6217ae57-00e5-45f0-9c59-9393d2579abe
+https://github.com/fez-github/rssocial/assets/75589254/47bb6b41-05ef-47b4-ad46-b1de90b90fe6
 
 ## Cloning:
 
 If you wish to use this project for yourself, clone the repository, then use `npm install` on the root, server, and client directories.  
+
 
 A PostgreSQL database is utilized in this project. Run `cd server` to move to the back-end, then run the following command to create and populate the databse.
  ```psql < src/sql/create.sql```
