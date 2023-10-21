@@ -72,7 +72,7 @@ export function App() {
 			const newUser = { username: username, password: password, email: email };
 
 			let token = await ServerCaller.registerUser(newUser);
-			setToken(token);
+			//setToken(token);
 		} catch (e: any) {
 			return e;
 		}
