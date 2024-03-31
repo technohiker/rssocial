@@ -89,7 +89,7 @@ export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
                 className="mb-3"
                 label={"RSS URL:"}
                 type={"text"}
-                placeholder={"http://feedpress.me/hacker-news-best"}
+                placeholder={"https://www.nme.com/feed"}
               />
             </Conditional>
 

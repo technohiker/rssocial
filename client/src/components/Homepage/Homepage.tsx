@@ -17,6 +17,7 @@ import { IBookmark } from "../../types/IBookmark";
 import { AddBookmarkForm } from "../AddBookmarkForm/AddBookmarkForm";
 import { ICondition } from "../../types/ICondition";
 import { Button, Col, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { LoadingRing } from "../LoadingRing/LoadingRing";
 
 export function Homepage({
   currUser,
@@ -154,13 +155,7 @@ export function Homepage({
   } else if (isLoading) {
     return (
       <>
-        <div className="lds-ring">
-          {/** From loading.io/css */}
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <LoadingRing />
         <p>{"Not available yet."}</p>
       </>
     );
@@ -201,7 +196,7 @@ export function Homepage({
         </Modal>
 
         <div className="d-flex flex-row main-container">
-          <Col xs={"2"}>
+          <Col xs={"3"}>
             <FeedContext.Provider
               value={{
                 folders: folders,
@@ -218,7 +213,7 @@ export function Homepage({
               <Sidebar buttons={formButtons} />
             </FeedContext.Provider>
           </Col>
-          <Col xs={"9"}>
+          <Col xs={"8"}>
             {displayMessages ? (
               messages.filter(
                 (message) => message[filterMSG.condition] === filterMSG.value
@@ -241,7 +236,8 @@ export function Homepage({
               <p className="message-list-empty">
                 No messages yet. Please click on a feed to show messages. If you
                 don't have a Feed, click on the Sidebar's top-right icon to add
-                one.
+                one. Note that you must also have a folder in order to have a
+                feed.
               </p>
             )}
           </Col>
