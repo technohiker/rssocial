@@ -15,7 +15,7 @@ export function SidebarCard({
       <CardBody className="d-flex flex-row align-items-center">
         <Col xs={1}>{collapseButton}</Col>
         <Col xs={2}>
-          <Icon name={image} />
+          <Icon className="sidebar-card-icon" name={image} />
         </Col>
         <Col xs={8}>
           <span className="sidebar-card-name">{cardName}</span>

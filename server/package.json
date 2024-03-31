@@ -14,7 +14,7 @@
       "config.js"
     ]
   },
-  "engine":{
+  "engine": {
     "node": "16.18.1"
   },
   "keywords": [],

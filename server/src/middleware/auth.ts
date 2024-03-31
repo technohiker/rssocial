@@ -18,13 +18,13 @@ export const authenticateJWT: RequestHandler = (req, res, next) => {
   try {
     if (authHeader) {
       const token = authHeader;
-      console.log({ token })
+      console.log({ token });
       res.locals.user = jwt.verify(token, SECRET_KEY);
       console.log("Locals:", res.locals.user);
     }
     return next();
   } catch (e: any) {
-    console.log("Auth Error:", e)
+    console.log("Auth Error:", e);
     return next();
   }
 };
@@ -44,8 +44,8 @@ export const ensureLoggedIn: RequestHandler = (req, res, next) => {
 export const ensureCorrectUser: RequestHandler = (req, res, next) => {
   try {
     const user = res.locals.user;
-    console.log({ user })
-    console.log("Params:", req.params)
+    console.log({ user });
+    console.log("Params:", req.params);
     if (!(user && user.username === req.params.username)) {
       throw new UnauthorizedError();
     }
@@ -58,26 +58,25 @@ export const ensureCorrectUser: RequestHandler = (req, res, next) => {
 /** Decode token sent in body. */
 export const checkVerifyToken: RequestHandler = (req, res, next) => {
   try {
-    const { verToken } = req.body
-    if (!verToken) return res.json({ verified: false })
+    const { verToken } = req.body;
+    if (!verToken) return res.json({ verified: false });
     //Verify token.
-    const verified = <IVerifiedToken>jwt.verify(verToken, SECRET_KEY)
-    console.log({ verified })
+    const verified = <IVerifiedToken>jwt.verify(verToken, SECRET_KEY);
+    console.log({ verified });
     //Set locals.
-    res.locals.userID = verified.id
+    res.locals.userID = verified.id;
     //What if user was already verified?
-    return next()
+    return next();
+  } catch (err: any) {
+    return res.json({ verified: false, token: "" });
   }
-  catch (err: any) {
-    return res.json({ verified: false, token: "" })
-  }
-}
+};
 
 interface IVerifiedToken extends JwtPayload {
-  id: number,
-  username: string,
-  email: string,
-  verifyID: string,
-  iat: number,
-  exp: number
+  id: number;
+  username: string;
+  email: string;
+  verifyID: string;
+  iat: number;
+  exp: number;
 }

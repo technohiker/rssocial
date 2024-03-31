@@ -1,4 +1,4 @@
-.sidebar-card-delete{
+.sidebar-card-delete {
   background-color: transparent !important;
   font-size: large;
   color: black;
@@ -10,14 +10,19 @@
   border: none !important;
 }
 
-.sidebar-card-delete:hover{
+.sidebar-card-delete:hover {
   color: white !important;
   background-color: black !important;
   transition: color 0.5s !important;
   transition: background-color 0.5s !important;
 }
 
-.sidebar-card-name{
+.sidebar-card-name {
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+.sidebar-card-icon:hover {
+  cursor: pointer;
 }

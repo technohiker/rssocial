@@ -8,7 +8,6 @@ import { IFeed } from "../types/IFeed";
 import { IFolder } from "../types/IFolder";
 import { INews } from "../types/INews";
 
-
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 /** Call server endpoints that trigger RSS/API fetches. */
@@ -39,8 +38,10 @@ export class ServerCaller {
 
   /** Send info for new call and feed. */
   static async postFeed(body: IRSSFormSubmit): Promise<IFeed> {
-    const response = await this.request(`calls/new/${body.source}`, "post", { ...body })
-    return response.feed
+    const response = await this.request(`calls/new/${body.source}`, "post", {
+      ...body,
+    });
+    return response.feed;
   }
 
   /** Create new user and receive token. */
@@ -51,7 +52,7 @@ export class ServerCaller {
 
   /** Get token with login credentials. */
   static async authUser(username: string, password: string): Promise<string> {
-    let res = await this.request(`auth/token/`, "post", {
+    let res = await this.request(`auth/token`, "post", {
       username: username,
       password: password,
     });
@@ -61,8 +62,8 @@ export class ServerCaller {
   /** Make RSS call and get new messages. */
   static async fetchMessages(): Promise<IUserMessage[]> {
     //TODO: Does this even need to return anything?
-    let res = await this.request(`calls/fetch`)
-    return res
+    let res = await this.request(`calls/fetch`);
+    return res;
   }
 
   /** Retrieve user info by username. */
@@ -73,30 +74,30 @@ export class ServerCaller {
 
   /** Send token to backend to verify new user. */
   static async verifyUser(token: string) {
-    console.log("Now verifying...")
-    let res = await this.request(`auth/verify`, 'post', {
-      verToken: token
-    })
+    console.log("Now verifying...");
+    let res = await this.request(`auth/verify`, "post", {
+      verToken: token,
+    });
 
     return {
       verified: res.verified,
-      token: res.token
-    }
+      token: res.token,
+    };
     //Need to give message if verification failed.
   }
 
   static async getNews(username: string): Promise<INews> {
     //Use token with ID instead of userID?
     let res = await this.request(`users/${username}/news`);
-    console.log({ res })
+    console.log({ res });
     return res.news;
   }
 
   /** Increment number of clicks for going to a message's external source. */
   static async addClick(messageID: number): Promise<number> {
-    let res = await this.request(`messages/${messageID}/click`, "post")
+    let res = await this.request(`messages/${messageID}/click`, "post");
 
-    return res.message.clicks
+    return res.message.clicks;
   }
 
   /** Create a new folder. */
@@ -108,7 +109,10 @@ export class ServerCaller {
   }
 
   /** Edit a folder's name. */
-  static async patchFolder(folderName: string, folderID: number): Promise<IFolder> {
+  static async patchFolder(
+    folderName: string,
+    folderID: number
+  ): Promise<IFolder> {
     let res = await this.request(`folders/${folderID}`, "patch", {
       folderName: folderName,
     });
@@ -122,18 +126,21 @@ export class ServerCaller {
   }
 
   /** Add/update a reaction to a user's article. */
-  static async postReaction(reactID: number, messageID: number): Promise<number> {
+  static async postReaction(
+    reactID: number,
+    messageID: number
+  ): Promise<number> {
     let res = await this.request(`messages/${messageID}/react`, "post", {
       reactID: reactID,
     });
-    console.log({ res })
+    console.log({ res });
     return res.reactID;
   }
 
   /** Delete a folder. */
   static async deleteFeed(feedID: number): Promise<IFeed> {
     let res = await this.request(`feeds/${feedID}`, "delete");
-    console.log({ res })
+    console.log({ res });
     return res.feed;
   }
 
@@ -144,12 +151,14 @@ export class ServerCaller {
   }
 
   /** Add a message to a bookmark. */
-  static async setBookmark(messageID: number, bookmarkID: number): Promise<number> {
+  static async setBookmark(
+    messageID: number,
+    bookmarkID: number
+  ): Promise<number> {
     let res = await this.request(`messages/${messageID}/bookmark`, "post", {
       bookmarkID: bookmarkID,
     });
     return res.bookmarkID;
-
   }
   /** Add notes to a message */
   static async addNotes(messageID: number, notes: string): Promise<string> {
@@ -168,7 +177,7 @@ export class ServerCaller {
   /** Mark a message as seen */
   static async addSeen(messageID: number): Promise<IUserMessage> {
     let res = await this.request(`messages/${messageID}/seen`, "post");
-    console.log({ res })
+    console.log({ res });
     return res.seen;
   }
 
@@ -182,7 +191,7 @@ export class ServerCaller {
 }
 
 interface INewUser {
-  username: string,
-  password: string,
-  email: string
+  username: string;
+  password: string;
+  email: string;
 }

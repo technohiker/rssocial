@@ -16,103 +16,120 @@ import { IRedditPost } from "../types/IReddit";
 export const callRouter = Router();
 
 /** Recieves information for creating a call.  Returns a feed created with call info. */
-callRouter.post('/new/rss', ensureLoggedIn, async function (req, res, next) {
+callRouter.post("/new/rss", ensureLoggedIn, async function (req, res, next) {
   try {
-    const { source } = req.query
-    const { id } = res.locals.user
+    const { source } = req.query;
+    const { id } = res.locals.user;
 
-    const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, 1)
-    const newCall = await Call.makeRSSCall(req.body.url, newFeed.id)
-    console.log({ newFeed })
+    const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, 1);
+    const newCall = await Call.makeRSSCall(req.body.url, newFeed.id);
+    console.log({ newFeed });
 
-    return (res.json({ feed: newFeed }))
+    return res.json({ feed: newFeed });
+  } catch (e: any) {
+    return next(e);
   }
-  catch (e: any) {
-    return next(e)
-  }
-} as RequestHandler)
+} as RequestHandler);
 
-callRouter.post('/new/reddit', ensureLoggedIn, async function (req, res, next) {
+callRouter.post("/new/reddit", ensureLoggedIn, async function (req, res, next) {
   try {
-    const { subreddit, params, sort } = req.body
-    console.log("Req.body: ", req.body)
-    const sourceID = await Source.getSourceID("reddit")
-    const { id } = res.locals.user
+    const { subreddit, params, sort } = req.body;
+    console.log("Req.body: ", req.body);
+    const sourceID = await Source.getSourceID("reddit");
+    const { id } = res.locals.user;
 
-    const newFeed = await Feed.newFeed(req.body.name, +id, req.body.folder, sourceID.id)
-    const newCall = await Call.makeRedditCall(subreddit, newFeed.id, params, sort)
-    console.log({ newFeed })
+    const newFeed = await Feed.newFeed(
+      req.body.name,
+      +id,
+      req.body.folder,
+      sourceID.id
+    );
+    const newCall = await Call.makeRedditCall(
+      subreddit,
+      newFeed.id,
+      params,
+      sort
+    );
+    console.log({ newFeed });
 
-    return res.json({ feed: newFeed })
+    return res.json({ feed: newFeed });
+  } catch (e: any) {
+    return next(e);
   }
-  catch (e: any) {
-    return next(e)
-  }
-} as RequestHandler)
+} as RequestHandler);
 
-callRouter.get('/fetch', ensureLoggedIn, async function (req, res, next) {
+callRouter.get("/fetch", ensureLoggedIn, async function (req, res, next) {
+  console.log("Route reached.");
   try {
-    const { id } = res.locals.user
+    const { id } = res.locals.user;
 
-    const calls: ICall[] = await Call.getByUserID(id)
-    console.log({ calls })
+    const calls: ICall[] = await Call.getByUserID(id);
+    console.log({ calls });
 
-    const allMessages: IUserMessage[] = []
-    const promises: Promise<IUserMessage[]>[] = []
+    const allMessages: IUserMessage[] = [];
+    const promises: Promise<IUserMessage[]>[] = [];
 
     for (let call of calls) {
-      promises.push(runCall(call, id))
+      promises.push(runCall(call, id));
     }
-    const results = await Promise.all(promises)
+    const results = await Promise.all(promises);
 
     for (let result of results) {
-      allMessages.push(...result)
+      allMessages.push(...result);
     }
 
     async function runCall(call: ICall, userID: number) {
       let title;
       let messages: IMessage[] = [];
 
-
       if (call.source_name === "rss") {
-        const response = await Call.callRSS(call.base_url)
-        title = response.title
+        const response = await Call.callRSS(call.base_url);
+        title = response.title;
 
-        console.log({ response })
+        console.log({ response });
 
-        messages = response.items.map((item: Parser.Item) => Call.makeMessage(item))
-      }
+        messages = response.items.map((item: Parser.Item) =>
+          Call.makeMessage(item)
+        );
+      } else if (call.source_name === "reddit") {
+        if (!call.request_params) call.request_params = "";
 
-      else if (call.source_name === "reddit") {
-
-        if (!call.request_params) call.request_params = ""
-
-        const response = await Call.callReddit(call.base_url, call.request_params)
-        console.log({ response })
-        title = response.children[0].data.subreddit
-        messages = response.children.map((item) => Call.redditToMessage(item.data))
+        const response = await Call.callReddit(
+          call.base_url,
+          call.request_params
+        );
+        console.log({ response });
+        title = response.children[0].data.subreddit;
+        messages = response.children.map((item) =>
+          Call.redditToMessage(item.data)
+        );
       }
 
       if (!call.feed_id) {
-        console.log("No feed ID found.  Please update the call in the database.")
-        return [{}] as IUserMessage[]
+        console.log(
+          "No feed ID found.  Please update the call in the database."
+        );
+        return [{}] as IUserMessage[];
       }
       if (!title) {
-        console.log("No title found.  Please update the call in the database.")
-        return [{}] as IUserMessage[]
+        console.log("No title found.  Please update the call in the database.");
+        return [{}] as IUserMessage[];
       }
 
-      const msgRes = await userMessage.addMessages(messages, title)
-      const umsgRes = await userMessage.addUserMessages(msgRes, id, call.feed_id)
+      const msgRes = await userMessage.addMessages(messages, title);
+      const umsgRes = await userMessage.addUserMessages(
+        msgRes,
+        id,
+        call.feed_id
+      );
 
-      return umsgRes
+      return umsgRes;
     }
-    return res.json({ "messages": allMessages })
+    return res.json({ messages: allMessages });
+  } catch (e: any) {
+    return next(e);
   }
-  catch (e: any) {
-    return next(e)
-  }
-} as RequestHandler)
+} as RequestHandler);
 
 //Making RSS Call.
 callRouter.post("/rss", async function (req, res, next) {

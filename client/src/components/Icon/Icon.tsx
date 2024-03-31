@@ -23,7 +23,7 @@ library.add(
 );
 
 /** User inputs a string for a certain Icon name, and the proper icon will be returned. */
-export function Icon({ name }: IIconProps) {
+export function Icon({ name, className }: IIconProps) {
   const [iconName, setIconName] = useState<IconProp>(() => {
     switch (name) {
       case "reddit":
@@ -47,7 +47,7 @@ export function Icon({ name }: IIconProps) {
 
   return (
     <FontAwesomeIcon
-      className={`fontawesome-icon icon-${name}`}
+      className={`fontawesome-icon icon-${name} ${className}`}
       icon={iconName}
     />
   );
@@ -55,4 +55,5 @@ export function Icon({ name }: IIconProps) {
 
 interface IIconProps {
   name: string;
+  className?: string;
 }

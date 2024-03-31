@@ -125,7 +125,11 @@ export function Message({
         <div className="d-flex align-items-center">
           <NotesForm onSubmission={addNotes} defaultNote={message.notes} />
         </div>
-        <div className="d-flex align-items-center">
+        <div
+          className={`d-flex align-items-center ${
+            bookmarks.length === 0 ? "hidden" : ""
+          }`}
+        >
           <SetBookmarkForm
             onSubmission={addToBookmark}
             bookmarkOptions={bookmarks.map((bookmark) => ({

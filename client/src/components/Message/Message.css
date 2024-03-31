@@ -8,7 +8,7 @@
   width: 100%;
 }
 
-.message-buttons{
+.message-buttons {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,7 +18,7 @@
   margin-right: 5px;
 }
 
-.message-button{
+.message-button {
   margin-left: 5px;
 }
 
@@ -30,53 +30,61 @@
   padding-left: 1px;
 }
 
-.card-footer{
-  height: min-content
+.card-footer {
+  height: min-content;
 }
 
-.seen{
+.seen {
   background-color: rgb(5, 169, 169);
 }
 
-.form{
-  background-color: #00000008
+.form {
+  background-color: #00000008;
 }
 
-.message-content img{
+.message-content img {
   max-width: 450px;
   max-height: 450px;
   display: inline-block;
 }
 
-.react-true{
+.react-true {
   background-color: black;
 }
 
-.react-button{
+.react-button {
   max-width: 55px;
   max-height: 55px;
   margin-right: 5px;
 }
 
-.react-button img{
+.react-button:hover {
+  color: #000;
+}
+
+.react-button img {
   max-width: 32px;
   max-height: 32px;
   display: inline-block;
 }
 
-.message-content{
+.message-content {
   text-align: left;
 }
 
-.card-title{
+.card-title {
   text-align: left;
   padding-left: 10px;
 }
 
-.message-title{
+.message-title {
   display: inline-block;
   max-width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.hidden {
+  visibility: hidden;
 }

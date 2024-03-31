@@ -9,7 +9,7 @@ dotenv.config();
 colors.enabled = true;
 
 export const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
-const { DATABASE_URL } = process.env
+const { DATABASE_URL } = process.env;
 export const { pg_user } = process.env;
 export const { pg_password } = process.env;
 export const { pg_host } = process.env;
@@ -27,7 +27,6 @@ export const { reddit_token } = process.env;
 export const { reddit_useragent } = process.env;
 export const { reddit_refreshtoken } = process.env;
 export const { frontend_url } = process.env;
-
 
 export const PORT = +(process.env.PORT ?? 3001);
 
