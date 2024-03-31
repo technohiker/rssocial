@@ -132,7 +132,7 @@ export function Homepage({
           can get you started.
         </p>
         <p>
-          If you're looking to view the demo, use the username "john_doe" and
+          If you're looking to view the demo, use the username "jane_doe" and
           the password "password."
         </p>
       </>
