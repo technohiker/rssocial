@@ -3,7 +3,6 @@ import { db } from "../db";
 import { IFeed } from "../types/IFeed";
 
 export class Feed {
-
   /** Get a feed by it's ID. */
   static async getFeed(feedID: number): Promise<IFeed> {
     const query: QueryResult<IFeed> = await db.query(
@@ -18,7 +17,7 @@ export class Feed {
     feedName: string,
     userID: number,
     folderID: number,
-    sourceID: number,
+    sourceID: number
   ): Promise<IFeed> {
     //Store feed into Feeds table.
     const query: QueryResult<IFeed> = await db.query(
@@ -36,7 +35,9 @@ export class Feed {
       s.img AS source_img, feed_name
       FROM feeds f
       JOIN sources s ON f.source_id = s.id
-      WHERE f.id=$1`, [feedID])
+      WHERE f.id=$1`,
+      [feedID]
+    );
 
     return query2.rows[0];
   }
@@ -67,15 +68,12 @@ export class Feed {
   }
 
   static async deleteFeed(feedID: number): Promise<IFeed> {
-    console.log({ feedID })
     const query: QueryResult<IFeed> = await db.query(
       `DELETE FROM feeds
        WHERE id=$1
        RETURNING *`,
       [feedID]
     );
-
-    console.log(query.rows[0])
 
     return query.rows[0];
   }

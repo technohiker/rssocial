@@ -9,12 +9,12 @@ export class Folder {
     //Make sure folder name doesn't already exist.
 
     let dupCheck: QueryResult<{ name: string }> = await db.query(
-      `SELECT name FROM folders WHERE user_id=$1 AND name=$2`, [userID, folderName]
-    )
-    console.log({ dupCheck })
+      `SELECT name FROM folders WHERE user_id=$1 AND name=$2`,
+      [userID, folderName]
+    );
 
-    if (dupCheck.rows[0]) throw new BadRequestError(`Duplicate folder name: ${folderName}`);
-
+    if (dupCheck.rows[0])
+      throw new BadRequestError(`Duplicate folder name: ${folderName}`);
 
     let query: QueryResult<IFolder> = await db.query(
       `INSERT INTO folders
@@ -45,14 +45,12 @@ export class Folder {
   }
 
   static async deleteFolder(folderID: number): Promise<IFolder> {
-    console.log({ folderID })
     let query: QueryResult<IFolder> = await db.query(
       `DELETE FROM folders
          WHERE id=$1
          RETURNING *`,
       [folderID]
     );
-    console.log(query.rows[0])
     return query.rows[0];
   }
   static async deleteFoldersOfUser(userID: number): Promise<IFolder[]> {
@@ -65,7 +63,10 @@ export class Folder {
     return query.rows;
   }
 
-  static async patchFolder(folderID: number, folderName: string): Promise<IFolder> {
+  static async patchFolder(
+    folderID: number,
+    folderName: string
+  ): Promise<IFolder> {
     let query: QueryResult<IFolder> = await db.query(
       `UPDATE folders
         SET name=$1

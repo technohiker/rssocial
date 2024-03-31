@@ -20,7 +20,6 @@ folderRouter.post("/new", async function (req, res, next) {
       const userID = res.locals.user.id;
 
       let newFolder = await Folder.newFolder(userID, folderName);
-      console.log({ newFolder })
       return res.json({ folder: newFolder });
     }
   } catch (e: any) {
@@ -48,12 +47,9 @@ folderRouter.patch("/:folderID", async function (req, res, next) {
 /** Delete folder. */
 folderRouter.delete("/:folderID", async function (req, res, next) {
   try {
-    console.log("Reached.")
     const { folderID } = req.params;
-    console.log({ folderID })
 
     let folder = await Folder.deleteFolder(+folderID);
-    console.log({ folder })
 
     return res.json({ folder });
   } catch (e: any) {

@@ -9,17 +9,15 @@ import { createToken } from "../helpers/tokens";
 import { IUser } from "../types/IUser";
 import { checkVerifyToken } from "../middleware/auth";
 
-
 export const authRouter = Router();
 
 /** Return JWT token, which will be used for authenticating later requests. */
 authRouter.post("/token", async function (req, res, next) {
   try {
     const { username, password } = req.body;
-    console.log({ username, password })
 
     const user = await User.authenticate(username, password);
-    const token = createToken(user, { expiresIn: '1w' });
+    const token = createToken(user, { expiresIn: "1w" });
     return res.json({ token });
   } catch (e: any) {
     next(e);
@@ -35,9 +33,7 @@ authRouter.post("/register", async function (req, res, next) {
       throw new BadRequestError(...errs);
     }
     const user: IUser = await User.register(req.body);
-    console.log("New User(route)", user)
-
-    const token = createToken(user, { expiresIn: '1w' });
+    const token = createToken(user, { expiresIn: "1w" });
 
     return res.status(201).json({ user, token });
   } catch (err) {
@@ -46,17 +42,15 @@ authRouter.post("/register", async function (req, res, next) {
 } as RequestHandler);
 
 /** Receive verification token and verify user. */
-authRouter.post('/verify', checkVerifyToken, async function (req, res, next) {
+authRouter.post("/verify", checkVerifyToken, async function (req, res, next) {
   try {
     //Check token.
-    const userID = res.locals.userID
-    console.log({ userID })
+    const userID = res.locals.userID;
     //Approve user.
-    const verUser = await User.verify(userID)
-    const token = createToken(verUser, { expiresIn: '1w' })
-    return res.json({ verified: true, token: token })
+    const verUser = await User.verify(userID);
+    const token = createToken(verUser, { expiresIn: "1w" });
+    return res.json({ verified: true, token: token });
+  } catch (e: any) {
+    return next(e);
   }
-  catch (e: any) {
-    return next(e)
-  }
-} as RequestHandler)
+} as RequestHandler);

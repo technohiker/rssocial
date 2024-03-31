@@ -31,8 +31,6 @@ umsgRouter.post("/:id/react", async function (req, res, next) {
     const messageID = req.params.id;
     const userID = res.locals.user.id;
 
-    console.log({ reactID, messageID, userID })
-
     let reactionID = await userMessage.addReaction(reactID, +messageID, userID);
 
     return res.json({ reactID: reactionID });
@@ -47,9 +45,8 @@ umsgRouter.post("/:id/click", async function (req, res, next) {
 
     const msg = await userMessage.addClick(+id);
     return res.json({ message: msg });
-  }
-  catch (e: any) {
-    return next(e)
+  } catch (e: any) {
+    return next(e);
   }
 } as RequestHandler);
 
@@ -61,9 +58,8 @@ umsgRouter.post("/:id/seen", async function (req, res, next) {
 
     const seen = await userMessage.messageSeen(userID, +id);
     return res.json({ seen });
-  }
-  catch (e: any) {
-    return next(e)
+  } catch (e: any) {
+    return next(e);
   }
 } as RequestHandler);
 
@@ -83,17 +79,20 @@ umsgRouter.post("/:id/notes", async function (req, res, next) {
 } as RequestHandler);
 
 /** Set bookmark to message. */
-umsgRouter.post('/:id/bookmark', async function (req, res, next) {
-    try {
-      const userID = res.locals.user.id
-      const { id } = req.params
-      const {bookmarkID} = req.body
-  
-      const newBookmarkID = await Bookmark.addMessageToBookmark(+bookmarkID, +id, +userID)
-  
-      return res.json({ bookmarkID: newBookmarkID })
-    }
-    catch (e: any) {
-      return next(e)
-    }
-  } as RequestHandler);
+umsgRouter.post("/:id/bookmark", async function (req, res, next) {
+  try {
+    const userID = res.locals.user.id;
+    const { id } = req.params;
+    const { bookmarkID } = req.body;
+
+    const newBookmarkID = await Bookmark.addMessageToBookmark(
+      +bookmarkID,
+      +id,
+      +userID
+    );
+
+    return res.json({ bookmarkID: newBookmarkID });
+  } catch (e: any) {
+    return next(e);
+  }
+} as RequestHandler);
