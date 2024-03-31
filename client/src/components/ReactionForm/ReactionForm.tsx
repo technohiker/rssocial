@@ -14,7 +14,6 @@ export function ReactionForm({
   const [error, setError] = useState("");
 
   const submission = async (evt: IReactionFormSubmit) => {
-    console.log({ evt });
     await onSubmission(evt.reaction, messageID);
   };
   return (

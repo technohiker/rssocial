@@ -32,17 +32,13 @@ test("add reaction to message.", async () => {
   render(messageList);
 
   const msgReaction = testMessages[0].react_id;
- // console.log({ messageList });
 
   const reactButtons = screen.getAllByRole("button", { name: "" });
- // console.log({ msgReaction });
- // console.log(reactButtons[0]);
+
   //Click on Reaction button.
   await act(async () => {
     reactButtons[0].click();
   });
-  // console.log({ msgReaction });
-  // console.log(testMessages[0]);
 
   //Message's reaction should be changed.
   expect(testMessages[0].react_id).not.toBe(msgReaction);
@@ -65,20 +61,18 @@ test("move back and forth between messages in list.", async () => {
   const nextButton = screen.getByRole("button", { name: /Next/i });
   const prevButton = screen.getByRole("button", { name: /Previous/i });
 
- // console.log({nextButton, prevButton})
-
   act(() => {
     nextButton.click();
   });
   expect(screen.getByText(/This is also a note/i)).toBeInTheDocument();
 
-  //TODO: PrevButton click isn't going through.  No idea why.  
+  //TODO: PrevButton click isn't going through.  No idea why.
   //Button is not disabled when attempting to click it.
   // act(() => {
   //   prevButton.click();
   // });
   // expect(screen.getByText(/This is a note/i)).toBeInTheDocument();
-})
+});
 
 /** Mocks function that changes state of Messages. */
 async function updateMessage(uMessage: IUserMessage) {

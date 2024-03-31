@@ -93,12 +93,6 @@ export function Homepage({
   const toggleFolderModal = () => setFolderModal(!folderModal);
   const toggleBookmarkModal = () => setBookmarkModal(!bookmarkModal);
 
-  // const formButtons = [
-  //   <Button onClick={toggleFeedModal}>Make New Feed</Button>,
-  //   <Button onClick={toggleFolderModal}>Make New Folder</Button>,
-  //   <Button onClick={toggleBookmarkModal}>Make New Bookmark</Button>,
-  // ];
-
   //Add buttons that will make modals appear.
   //Do not show buttons for new feeds if user doesn't have a folder to put them in yet.
   const formButtons: JSX.Element[] = [];
@@ -115,7 +109,6 @@ export function Homepage({
   const loadMessages = (condition: ICondition) => {
     setDisplayMessages(true);
     setFilterMSG({ ...condition });
-    console.log({ filterMSG });
   };
 
   /** Update Message state when a change is made. */

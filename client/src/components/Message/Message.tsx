@@ -27,10 +27,6 @@ export function Message({
 }: IMessageProps) {
   const [isSeen, setIsSeen] = useState(message.seen);
 
-  useEffect(() => {
-    console.log({ message });
-  }, [message]);
-
   //Clean Author data.
   let author = "";
   if (message.author) author = `by ${message.author}`;

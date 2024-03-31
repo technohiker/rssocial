@@ -31,19 +31,15 @@ export function MessageList({
   }, [messages]);
 
   const nextMessage = () => {
-    console.log("Next Message Fired!");
     if (msgIndex < messages.length - 1) {
       setIndex(msgIndex + 1);
     }
   };
 
   const prevMessage = () => {
-    console.log("Previous Message Fired!");
-    console.log({ msgIndex });
     if (msgIndex > 0) {
       setIndex(msgIndex - 1);
     }
-    console.log({ msgIndex });
   };
 
   // Declaring buttons here since they depend on MessageList state,

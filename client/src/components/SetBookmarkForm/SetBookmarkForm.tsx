@@ -14,7 +14,6 @@ export function SetBookmarkForm({
   const [error, setError] = useState("");
 
   const submission = async (evt: IBookMarkFormSubmit) => {
-    console.log({ evt });
     let result = await onSubmission(evt.bookmark);
   };
   return (

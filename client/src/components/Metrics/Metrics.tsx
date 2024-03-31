@@ -25,9 +25,7 @@ export function Metrics({ currUser, totalMessages }: IMetricsProps) {
   /** Pull metric information. */
   const getMetrics = async () => {
     try {
-      console.log({ metrics });
       const newMetrics = await ServerCaller.getMetrics(currUser.username);
-      console.log({ newMetrics });
       setMetrics(newMetrics);
     } catch (e: any) {
       throw e;

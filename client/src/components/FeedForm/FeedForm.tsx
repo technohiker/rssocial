@@ -8,15 +8,12 @@ import { Conditional } from "../../helpers/FormFields/FieldCondition";
 
 /** Create a news feed for the user. */
 export function FeedForm({ onSubmission, folders, sources }: IRSSFormProps) {
-  console.log({ folders });
-  console.log({ sources });
   const required = (value: any) => {
     return value ? undefined : "Required";
   };
   const [message, setMessage] = useState("");
 
   const submission = async (evt: IRSSFormSubmit) => {
-    console.log({ evt });
     if (
       (evt.source === "rss" && !evt.url) ||
       (evt.source === "reddit" && !evt.subreddit)

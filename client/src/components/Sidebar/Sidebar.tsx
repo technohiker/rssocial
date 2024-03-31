@@ -12,7 +12,6 @@ export function Sidebar({ buttons }: ISidebarProps) {
   const context = useContext(FeedContext);
   const { folders, setFolders } = context;
   const { bookmarks, setBookmarks } = context;
-  console.log({ context });
 
   const removeFolder = async (folderID: number) => {
     const folder = await ServerCaller.deleteFolder(folderID);
