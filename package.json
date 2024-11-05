@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "concurrently": "^7.6.0",
+    "tough-cookie": "^5.0.0",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
